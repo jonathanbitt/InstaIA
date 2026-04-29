@@ -1519,9 +1519,21 @@ function iniciarListeners() {
   if (_listenersAtivos) return;
   _listenersAtivos = true;
 
-  // Carrega curtidas do Firestore antes de qualquer render
-  carregarCurtidasFirestore().then(() => {
-    renderFeed(); // re-renderiza com estado correto de curtidas
+  // Carrega todos os dados do usuário do Firestore em paralelo
+  Promise.all([
+    carregarCurtidasFirestore(),
+    carregarPreferencias(),
+    carregarPerfisFirestore(),
+    carregarAssuntosFirestore(),
+  ]).then(() => {
+    // Dados carregados — inicializa UI
+    _assuntosCache.forEach(a => injetarCSS(a.id, a.cor));
+    renderFilterTags();
+    renderSelectsAssunto();
+    renderSelectsPerfil();
+    renderFeed(); // re-renderiza com curtidas corretas
+  }).catch(e => {
+    console.error('Erro ao carregar dados do usuário:', e);
   });
 
   // Listener de comentários em tempo real
@@ -1742,16 +1754,42 @@ const PERFIS_PADRAO = [
   }
 ];
 
-function carregarPerfis() {
+/* ════════════════════════════════════════
+   PERFIS — Firestore + cache local
+   /usuario/principal  →  { perfis: [...] }
+════════════════════════════════════════ */
+let _perfisCache = [];
+let _perfisCarregados = false;
+
+async function carregarPerfisFirestore() {
   try {
-    const saved = localStorage.getItem('st-perfis');
-    return saved ? JSON.parse(saved) : [];
-  } catch { return []; }
+    const snap = await db.collection('usuario').doc(DOC_USUARIO).get();
+    if (snap.exists && snap.data().perfis) {
+      _perfisCache = snap.data().perfis;
+      localStorage.setItem('st-perfis', JSON.stringify(_perfisCache));
+    } else {
+      // Migra localStorage → Firestore na primeira vez
+      const local = JSON.parse(localStorage.getItem('st-perfis') || '[]');
+      _perfisCache = local;
+      if (local.length) await salvarPerfisFirestore();
+    }
+  } catch(e) {
+    try { _perfisCache = JSON.parse(localStorage.getItem('st-perfis') || '[]'); } catch {}
+  }
+  _perfisCarregados = true;
 }
 
-function salvarPerfisStorage(lista) {
-  localStorage.setItem('st-perfis', JSON.stringify(lista));
+async function salvarPerfisFirestore() {
+  try {
+    await db.collection('usuario').doc(DOC_USUARIO).set({ perfis: _perfisCache }, { merge: true });
+    localStorage.setItem('st-perfis', JSON.stringify(_perfisCache));
+  } catch(e) {
+    localStorage.setItem('st-perfis', JSON.stringify(_perfisCache));
+  }
 }
+
+function carregarPerfis()       { return _perfisCache; }
+function salvarPerfisStorage(lista) { _perfisCache = lista; salvarPerfisFirestore(); }
 
 function getTodosPerfis() {
   return [...PERFIS_PADRAO, ...carregarPerfis()];
@@ -2019,16 +2057,41 @@ const CORES_CUSTOM = [
   '#a06abf','#6aafbf','#bfa06a','#6abfa0','#bf6aa0',
 ];
 
-function carregarAssuntos() {
+/* ════════════════════════════════════════
+   ASSUNTOS CUSTOMIZADOS — Firestore
+   /usuario/principal  →  { assuntos: [...] }
+════════════════════════════════════════ */
+let _assuntosCache = [];
+let _assuntosCarregados = false;
+
+async function carregarAssuntosFirestore() {
   try {
-    const saved = localStorage.getItem('st-assuntos-custom');
-    return saved ? JSON.parse(saved) : [];
-  } catch { return []; }
+    const snap = await db.collection('usuario').doc(DOC_USUARIO).get();
+    if (snap.exists && snap.data().assuntos) {
+      _assuntosCache = snap.data().assuntos;
+      localStorage.setItem('st-assuntos-custom', JSON.stringify(_assuntosCache));
+    } else {
+      const local = JSON.parse(localStorage.getItem('st-assuntos-custom') || '[]');
+      _assuntosCache = local;
+      if (local.length) await salvarAssuntosFirestore();
+    }
+  } catch(e) {
+    try { _assuntosCache = JSON.parse(localStorage.getItem('st-assuntos-custom') || '[]'); } catch {}
+  }
+  _assuntosCarregados = true;
 }
 
-function salvarAssuntosCustom(lista) {
-  localStorage.setItem('st-assuntos-custom', JSON.stringify(lista));
+async function salvarAssuntosFirestore() {
+  try {
+    await db.collection('usuario').doc(DOC_USUARIO).set({ assuntos: _assuntosCache }, { merge: true });
+    localStorage.setItem('st-assuntos-custom', JSON.stringify(_assuntosCache));
+  } catch(e) {
+    localStorage.setItem('st-assuntos-custom', JSON.stringify(_assuntosCache));
+  }
 }
+
+function carregarAssuntos()       { return _assuntosCache; }
+function salvarAssuntosCustom(lista) { _assuntosCache = lista; salvarAssuntosFirestore(); }
 
 function getTodosAssuntos() {
   return [...ASSUNTOS_PADRAO, ...carregarAssuntos()];
@@ -2436,12 +2499,8 @@ let feedTab = 'recentes'; // 'recentes' | 'recomendados' | 'curtidos'
 ════════════════════════════════════════ */
 
 function getUserId() {
-  let id = localStorage.getItem('st-uid');
-  if (!id) {
-    id = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-    localStorage.setItem('st-uid', id);
-  }
-  return id;
+  // ID fixo — usuário único, todos os dispositivos compartilham os mesmos dados
+  return 'usuario_principal';
 }
 
 // Cache local das curtidas (sincronizado do Firestore na inicialização)
@@ -2510,34 +2569,46 @@ async function toggleCurtir(postId) {
    das curtidas — base do algoritmo
 ════════════════════════════════════════ */
 
-function getPreferencias() {
-  try { return JSON.parse(localStorage.getItem('st-preferencias') || '{"tipos":{},"tags":{},"autores":{},"totalCurtidas":0}'); }
-  catch { return { tipos:{}, tags:{}, autores:{}, totalCurtidas:0 }; }
+/* ════════════════════════════════════════
+   PREFERÊNCIAS DO USUÁRIO — Firestore
+   /usuario/principal  →  { preferencias: {...} }
+════════════════════════════════════════ */
+const DOC_USUARIO = 'principal'; // documento único — usuário único
+
+let _prefs = { tipos:{}, tags:{}, autores:{}, totalCurtidas:0 };
+let _prefsCarregadas = false;
+
+async function carregarPreferencias() {
+  try {
+    const snap = await db.collection('usuario').doc(DOC_USUARIO).get();
+    if (snap.exists && snap.data().preferencias) {
+      _prefs = snap.data().preferencias;
+    }
+  } catch(e) {
+    // fallback localStorage
+    try { _prefs = JSON.parse(localStorage.getItem('st-preferencias') || '{}') || _prefs; } catch {}
+  }
+  _prefsCarregadas = true;
 }
 
-function salvarPreferencias(p) {
-  localStorage.setItem('st-preferencias', JSON.stringify(p));
+async function salvarPreferencias() {
+  try {
+    await db.collection('usuario').doc(DOC_USUARIO).set({ preferencias: _prefs }, { merge: true });
+    localStorage.setItem('st-preferencias', JSON.stringify(_prefs)); // backup offline
+  } catch(e) {
+    localStorage.setItem('st-preferencias', JSON.stringify(_prefs));
+  }
 }
+
+function getPreferencias() { return _prefs; }
 
 function registrarPreferencia(post) {
-  const prefs = getPreferencias();
-  prefs.totalCurtidas = (prefs.totalCurtidas || 0) + 1;
-
-  // Peso por tipo
+  _prefs.totalCurtidas = (_prefs.totalCurtidas || 0) + 1;
   const tipo = post.tipo || 'outro';
-  prefs.tipos[tipo] = (prefs.tipos[tipo] || 0) + 1;
-
-  // Peso por tag
-  (post.tags || []).forEach(t => {
-    prefs.tags[t] = (prefs.tags[t] || 0) + 1;
-  });
-
-  // Peso por autor
-  if (post.autorId) {
-    prefs.autores[post.autorId] = (prefs.autores[post.autorId] || 0) + 1;
-  }
-
-  salvarPreferencias(prefs);
+  _prefs.tipos[tipo] = (_prefs.tipos[tipo] || 0) + 1;
+  (post.tags || []).forEach(t => { _prefs.tags[t] = (_prefs.tags[t] || 0) + 1; });
+  if (post.autorId) _prefs.autores[post.autorId] = (_prefs.autores[post.autorId] || 0) + 1;
+  salvarPreferencias(); // async, não bloqueia
 }
 
 /* ════════════════════════════════════════
@@ -2817,17 +2888,7 @@ function abrirAprofundamento(postId) {
 
 // ── Chamada quando Firebase + DOM estão prontos ──
 function onAppReady() {
-  carregarAssuntos().forEach(a => injetarCSS(a.id, a.cor));
-  renderFilterTags();
-  renderSelectsAssunto();
-  renderSelectsPerfil();
-  if (typeof GAME !== 'undefined') GAME.atualizarHUD();
-  if (typeof FLASHCARD !== 'undefined') {
-    const pendentes = FLASHCARD.getParaRevisar().length;
-    const btn = document.getElementById('btn-revisao');
-    if (btn && pendentes > 0) btn.textContent = `🃏 Revisar (${pendentes})`;
-  }
-
+  // Mostra loading — dados serão carregados do Firestore por iniciarListeners
   document.getElementById('posts-list').innerHTML =
     `<div class="empty-feed"><div class="empty-icon" style="animation:pulse 1s infinite;">⏳</div><div class="empty-text">Conectando ao Firebase…</div></div>`;
   try {

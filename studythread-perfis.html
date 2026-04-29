@@ -289,6 +289,8 @@ body{font-family:var(--font-b);font-size:16px;color:var(--ink);}
 
 <div class="toast-wrap" id="toast-wrap"></div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
 /* ════════════════
    PERFIS (localStorage)
@@ -299,11 +301,49 @@ const PADRAO = [
     emoji:'🧑', cor:'#c4952a', ramos:[], padrao:true }
 ];
 
-function carregar() {
-  try { return JSON.parse(localStorage.getItem('st-perfis')||'[]'); } catch { return []; }
+// Firebase setup
+const firebaseConfig = {
+  apiKey:"AIzaSyDDGUikGRoJoVu3g0tSenKtZHffflApUWQ",
+  authDomain:"agenda-diaria-6c1ac.firebaseapp.com",
+  projectId:"agenda-diaria-6c1ac",
+  storageBucket:"agenda-diaria-6c1ac.firebasestorage.app",
+  messagingSenderId:"38282868914",
+  appId:"1:38282868914:web:a8332ed3fe258a41af71ab"
+};
+
+let db = null;
+const DOC_USUARIO = 'principal';
+
+function initFirebase() {
+  if (typeof firebase === 'undefined') { setTimeout(initFirebase, 100); return; }
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  carregarPerfisFS().then(() => { renderRamosFilter(); renderGrid(); });
 }
-function salvarLS(lista) { localStorage.setItem('st-perfis', JSON.stringify(lista)); }
-function todos() { return [...PADRAO, ...carregar()]; }
+
+let _cache = [];
+
+async function carregarPerfisFS() {
+  try {
+    const snap = await db.collection('usuario').doc(DOC_USUARIO).get();
+    _cache = (snap.exists && snap.data().perfis) ? snap.data().perfis : [];
+    localStorage.setItem('st-perfis', JSON.stringify(_cache)); // backup
+  } catch(e) {
+    try { _cache = JSON.parse(localStorage.getItem('st-perfis')||'[]'); } catch { _cache = []; }
+  }
+}
+
+async function salvarLS(lista) {
+  _cache = lista;
+  localStorage.setItem('st-perfis', JSON.stringify(lista));
+  if (db) {
+    try { await db.collection('usuario').doc(DOC_USUARIO).set({ perfis: lista }, { merge: true }); }
+    catch(e) { console.warn('Erro ao salvar perfis:', e); }
+  }
+}
+
+function carregar() { return _cache; }
+function todos() { return [...PADRAO, ..._cache]; }
 function normId(nome) {
   return nome.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,40);
@@ -553,8 +593,8 @@ function excluirPerfil() {
 /* ════════════════
    INICIALIZAÇÃO
 ════════════════ */
-renderRamosFilter();
-renderGrid();
+// Inicia Firebase (aguarda scripts CDN)
+initFirebase();
 </script>
 </body>
 </html>

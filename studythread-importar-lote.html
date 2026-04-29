@@ -227,15 +227,24 @@ const ts   = () => new Date().toISOString();
 const esc  = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// Lê assuntos do localStorage (inclui customizados criados no StudyThread)
-function getTiposValidos() {
-  const padrao = ['filosofia','fisica','matematica','idioma','logica','ciencia','historia','literatura','outro'];
+// Lê assuntos do Firestore (com fallback localStorage)
+const _PADRAO_TIPOS = ['filosofia','fisica','matematica','idioma','logica','ciencia','historia','literatura','outro'];
+let TIPOS_VALIDOS = [..._PADRAO_TIPOS];
+
+async function carregarTiposValidos() {
   try {
-    const custom = JSON.parse(localStorage.getItem('st-assuntos-custom') || '[]');
-    return [...padrao, ...custom.map(a => a.id)];
-  } catch { return padrao; }
+    const snap = await db.collection('usuario').doc('principal').get();
+    const assuntos = (snap.exists && snap.data().assuntos) ? snap.data().assuntos : [];
+    const local = JSON.parse(localStorage.getItem('st-assuntos-custom') || '[]');
+    const todos = [...assuntos, ...local];
+    TIPOS_VALIDOS = [..._PADRAO_TIPOS, ...todos.map(a => a.id)];
+  } catch(e) {
+    try {
+      const local = JSON.parse(localStorage.getItem('st-assuntos-custom') || '[]');
+      TIPOS_VALIDOS = [..._PADRAO_TIPOS, ...local.map(a => a.id)];
+    } catch {}
+  }
 }
-const TIPOS_VALIDOS = getTiposValidos();
 const TIPOS_COMMENT = ['resposta','aula','explicacao','exercicio','correcao','sintese'];
 
 /* Estado da importação */
