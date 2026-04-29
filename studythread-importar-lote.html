@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StudyThread — Importar Posts em Lote</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@300;400&family=Crimson+Pro:wght@300;400&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink:#1a1410;--paper:#f5f0e8;--aged:#e8e0ce;--sepia:#c8b89a;--rust:#8b3a2a;--gold:#c4952a;--sage:#4a6741;--slate:#3d4f5c;--ghost:#7a7060;--margin:#d4c9b0;
+  --font-d:'Playfair Display',Georgia,serif;--font-b:'Crimson Pro',serif;--font-m:'DM Mono','Courier New',monospace;--r:4px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:#2a2218;min-height:100vh;font-family:var(--font-b);font-size:16px;color:var(--ink);display:flex;flex-direction:column;align-items:center;padding:32px 16px 60px;}
+
+.page-title{font-family:var(--font-d);font-size:1.8rem;font-weight:700;color:var(--paper);margin-bottom:4px;}
+.page-title span{color:var(--gold);font-style:italic;}
+.page-sub{font-family:var(--font-m);font-size:.65rem;color:var(--sepia);letter-spacing:.18em;text-transform:uppercase;margin-bottom:28px;}
+
+.card{background:var(--paper);background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(196,149,42,.07) 27px,rgba(196,149,42,.07) 28px);border:1px solid var(--margin);border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,.35);width:100%;max-width:860px;overflow:hidden;margin-bottom:20px;}
+.card-head{background:var(--aged);border-bottom:2px solid var(--margin);padding:16px 22px;display:flex;align-items:center;gap:12px;}
+.card-title{font-family:var(--font-d);font-size:1.1rem;color:var(--ink);flex:1;}
+.card-body{padding:20px 22px;}
+.card-foot{background:var(--aged);border-top:1px solid var(--margin);padding:12px 22px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+
+/* Botões */
+.btn{font-family:var(--font-m);font-size:.7rem;letter-spacing:.07em;padding:8px 16px;border-radius:var(--r);border:none;cursor:pointer;transition:all .15s;text-transform:uppercase;}
+.btn-gold{background:var(--gold);color:var(--ink);font-weight:500;}.btn-gold:hover{background:#b5882a;}
+.btn-sage{background:var(--sage);color:var(--paper);}.btn-sage:hover{background:#3d5835;}
+.btn-ghost{background:transparent;border:1px solid var(--margin);color:var(--ghost);}.btn-ghost:hover{background:rgba(0,0,0,.07);color:var(--ink);}
+.btn-rust{background:var(--rust);color:var(--paper);}.btn-rust:hover{background:#73301f;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* Textarea JSON */
+.json-ta{width:100%;background:#1a1410;border:1px solid var(--margin);border-radius:var(--r);padding:14px;font-family:var(--font-m);font-size:.75rem;color:#c0b080;line-height:1.7;resize:vertical;min-height:300px;outline:none;transition:border-color .2s;}
+.json-ta:focus{border-color:var(--gold);}
+
+/* Preview table */
+.preview-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.preview-table th{font-family:var(--font-m);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ghost);border-bottom:2px solid var(--margin);padding:8px 10px;text-align:left;}
+.preview-table td{padding:8px 10px;border-bottom:1px solid rgba(212,201,176,.4);vertical-align:top;color:var(--ink);line-height:1.5;}
+.preview-table tr:last-child td{border-bottom:none;}
+.preview-table tr:hover td{background:rgba(196,149,42,.05);}
+.preview-table .tipo-badge{font-family:var(--font-m);font-size:.58rem;padding:2px 7px;border-radius:2px;text-transform:uppercase;letter-spacing:.1em;}
+.preview-table .c-trunc{max-width:380px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ghost);}
+.row-ok   td:first-child{border-left:3px solid var(--sage);}
+.row-erro td:first-child{border-left:3px solid var(--rust);}
+.row-skip td:first-child{border-left:3px solid var(--gold);}
+
+/* Progresso */
+.progress-wrap{width:100%;background:var(--margin);border-radius:20px;height:8px;overflow:hidden;margin:10px 0;}
+.progress-bar{height:100%;background:var(--sage);border-radius:20px;transition:width .3s ease;width:0%;}
+.progress-text{font-family:var(--font-m);font-size:.68rem;color:var(--ghost);text-align:center;margin-top:6px;}
+
+/* Log */
+.log-box{background:#1a1410;border:1px solid #3d3020;border-radius:var(--r);padding:14px;font-family:var(--font-m);font-size:.7rem;color:#9a8a60;line-height:1.8;max-height:240px;overflow-y:auto;white-space:pre-wrap;}
+.log-ok   {color:#6abf8a;}
+.log-erro {color:#bf6a6a;}
+.log-warn {color:#bfa060;}
+.log-info {color:#6a9abf;}
+
+/* Tipo colors */
+.tipo-filosofia{background:#ede8f5;color:#4a2d7a;}
+.tipo-fisica{background:#e8f4ff;color:#1a3a6a;}
+.tipo-matematica{background:#e8f0f5;color:#1a4a7a;}
+.tipo-idioma{background:#f5ede8;color:#7a3a1a;}
+.tipo-logica{background:#e8f5ed;color:#1a7a4a;}
+.tipo-ciencia{background:#f5f0e8;color:#7a5a1a;}
+.tipo-historia{background:#ede8e8;color:#7a1a1a;}
+.tipo-literatura{background:#f0ede8;color:#5a3a1a;}
+.tipo-outro{background:#e8e8e8;color:#4a4a4a;}
+
+/* Status chips */
+.chip{font-family:var(--font-m);font-size:.6rem;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.08em;}
+.chip-ok   {background:#e8f5e8;color:#2d6a2d;border:1px solid #b8d8b8;}
+.chip-erro {background:#f5e8e8;color:#6a2d2d;border:1px solid #d8b8b8;}
+.chip-skip {background:#fff8e8;color:#7a5a10;border:1px solid #e0cc80;}
+
+/* Help box */
+.help{background:rgba(196,149,42,.08);border:1px solid rgba(196,149,42,.25);border-radius:var(--r);padding:14px 16px;font-size:.82rem;color:var(--ghost);line-height:1.7;font-family:var(--font-b);}
+.help code{font-family:var(--font-m);font-size:.72rem;background:rgba(196,149,42,.12);padding:1px 5px;border-radius:2px;color:var(--ink);}
+.help pre{background:#1a1410;border:1px solid #3d3020;border-radius:var(--r);padding:12px;font-family:var(--font-m);font-size:.7rem;color:#c0b080;line-height:1.7;overflow-x:auto;margin:10px 0;}
+
+/* Stats row */
+.stats-row{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0;}
+.stat-box{flex:1;min-width:100px;background:var(--aged);border:1px solid var(--margin);border-radius:var(--r);padding:10px 14px;text-align:center;}
+.stat-num{font-family:var(--font-d);font-size:1.6rem;line-height:1;color:var(--ink);}
+.stat-lbl{font-family:var(--font-m);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ghost);margin-top:2px;}
+.stat-box.ok   .stat-num{color:var(--sage);}
+.stat-box.erro .stat-num{color:var(--rust);}
+.stat-box.skip .stat-num{color:var(--gold);}
+
+::-webkit-scrollbar{width:5px;}.:-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#4a3d2a;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div class="page-title">Study<span>Thread</span></div>
+<div class="page-sub">Importar Posts em Lote — Firebase Firestore</div>
+
+<!-- ══ CARD 1: FORMATO ══ -->
+<div class="card">
+  <div class="card-head">
+    <span class="card-title">📋 Formato do JSON de entrada</span>
+    <button class="btn btn-ghost" onclick="toggleHelp()">? Ver formato</button>
+  </div>
+  <div class="card-body" id="help-box" style="display:none;">
+    <div class="help">
+      Cole um array de posts. Cada post pode ter os campos abaixo.<br>
+      Apenas <code>conteudo</code> é obrigatório — os demais têm valores padrão.
+
+      <pre>{
+  "posts": [
+    {
+      "conteudo": "Por que Kant distingue fenômeno de nômeno?",
+      "tipo": "filosofia",       // padrão: "outro"
+      "status": "ativo",         // padrão: "ativo"
+      "inedito": true,           // padrão: true
+      "comentarios": [           // opcional — comentários iniciais
+        {
+          "autor": "Kant_IA",
+          "tipo": "explicacao",  // resposta|aula|explicacao|exercicio|correcao|sintese
+          "origem": "ia",        // "ia" ou "manual"  (padrão: "ia")
+          "conteudo": "A distinção entre fenômeno (o que aparece) e nômeno (a coisa-em-si)…"
+        }
+      ]
+    },
+    {
+      "conteudo": "Prove que √2 é irracional.",
+      "tipo": "matematica"
+    }
+  ]
+}</pre>
+
+      <strong>Tipos válidos:</strong> filosofia · matemática · idioma · lógica · ciência · história · literatura · outro<br>
+      <strong>IDs</strong> são gerados automaticamente. <strong>Timestamps</strong> também são gerados automaticamente.
+    </div>
+  </div>
+</div>
+
+<!-- ══ CARD 2: ENTRADA JSON ══ -->
+<div class="card">
+  <div class="card-head">
+    <span class="card-title">① Colar JSON</span>
+  </div>
+  <div class="card-body">
+    <textarea class="json-ta" id="json-input" placeholder='{ "posts": [ { "conteudo": "...", "tipo": "filosofia" } ] }'></textarea>
+  </div>
+  <div class="card-foot">
+    <button class="btn btn-gold" onclick="validarEPrevisualizar()">② Validar e Pré-visualizar</button>
+    <button class="btn btn-ghost" onclick="carregarExemplo()">Carregar exemplo</button>
+    <button class="btn btn-ghost" onclick="limpar()">Limpar</button>
+    <span id="val-status" style="font-family:var(--font-m);font-size:.7rem;color:var(--ghost);margin-left:auto;"></span>
+  </div>
+</div>
+
+<!-- ══ CARD 3: PREVIEW ══ -->
+<div class="card" id="card-preview" style="display:none;">
+  <div class="card-head">
+    <span class="card-title">② Pré-visualização</span>
+    <span id="preview-resumo" style="font-family:var(--font-m);font-size:.68rem;color:var(--ghost);"></span>
+  </div>
+  <div class="card-body" style="padding:0;overflow-x:auto;">
+    <table class="preview-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tipo</th>
+          <th>Conteúdo</th>
+          <th>Comentários</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="preview-body"></tbody>
+    </table>
+  </div>
+  <div class="card-foot">
+    <button class="btn btn-sage" id="btn-importar" onclick="importarLote()">③ Importar para Firebase</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('card-preview').style.display='none'">Cancelar</button>
+  </div>
+</div>
+
+<!-- ══ CARD 4: PROGRESSO ══ -->
+<div class="card" id="card-progresso" style="display:none;">
+  <div class="card-head">
+    <span class="card-title">③ Importando…</span>
+  </div>
+  <div class="card-body">
+    <div class="stats-row">
+      <div class="stat-box ok"><div class="stat-num" id="st-ok">0</div><div class="stat-lbl">Salvos</div></div>
+      <div class="stat-box erro"><div class="stat-num" id="st-erro">0</div><div class="stat-lbl">Erros</div></div>
+      <div class="stat-box skip"><div class="stat-num" id="st-skip">0</div><div class="stat-lbl">Ignorados</div></div>
+      <div class="stat-box"><div class="stat-num" id="st-total">0</div><div class="stat-lbl">Total</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+    <div class="progress-text" id="progress-text">Aguardando…</div>
+    <br>
+    <div class="log-box" id="log-box"></div>
+  </div>
+  <div class="card-foot" id="progresso-foot" style="display:none;">
+    <button class="btn btn-sage" onclick="window.location.reload()">↺ Nova importação</button>
+    <a href="studythread.html" class="btn btn-gold">→ Abrir StudyThread</a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* ── Firebase ── */
+const firebaseConfig = {
+  apiKey: "AIzaSyDDGUikGRoJoVu3g0tSenKtZHffflApUWQ",
+  authDomain: "agenda-diaria-6c1ac.firebaseapp.com",
+  projectId: "agenda-diaria-6c1ac",
+  storageBucket: "agenda-diaria-6c1ac.firebasestorage.app",
+  messagingSenderId: "38282868914",
+  appId: "1:38282868914:web:a8332ed3fe258a41af71ab",
+  measurementId: "G-3B5J0MLJ7R"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+/* ── Utilitários ── */
+const uid  = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const ts   = () => new Date().toISOString();
+const esc  = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Lê assuntos do localStorage (inclui customizados criados no StudyThread)
+function getTiposValidos() {
+  const padrao = ['filosofia','fisica','matematica','idioma','logica','ciencia','historia','literatura','outro'];
+  try {
+    const custom = JSON.parse(localStorage.getItem('st-assuntos-custom') || '[]');
+    return [...padrao, ...custom.map(a => a.id)];
+  } catch { return padrao; }
+}
+const TIPOS_VALIDOS = getTiposValidos();
+const TIPOS_COMMENT = ['resposta','aula','explicacao','exercicio','correcao','sintese'];
+
+/* Estado da importação */
+let _postsParsed = [];   // posts validados prontos para importar
+let _stats = { ok:0, erro:0, skip:0, total:0 };
+
+/* ════════════════════════════════════════
+   LOG
+════════════════════════════════════════ */
+function log(msg, tipo='info') {
+  const box = document.getElementById('log-box');
+  const classes = { ok:'log-ok', erro:'log-erro', warn:'log-warn', info:'log-info' };
+  const ts_now = new Date().toLocaleTimeString('pt-BR');
+  box.innerHTML += `<span class="${classes[tipo]||'log-info'}">[${ts_now}] ${esc(msg)}</span>\n`;
+  box.scrollTop = box.scrollHeight;
+}
+
+/* ════════════════════════════════════════
+   VALIDAR E PRÉ-VISUALIZAR
+════════════════════════════════════════ */
+function validarEPrevisualizar() {
+  const raw = document.getElementById('json-input').value.trim();
+  const valStatus = document.getElementById('val-status');
+
+  if (!raw) {
+    valStatus.textContent = '⚠ Cole o JSON primeiro.';
+    valStatus.style.color = 'var(--rust)';
+    return;
+  }
+
+  let dados;
+  try {
+    dados = JSON.parse(raw);
+  } catch(e) {
+    valStatus.textContent = `✕ JSON inválido: ${e.message}`;
+    valStatus.style.color = 'var(--rust)';
+    return;
+  }
+
+  // Aceita tanto { posts: [...] } quanto array direto [...]
+  const lista = Array.isArray(dados) ? dados : (dados.posts || []);
+
+  if (!lista.length) {
+    valStatus.textContent = '⚠ Nenhum post encontrado no JSON.';
+    valStatus.style.color = 'var(--gold)';
+    return;
+  }
+
+  // Valida e normaliza cada post
+  _postsParsed = [];
+  const tbody = document.getElementById('preview-body');
+  tbody.innerHTML = '';
+  let validos = 0, invalidos = 0;
+
+  lista.forEach((item, i) => {
+    const erros = [];
+    const avisos = [];
+
+    // Validações
+    if (!item.conteudo || !String(item.conteudo).trim()) {
+      erros.push('conteudo obrigatório');
+    }
+
+    let tipo = String(item.tipo || 'outro').toLowerCase().trim();
+    if (!TIPOS_VALIDOS.includes(tipo)) {
+      avisos.push(`tipo "${tipo}" inválido → usando "outro"`);
+      tipo = 'outro';
+    }
+
+    // Valida comentários opcionais
+    const comentarios = (item.comentarios || []).map((c, ci) => {
+      const ce = [];
+      if (!c.conteudo) ce.push(`comentario[${ci}] sem conteudo`);
+      const cTipo = TIPOS_COMMENT.includes(c.tipo) ? c.tipo : 'resposta';
+      if (c.tipo && !TIPOS_COMMENT.includes(c.tipo)) {
+        avisos.push(`comentario[${ci}].tipo inválido → "resposta"`);
+      }
+      return {
+        conteudo: String(c.conteudo || '').trim(),
+        autor: String(c.autor || 'IA').trim(),
+        tipo: cTipo,
+        origem: c.origem === 'manual' ? 'manual' : 'ia',
+        erros: ce
+      };
+    });
+
+    const temErro = erros.length > 0;
+    if (!temErro) validos++; else invalidos++;
+
+    // Monta objeto normalizado
+    const postNorm = {
+      id: uid(),
+      conteudo: String(item.conteudo || '').trim(),
+      tipo,
+      status: item.status || 'ativo',
+      inedito: item.inedito !== false, // padrão true
+      timestamp: ts(),
+      _comentarios: comentarios,
+      _erros: erros,
+      _avisos: avisos,
+      _valido: !temErro,
+    };
+
+    if (!temErro) _postsParsed.push(postNorm);
+
+    // Linha da tabela
+    const rowClass = temErro ? 'row-erro' : avisos.length ? 'row-skip' : 'row-ok';
+    const statusChip = temErro
+      ? `<span class="chip chip-erro">Erro</span>`
+      : avisos.length
+        ? `<span class="chip chip-skip">Aviso</span>`
+        : `<span class="chip chip-ok">Válido</span>`;
+
+    const errosTxt = [...erros,...avisos].join(' · ');
+
+    tbody.innerHTML += `<tr class="${rowClass}">
+      <td style="font-family:var(--font-m);font-size:.65rem;color:var(--ghost);">${i+1}</td>
+      <td><span class="tipo-badge tipo-${tipo}">${tipo}</span></td>
+      <td><div class="c-trunc">${esc(postNorm.conteudo)}</div>${errosTxt ? `<div style="font-family:var(--font-m);font-size:.6rem;color:var(--rust);margin-top:3px;">${esc(errosTxt)}</div>`:''}</td>
+      <td style="font-family:var(--font-m);font-size:.65rem;color:var(--ghost);text-align:center;">${comentarios.length || '—'}</td>
+      <td>${statusChip}</td>
+    </tr>`;
+  });
+
+  valStatus.textContent = `✓ ${lista.length} posts lidos`;
+  valStatus.style.color = 'var(--sage)';
+
+  document.getElementById('preview-resumo').textContent =
+    `${validos} válidos · ${invalidos} com erro · ${lista.length} total`;
+
+  document.getElementById('card-preview').style.display = 'block';
+  document.getElementById('card-preview').scrollIntoView({ behavior:'smooth' });
+}
+
+/* ════════════════════════════════════════
+   IMPORTAR LOTE → FIRESTORE
+   Usa writeBatch (máx 500 ops por batch).
+   Divide automaticamente em batches de 499
+   para não estourar o limite.
+════════════════════════════════════════ */
+async function importarLote() {
+  if (!_postsParsed.length) {
+    alert('Nenhum post válido para importar.');
+    return;
+  }
+
+  document.getElementById('card-progresso').style.display = 'block';
+  document.getElementById('btn-importar').disabled = true;
+  document.getElementById('card-progresso').scrollIntoView({ behavior:'smooth' });
+
+  _stats = { ok:0, erro:0, skip:0, total: _postsParsed.length };
+  atualizarStats();
+  document.getElementById('st-total').textContent = _stats.total;
+
+  log(`Iniciando importação de ${_stats.total} posts…`, 'info');
+
+  // Firestore writeBatch aceita no máximo 500 operações por lote.
+  // Cada post = 1 op. Cada comentário = 1 op adicional.
+  // Quebramos em sub-lotes de 499 operações por segurança.
+  const MAX_OPS = 499;
+
+  let batch        = writeBatch(db);
+  let opsNoBatch   = 0;
+  let batchNum     = 1;
+
+  const commitBatch = async () => {
+    if (opsNoBatch === 0) return;
+    log(`Enviando batch #${batchNum} (${opsNoBatch} operações)…`, 'info');
+    await batch.commit();
+    log(`✓ Batch #${batchNum} salvo.`, 'ok');
+    batch = writeBatch(db);
+    opsNoBatch = 0;
+    batchNum++;
+  };
+
+  for (let i = 0; i < _postsParsed.length; i++) {
+    const p = _postsParsed[i];
+
+    try {
+      // Verifica se o batch está cheio (considerando comentários do post)
+      const opsNecessarias = 1 + p._comentarios.length;
+      if (opsNoBatch + opsNecessarias > MAX_OPS) {
+        await commitBatch();
+      }
+
+      // Adiciona o post ao batch
+      const postRef = doc(db, 'posts', p.id);
+      const postData = {
+        id:       p.id,
+        conteudo: p.conteudo,
+        tipo:     p.tipo,
+        status:   p.status,
+        inedito:  p.inedito,
+        timestamp: p.timestamp,
+      };
+      batch.set(postRef, postData);
+      opsNoBatch++;
+
+      // Adiciona comentários do post ao mesmo batch
+      for (const c of p._comentarios) {
+        if (!c.conteudo) continue;
+        const cId  = uid();
+        const cRef = doc(db, 'comments', cId);
+        const cData = {
+          id:          cId,
+          postId:      p.id,
+          parentId:    null,
+          autor:       c.autor,
+          conteudo:    c.conteudo,
+          tipo:        c.tipo,
+          origem:      c.origem,
+          statusLeitura: c.origem === 'manual' ? 'inedito' : 'processado',
+          timestamp:   ts(),
+        };
+        batch.set(cRef, cData);
+        opsNoBatch++;
+      }
+
+      _stats.ok++;
+      log(`✓ [${i+1}/${_stats.total}] "${p.conteudo.slice(0,60)}…"`, 'ok');
+
+    } catch(e) {
+      _stats.erro++;
+      log(`✕ [${i+1}] Erro: ${e.message}`, 'erro');
+    }
+
+    // Atualiza progresso a cada post
+    atualizarStats();
+    atualizarProgresso(i + 1, _stats.total);
+
+    // Pequena pausa a cada 50 posts para não travar a UI
+    if ((i + 1) % 50 === 0) await sleep(20);
+  }
+
+  // Commita o batch final (posts que sobraram)
+  try {
+    await commitBatch();
+  } catch(e) {
+    log(`✕ Erro no batch final: ${e.message}`, 'erro');
+    _stats.erro++;
+  }
+
+  // Finalizado
+  atualizarProgresso(_stats.total, _stats.total);
+  const msg = `Importação concluída! ✓ ${_stats.ok} posts salvo(s)` +
+    (_stats.erro ? ` · ✕ ${_stats.erro} erro(s)` : '');
+  log(msg, _stats.erro > 0 ? 'warn' : 'ok');
+
+  document.getElementById('progresso-foot').style.display = 'flex';
+  document.getElementById('progress-text').textContent = msg;
+}
+
+function atualizarStats() {
+  document.getElementById('st-ok').textContent   = _stats.ok;
+  document.getElementById('st-erro').textContent = _stats.erro;
+  document.getElementById('st-skip').textContent = _stats.skip;
+}
+
+function atualizarProgresso(atual, total) {
+  const pct = total > 0 ? Math.round((atual / total) * 100) : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${atual} de ${total} posts (${pct}%)`;
+}
+
+/* ════════════════════════════════════════
+   UI HELPERS
+════════════════════════════════════════ */
+function toggleHelp() {
+  const h = document.getElementById('help-box');
+  h.style.display = h.style.display === 'none' ? 'block' : 'none';
+}
+
+function limpar() {
+  document.getElementById('json-input').value = '';
+  document.getElementById('val-status').textContent = '';
+  document.getElementById('card-preview').style.display = 'none';
+  document.getElementById('card-progresso').style.display = 'none';
+  _postsParsed = [];
+}
+
+function carregarExemplo() {
+  const exemplo = {
+    posts: [
+      {
+        conteudo: "Por que Kant distingue fenômeno de nômeno? Qual a relevância dessa distinção para a epistemologia moderna?",
+        tipo: "filosofia",
+        comentarios: [
+          {
+            autor: "Kant_IA",
+            tipo: "explicacao",
+            origem: "ia",
+            conteudo: "A distinção entre fenômeno (Erscheinung) e nômeno (Ding an sich) é o coração da filosofia crítica de Kant. O fenômeno é o objeto tal como aparece à nossa experiência, estruturado pelas formas a priori da sensibilidade (espaço e tempo) e do entendimento (categorias). O nômeno é a coisa-em-si, incognoscível pela razão teórica."
+          }
+        ]
+      },
+      {
+        conteudo: "Prove que √2 é irracional usando redução ao absurdo.",
+        tipo: "matematica"
+      },
+      {
+        conteudo: "Qual a diferença entre 'ser' e 'estar' em português? Como explicar para falantes de inglês?",
+        tipo: "idioma"
+      },
+      {
+        conteudo: "O que é uma falácia ad hominem e como identificá-la em debates filosóficos?",
+        tipo: "logica",
+        comentarios: [
+          {
+            autor: "Lógico_IA",
+            tipo: "aula",
+            origem: "ia",
+            conteudo: "A falácia ad hominem (contra o homem) ocorre quando se ataca a pessoa que faz um argumento em vez do argumento em si. Existem três variantes principais: ad hominem abusivo (ataque ao caráter), circunstancial (insinua motivo oculto) e tu quoque (você também faz)."
+          }
+        ]
+      },
+      {
+        conteudo: "Como funciona a seleção natural de Darwin? Ela é compatível com alguma forma de teleologia?",
+        tipo: "ciencia"
+      }
+    ]
+  };
+  document.getElementById('json-input').value = JSON.stringify(exemplo, null, 2);
+  document.getElementById('val-status').textContent = 'Exemplo carregado.';
+  document.getElementById('val-status').style.color = 'var(--ghost)';
+}
+
+/* Expõe para onclick no HTML (type="module" isola o escopo) */
+Object.assign(window, { validarEPrevisualizar, importarLote, limpar, carregarExemplo, toggleHelp });
+</script>
+</body>
+</html>

@@ -1,0 +1,2845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StudyThread — Feed de Estudos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+<style>
+/* ── RESET TOTAL ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; width: 100%; overflow: hidden; }
+body {
+  font-family: 'Crimson Pro', 'Times New Roman', serif;
+  font-size: 17px;
+  line-height: 1.65;
+  color: #1a1410;
+  background: #2a2218;
+}
+
+/* ── VARIÁVEIS ── */
+:root {
+  --ink: #1a1410; --paper: #f5f0e8; --aged: #e8e0ce; --sepia: #c8b89a;
+  --rust: #8b3a2a; --gold: #c4952a; --sage: #4a6741; --slate: #3d4f5c;
+  --ghost: #7a7060; --margin: #d4c9b0; --shadow: rgba(26,20,16,.22);
+  --mono: 'DM Mono', 'Courier New', monospace;
+  --display: 'Playfair Display', Georgia, serif;
+  --r: 4px;
+  --bar: 56px;   /* altura do masthead */
+  --side: 220px; /* largura da sidebar */
+}
+
+/* ══════════════════════════════════════════
+   LAYOUT — tudo com position:fixed explícito
+   Sem grid, sem flex aninhado, sem ambiguidade
+══════════════════════════════════════════ */
+
+/* Barra superior */
+#bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--bar);
+  z-index: 30;
+  background: var(--ink);
+  border-bottom: 3px double var(--gold);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+}
+#bar-title {
+  font-family: var(--display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--paper);
+  letter-spacing: -.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+#bar-title span { color: var(--gold); font-style: italic; }
+#bar-sub {
+  font-family: var(--mono);
+  font-size: .62rem;
+  color: var(--sepia);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  flex: 1;
+}
+#bar-actions { display: flex; gap: 8px; }
+
+/* Sidebar */
+#side {
+  position: fixed;
+  top: var(--bar); left: 0; bottom: 0;
+  width: var(--side);
+  z-index: 20;
+  background: #221b13;
+  border-right: 1px solid #3d3020;
+  overflow-y: auto;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Área principal do feed */
+#feed {
+  position: fixed;
+  top: var(--bar);
+  left: var(--side);
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  background-image: repeating-linear-gradient(
+    transparent, transparent 27px,
+    rgba(196,149,42,.07) 27px, rgba(196,149,42,.07) 28px
+  );
+}
+
+/* Composer — altura fixa, não cresce */
+#composer {
+  flex-shrink: 0;
+  background: var(--aged);
+  border-bottom: 2px solid var(--margin);
+  padding: 14px 22px;
+}
+
+/* Lista de posts — pega TODO o espaço restante e rola */
+#posts-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 24px 40px;
+}
+
+/* Espaçamento entre cards */
+#posts-list > * + * { margin-top: 14px; }
+
+/* ══════════════════════════════════════════
+   COMPONENTES
+══════════════════════════════════════════ */
+
+/* Sidebar interna */
+.sec-title {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ghost);
+  border-bottom: 1px solid #3d3020;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+.filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--r);
+  cursor: pointer;
+  font-size: .85rem;
+  color: var(--sepia);
+  transition: background .15s;
+}
+.filter-tag:hover { background: #2e2518; }
+.filter-tag.active { background: #3d2f1a; color: var(--gold); }
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.badge-box {
+  background: #1a2318;
+  border: 1px solid #2a3a28;
+  border-radius: var(--r);
+  padding: 12px;
+}
+.badge-num {
+  font-family: var(--display);
+  font-size: 2rem;
+  color: var(--sage);
+  line-height: 1;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+.badge-lbl {
+  font-family: var(--mono);
+  font-size: .58rem;
+  color: var(--ghost);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.badge-detail {
+  font-size: .7rem;
+  color: #5a8a5a;
+  font-family: var(--mono);
+  margin-top: 6px;
+  line-height: 1.7;
+}
+
+/* Composer */
+.composer-lbl {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ghost);
+  margin-bottom: 7px;
+}
+#composer textarea {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--margin);
+  border-radius: var(--r);
+  padding: 9px 11px;
+  font-family: 'Crimson Pro', serif;
+  font-size: .95rem;
+  color: var(--ink);
+  resize: none;
+  height: 72px;
+  outline: none;
+  line-height: 1.55;
+  transition: border-color .2s, box-shadow .2s;
+}
+#composer textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(196,149,42,.12);
+}
+.composer-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+.tipo-sel {
+  flex: 1;
+  background: var(--paper);
+  border: 1px solid var(--margin);
+  border-radius: var(--r);
+  padding: 6px 9px;
+  font-family: var(--mono);
+  font-size: .7rem;
+  color: var(--ink);
+  outline: none;
+  cursor: pointer;
+}
+
+/* Botões */
+.btn {
+  font-family: var(--mono);
+  font-size: .67rem;
+  letter-spacing: .07em;
+  padding: 7px 14px;
+  border-radius: var(--r);
+  border: none;
+  cursor: pointer;
+  transition: all .15s;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.btn-sm { padding: 4px 9px; font-size: .62rem; }
+.btn-primary  { background: var(--ink);  color: var(--paper); }
+.btn-primary:hover  { background: #2e2618; }
+.btn-gold     { background: var(--gold); color: var(--ink); font-weight: 500; }
+.btn-gold:hover     { background: #b5882a; }
+.btn-sage     { background: var(--sage); color: var(--paper); }
+.btn-sage:hover     { background: #3d5835; }
+.btn-ghost    { background: transparent; border: 1px solid var(--margin); color: var(--ghost); }
+.btn-ghost:hover    { background: rgba(0,0,0,.07); color: var(--ink); }
+.btn-rust     { background: var(--rust); color: var(--paper); }
+.btn-rust:hover     { background: #73301f; }
+.btn-dark-ghost {
+  background: transparent;
+  border: 1px solid #4a3d2a;
+  color: #8a7a60;
+  font-family: var(--mono);
+  font-size: .62rem;
+  padding: 4px 9px;
+  border-radius: var(--r);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.btn-dark-ghost:hover { background: #2e2518; color: var(--sepia); }
+
+/* Post card */
+.post-card {
+  background: rgba(255,255,255,.72);
+  border: 1px solid var(--margin);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px var(--shadow), inset 0 1px 0 rgba(255,255,255,.9);
+  overflow: hidden;
+  transition: box-shadow .2s, transform .2s, border-color .2s;
+  cursor: pointer;
+  animation: fadeIn .25s ease both;
+}
+.post-card:hover { box-shadow: 0 4px 14px var(--shadow); transform: translateY(-1px); }
+.post-card.active { border-color: var(--gold); box-shadow: 0 4px 14px var(--shadow), 0 0 0 2px rgba(196,149,42,.2); }
+
+.post-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--margin);
+}
+.tipo-badge {
+  font-family: var(--mono);
+  font-size: .57rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.post-ts { font-family: var(--mono); font-size: .63rem; color: var(--ghost); flex: 1; }
+.status-badge {
+  font-family: var(--mono);
+  font-size: .56rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  flex-shrink: 0;
+}
+.s-inedito    { background: #e8f5e8; color: #2d6a2d; border: 1px solid #b8d8b8; }
+.s-processado { background: #f0ede6; color: var(--ghost); border: 1px solid var(--margin); }
+.s-pendente   { background: #fff8e8; color: #7a5a10; border: 1px solid #e0cc80; }
+
+.post-body {
+  padding: 11px 14px;
+  font-size: .97rem;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.post-foot {
+  padding: 5px 14px 9px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.comment-count { font-family: var(--mono); font-size: .63rem; color: var(--ghost); margin-left: auto; }
+
+/* Tipo cores */
+.tipo-filosofia  { background: #ede8f5; color: #4a2d7a; }
+.tipo-fisica     { background: #e8f4ff; color: #1a3a6a; }
+.tipo-matematica { background: #e8f0f5; color: #1a4a7a; }
+.tipo-idioma     { background: #f5ede8; color: #7a3a1a; }
+.tipo-logica     { background: #e8f5ed; color: #1a7a4a; }
+.tipo-ciencia    { background: #f5f0e8; color: #7a5a1a; }
+.tipo-historia   { background: #ede8e8; color: #7a1a1a; }
+.tipo-literatura { background: #f0ede8; color: #5a3a1a; }
+.tipo-outro      { background: #e8e8e8; color: #4a4a4a; }
+
+/* Paginação */
+.lote-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 0 28px;
+  border-top: 1px dashed var(--margin);
+  margin-top: 14px;
+}
+.lote-progresso { font-family: var(--mono); font-size: .63rem; color: var(--ghost); letter-spacing: .1em; }
+.lote-fim { font-family: var(--mono); font-size: .6rem; color: var(--margin); letter-spacing: .15em; }
+#btn-carregar-mais:disabled { opacity: .5; cursor: wait; }
+
+/* Vazio */
+.empty-feed { text-align: center; padding: 60px 20px; color: var(--ghost); }
+.empty-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: .4; }
+.empty-text { font-family: var(--display); font-style: italic; font-size: 1rem; }
+
+/* ── DRAWER (thread) ── */
+.thread-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,8,4,0);
+  pointer-events: none;
+  z-index: 40;
+  transition: background .25s;
+}
+.thread-overlay.open { background: rgba(10,8,4,.55); pointer-events: all; }
+
+.thread-drawer {
+  position: fixed; top: 0; right: 0;
+  width: 420px; max-width: 95vw; height: 100vh;
+  background: #1c1610;
+  border-left: 1px solid #4a3d2a;
+  display: flex; flex-direction: column;
+  z-index: 50;
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.32,0,.67,0);
+  box-shadow: -8px 0 40px rgba(0,0,0,.5);
+}
+.thread-drawer.open { transform: translateX(0); transition-timing-function: cubic-bezier(.33,1,.68,1); }
+
+.drawer-header {
+  flex-shrink: 0;
+  padding: 14px 18px;
+  background: #221b13;
+  border-bottom: 1px solid #3d3020;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.drawer-header-text { flex: 1; min-width: 0; }
+.drawer-title { font-family: var(--display); font-size: .95rem; color: var(--sepia); font-style: italic; margin-bottom: 3px; }
+.drawer-preview { font-size: .77rem; color: var(--ghost); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.drawer-close { background: transparent; border: 1px solid #4a3d2a; color: #7a6a50; font-size: .78rem; padding: 4px 8px; border-radius: var(--r); cursor: pointer; flex-shrink: 0; font-family: var(--mono); }
+.drawer-close:hover { background: #2e2518; color: var(--sepia); }
+
+.comments-scroll { flex: 1; overflow-y: auto; padding: 12px 12px 0; }
+
+.no-comments { color: #4a4030; font-family: var(--display); font-style: italic; font-size: .82rem; padding: 18px 0; text-align: center; }
+
+/* Comentários */
+.comment-node { margin-bottom: 9px; animation: fadeIn .22s ease both; }
+.comment-node.nested { margin-left: 14px; border-left: 2px solid #3d3020; padding-left: 11px; }
+
+.c-bubble { background: #252018; border: 1px solid #3d3020; border-radius: 5px; overflow: hidden; transition: border-color .2s; }
+.c-bubble:hover { border-color: #5a4a30; }
+.c-head { display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: #1e1810; border-bottom: 1px solid #3d3020; flex-wrap: wrap; }
+.c-autor { font-family: var(--mono); font-size: .67rem; color: var(--gold); flex: 1; min-width: 0; }
+.c-tipo { font-family: var(--mono); font-size: .55rem; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; letter-spacing: .08em; }
+.ct-resposta   { background: #1e2d3d; color: #6a9abf; }
+.ct-aula       { background: #2d1e3d; color: #9a6abf; }
+.ct-explicacao { background: #1e3d2d; color: #6abf9a; }
+.ct-exercicio  { background: #3d2d1e; color: #bf9a6a; }
+.ct-correcao   { background: #3d1e1e; color: #bf6a6a; }
+.ct-sintese    { background: #2d3d1e; color: #9abf6a; }
+.c-origin { font-family: var(--mono); font-size: .52rem; padding: 1px 5px; border-radius: 10px; text-transform: uppercase; letter-spacing: .07em; }
+.o-ia     { background: #1e2a1e; color: #5a8a5a; border: 1px solid #2a3a2a; }
+.o-manual { background: #2a1e1e; color: #8a5a5a; border: 1px solid #3a2a2a; }
+.c-body { padding: 8px 10px; font-size: .86rem; color: #bfb090; line-height: 1.65; font-family: 'Crimson Pro', serif; }
+.c-foot { padding: 5px 10px; display: flex; gap: 6px; align-items: center; border-top: 1px solid #3d3020; }
+.c-ts   { font-family: var(--mono); font-size: .55rem; color: #4a4030; margin-left: auto; }
+
+.inline-composer { margin-top: 6px; background: #1a1510; border: 1px dashed #4a3d2a; border-radius: var(--r); padding: 8px 10px; display: none; }
+.inline-composer.open { display: block; }
+.inline-composer textarea { width: 100%; background: #252018; border: 1px solid #4a3d2a; border-radius: var(--r); padding: 6px 8px; font-family: 'Crimson Pro', serif; font-size: .82rem; color: #bfb090; resize: vertical; min-height: 52px; outline: none; line-height: 1.5; }
+.inline-composer textarea:focus { border-color: var(--gold); }
+.inline-row { display: flex; gap: 6px; margin-top: 5px; align-items: center; }
+.dark-sel { flex: 1; background: #252018; border: 1px solid #4a3d2a; border-radius: var(--r); padding: 5px 7px; font-family: var(--mono); font-size: .62rem; color: #8a7a60; outline: none; cursor: pointer; }
+
+/* Mini composer dentro do drawer */
+.mini-composer { flex-shrink: 0; border-top: 1px solid #3d3020; padding: 11px 13px; background: #1c1610; }
+.mini-lbl { font-family: var(--mono); font-size: .58rem; letter-spacing: .16em; text-transform: uppercase; color: #5a4d3a; margin-bottom: 6px; }
+.mini-composer textarea { width: 100%; background: #252018; border: 1px solid #4a3d2a; border-radius: var(--r); padding: 7px 9px; font-family: 'Crimson Pro', serif; font-size: .84rem; color: #bfb090; resize: vertical; min-height: 60px; outline: none; line-height: 1.5; transition: border-color .2s; }
+.mini-composer textarea:focus { border-color: var(--gold); }
+.mini-row { display: flex; gap: 7px; margin-top: 6px; align-items: center; }
+
+/* ── MODAIS ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(10,8,4,.8); backdrop-filter: blur(3px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--paper); border: 1px solid var(--margin); border-radius: 6px; box-shadow: 0 20px 60px rgba(0,0,0,.5); max-width: 680px; width: 100%; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; }
+.modal-head { padding: 14px 18px; border-bottom: 2px solid var(--margin); display: flex; align-items: center; gap: 12px; background: var(--aged); flex-shrink: 0; }
+.modal-title { font-family: var(--display); font-size: 1.2rem; color: var(--ink); flex: 1; }
+.modal-body { padding: 16px 18px; overflow-y: auto; flex: 1; }
+.modal-foot { padding: 10px 18px; border-top: 1px solid var(--margin); display: flex; gap: 9px; background: var(--aged); flex-wrap: wrap; flex-shrink: 0; }
+.json-block { background: #1a1410; border: 1px solid #3d3020; border-radius: var(--r); padding: 12px; font-family: var(--mono); font-size: .72rem; color: #9a8a60; line-height: 1.7; max-height: 340px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
+.import-ta { width: 100%; background: #1a1410; border: 1px solid var(--margin); border-radius: var(--r); padding: 10px; font-family: var(--mono); font-size: .72rem; color: #9a8a60; resize: vertical; min-height: 160px; outline: none; line-height: 1.7; }
+.import-ta:focus { border-color: var(--gold); }
+.help-text { font-size: .8rem; color: var(--ghost); font-family: 'Crimson Pro', serif; font-style: italic; line-height: 1.5; margin-bottom: 10px; }
+
+/* ── TOAST ── */
+.toast-wrap { position: fixed; bottom: 20px; right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 7px; pointer-events: none; }
+.toast { font-family: var(--mono); font-size: .68rem; padding: 9px 14px; border-radius: var(--r); box-shadow: 0 4px 20px rgba(0,0,0,.4); pointer-events: all; transform: translateX(120%); transition: transform .3s cubic-bezier(.34,1.56,.64,1); max-width: 300px; letter-spacing: .05em; }
+.toast.show     { transform: translateX(0); }
+.toast.success  { background: var(--sage);  color: var(--paper); }
+.toast.warning  { background: var(--gold);  color: var(--ink); }
+.toast.info     { background: var(--slate); color: var(--paper); }
+.toast.error    { background: var(--rust);  color: var(--paper); }
+
+/* ── ANIMAÇÕES ── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse  { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #4a3d2a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #6a5a3a; }
+
+/* ── HASHTAGS ── */
+.tags-input-wrap {
+  margin-top: 8px;
+  position: relative;
+}
+.tags-input-wrap input {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--margin);
+  border-radius: var(--r);
+  padding: 7px 11px;
+  font-family: var(--mono);
+  font-size: .78rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .2s;
+}
+.tags-input-wrap input:focus { border-color: var(--gold); }
+.tags-input-wrap input::placeholder { color: var(--ghost); }
+
+/* Chips de tag nos cards */
+.tag-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 14px 10px; }
+.tag-chip {
+  font-family: var(--mono);
+  font-size: .62rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(196,149,42,.12);
+  color: var(--gold);
+  border: 1px solid rgba(196,149,42,.25);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  letter-spacing: .04em;
+}
+.tag-chip:hover { background: rgba(196,149,42,.25); color: #a07820; }
+.tag-chip.active { background: var(--gold); color: var(--ink); }
+
+/* Tags na sidebar */
+.tag-sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+  border-radius: var(--r);
+  cursor: pointer;
+  font-size: .82rem;
+  color: var(--sepia);
+  transition: background .15s;
+  gap: 8px;
+}
+.tag-sidebar-item:hover  { background: #2e2518; }
+.tag-sidebar-item.active { background: #3d2f1a; color: var(--gold); }
+.tag-sidebar-name { font-family: var(--mono); font-size: .72rem; color: inherit; flex: 1; }
+.tag-sidebar-count {
+  font-family: var(--mono);
+  font-size: .6rem;
+  background: rgba(196,149,42,.15);
+  color: var(--gold);
+  border-radius: 8px;
+  padding: 1px 6px;
+  flex-shrink: 0;
+}
+.tag-sidebar-item.active .tag-sidebar-count { background: rgba(255,255,255,.2); color: var(--ink); }
+
+/* Autocomplete dropdown */
+.tag-autocomplete {
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  background: var(--aged);
+  border: 1px solid var(--margin);
+  border-radius: var(--r);
+  box-shadow: 0 4px 16px var(--shadow);
+  z-index: 50;
+  max-height: 180px;
+  overflow-y: auto;
+  display: none;
+}
+.tag-autocomplete.open { display: block; }
+.tag-ac-item {
+  padding: 7px 12px;
+  font-family: var(--mono);
+  font-size: .75rem;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.tag-ac-item:hover { background: rgba(196,149,42,.1); }
+.tag-ac-count { font-size: .65rem; color: var(--ghost); }
+
+/* Tag ativa no filtro — barra indicadora no feed */
+#tag-filtro-bar {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 24px;
+  background: rgba(196,149,42,.1);
+  border-bottom: 1px solid rgba(196,149,42,.2);
+  font-family: var(--mono);
+  font-size: .7rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+#tag-filtro-bar.visible { display: flex; }
+#tag-filtro-bar button {
+  background: transparent;
+  border: none;
+  color: var(--ghost);
+  cursor: pointer;
+  font-size: .75rem;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-left: auto;
+}
+#tag-filtro-bar button:hover { color: var(--rust); }
+@media (max-width: 640px) {
+  :root { --side: 0px; }
+  #side { display: none; }
+  .thread-drawer { width: 100vw; }
+}
+
+/* ── CONTROLE DE FONTE ── */
+#font-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--r);
+  padding: 2px 6px;
+}
+#font-ctrl button {
+  background: transparent;
+  border: none;
+  color: var(--sepia);
+  font-family: var(--mono);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 2px;
+  transition: background .15s, color .15s;
+  line-height: 1;
+}
+#font-ctrl button:hover { background: rgba(196,149,42,.2); color: var(--gold); }
+#font-ctrl button:active { transform: scale(.92); }
+#font-val {
+  font-family: var(--mono);
+  font-size: .62rem;
+  color: var(--ghost);
+  min-width: 30px;
+  text-align: center;
+  letter-spacing: .05em;
+}
+/* ── GERENCIAR ASSUNTOS ── */
+.assunto-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: var(--aged);
+  border: 1px solid var(--margin);
+  border-radius: var(--r);
+  font-family: 'Crimson Pro', serif;
+  font-size: .9rem;
+  color: var(--ink);
+}
+.assunto-item .dot-p { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.assunto-item .assunto-label { flex: 1; }
+.assunto-item .assunto-padrao { font-family: var(--mono); font-size: .55rem; color: var(--ghost); text-transform: uppercase; letter-spacing: .08em; }
+.btn-rm { background: transparent; border: none; color: var(--ghost); cursor: pointer; font-size: .8rem; padding: 2px 5px; border-radius: 2px; transition: color .15s, background .15s; flex-shrink: 0; }
+.btn-rm:hover { color: var(--rust); background: rgba(139,58,42,.08); }
+
+/* ── EDIÇÃO ── */
+.btn-edit {
+  background: transparent;
+  border: none;
+  color: #5a4d3a;
+  font-family: var(--mono);
+  font-size: .6rem;
+  padding: 3px 6px;
+  border-radius: var(--r);
+  cursor: pointer;
+  letter-spacing: .05em;
+  transition: color .15s, background .15s;
+}
+.btn-edit:hover { color: var(--gold); background: rgba(196,149,42,.1); }
+/* Links renderizados dentro de posts e comentários */
+.post-body a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; word-break: break-all; }
+.post-body a:hover { opacity: .75; }
+.c-body a { color: #9a8060; text-decoration: underline; text-underline-offset: 2px; word-break: break-all; }
+.c-body a:hover { opacity: .75; }
+/* ── PERFIS ── */
+.perfil-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ghost);
+  cursor: pointer;
+  transition: all .15s;
+}
+.perfil-tab:hover { color: var(--ink); }
+.perfil-tab.active { color: var(--gold); border-bottom-color: var(--gold); background: rgba(196,149,42,.05); }
+
+.field-lbl {
+  display: block;
+  font-family: var(--mono);
+  font-size: .6rem;
+  color: var(--ghost);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-bottom: 5px;
+}
+.field-input {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--margin);
+  border-radius: var(--r);
+  padding: 7px 10px;
+  font-family: 'Crimson Pro', serif;
+  font-size: .92rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .2s;
+}
+.field-input:focus { border-color: var(--gold); }
+.field-ta {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--margin);
+  border-radius: var(--r);
+  padding: 7px 10px;
+  font-family: 'Crimson Pro', serif;
+  font-size: .92rem;
+  color: var(--ink);
+  resize: vertical;
+  outline: none;
+  line-height: 1.55;
+  transition: border-color .2s;
+}
+.field-ta:focus { border-color: var(--gold); }
+
+.perfil-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--aged);
+  border: 1px solid var(--margin);
+  border-radius: var(--r);
+  transition: border-color .15s, box-shadow .15s;
+  cursor: pointer;
+}
+.perfil-card:hover { border-color: var(--gold); box-shadow: 0 2px 8px var(--shadow); }
+.perfil-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.perfil-info { flex: 1; min-width: 0; }
+.perfil-nome { font-family: var(--mono); font-size: .78rem; color: var(--ink); font-weight: 500; }
+.perfil-area { font-size: .8rem; color: var(--ghost); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.perfil-ia-badge {
+  font-family: var(--mono);
+  font-size: .58rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(196,149,42,.12);
+  color: var(--gold);
+  border: 1px solid rgba(196,149,42,.2);
+  flex-shrink: 0;
+}
+
+/* Avatar chip no post/comment header */
+.autor-avatar {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.autor-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .6rem;
+  flex-shrink: 0;
+}/* ── CURTIDAS E RECOMENDAÇÃO ── */
+.btn-curtir {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid var(--margin);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-family: var(--mono);
+  font-size: .65rem;
+  color: var(--ghost);
+  cursor: pointer;
+  transition: all .2s;
+  line-height: 1;
+}
+.btn-curtir:hover { border-color: #e07070; color: #c04040; background: rgba(200,60,60,.06); }
+.btn-curtir.curtido { border-color: #e07070; color: #c04040; background: rgba(200,60,60,.1); }
+.btn-curtir .heart { font-size: .8rem; transition: transform .2s; }
+.btn-curtir:hover .heart, .btn-curtir.curtido .heart { transform: scale(1.25); }
+
+.score-badge {
+  font-family: var(--mono);
+  font-size: .58rem;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(196,149,42,.1);
+  color: var(--gold);
+  border: 1px solid rgba(196,149,42,.2);
+}
+
+/* Aba de recomendação no feed */
+.feed-tabs {
+  display: flex;
+  flex-shrink: 0;
+  border-bottom: 2px solid var(--margin);
+  background: var(--aged);
+}
+.feed-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ghost);
+  cursor: pointer;
+  transition: all .15s;
+}
+.feed-tab:hover { color: var(--ink); }
+.feed-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* Card de recomendação — destaque sutil */
+.post-card.recomendado { border-left: 3px solid var(--gold); }
+.rec-why {
+  padding: 3px 14px 6px;
+  font-family: var(--mono);
+  font-size: .58rem;
+  color: var(--gold);
+  opacity: .8;
+  letter-spacing: .04em;
+}
+/* ══════════════════════════════════════
+   GAMIFICAÇÃO — HUD, XP, BADGES
+══════════════════════════════════════ */
+#game-hud { font-family: var(--mono); font-size: .7rem; }
+.hud-streak {
+  background: rgba(255,100,0,.15);
+  border: 1px solid rgba(255,100,0,.3);
+  border-radius: 20px;
+  padding: 3px 10px;
+  color: #ff8040;
+  font-size: .75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.hud-xp-wrap { flex: 1; min-width: 0; }
+.hud-nivel { font-size: .6rem; color: var(--sepia); letter-spacing: .1em; text-transform: uppercase; }
+.hud-bar-wrap { background: rgba(255,255,255,.1); border-radius: 4px; height: 5px; margin: 3px 0; overflow: hidden; }
+.hud-bar { height: 100%; background: linear-gradient(90deg, var(--gold), #e8b840); border-radius: 4px; transition: width .5s ease; }
+.hud-xp-txt { font-size: .58rem; color: var(--ghost); }
+.hud-btn { background: transparent; border: 1px solid rgba(255,255,255,.15); border-radius: var(--r); color: var(--sepia); font-size: .85rem; padding: 3px 8px; cursor: pointer; transition: all .15s; }
+.hud-btn:hover { background: rgba(196,149,42,.2); color: var(--gold); }
+
+/* XP Toast */
+.xp-toast {
+  position: fixed; bottom: 80px; right: 24px; z-index: 300;
+  background: #1a2a1a; border: 1px solid var(--sage);
+  color: var(--sage); font-family: var(--mono); font-size: .7rem;
+  padding: 7px 14px; border-radius: 20px;
+  transform: translateY(20px); opacity: 0;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+.xp-toast.show { transform: translateY(0); opacity: 1; }
+
+/* Badge Toast */
+.badge-toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(30px);
+  z-index: 300; background: var(--ink); border: 2px solid var(--gold);
+  border-radius: 12px; padding: 14px 20px;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; transition: all .4s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  pointer-events: none;
+}
+.badge-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.badge-toast-emoji { font-size: 2rem; }
+.badge-toast-titulo { font-family: var(--mono); font-size: .62rem; color: var(--gold); letter-spacing: .12em; text-transform: uppercase; }
+.badge-toast-nome { font-family: var(--display); font-size: 1rem; color: var(--paper); }
+
+/* Perfil do estudante */
+.perfil-game-head { display: flex; gap: 16px; align-items: center; padding: 4px 0 16px; border-bottom: 1px solid var(--margin); margin-bottom: 16px; }
+.perfil-game-nivel { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), #e8b840); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 1.8rem; font-weight: 700; color: var(--ink); flex-shrink: 0; box-shadow: 0 4px 16px rgba(196,149,42,.4); }
+.perfil-game-info { flex: 1; min-width: 0; }
+.perfil-game-titulo { font-family: var(--display); font-size: 1.2rem; color: var(--ink); }
+.perfil-game-xp { font-family: var(--mono); font-size: .68rem; color: var(--ghost); margin-top: 2px; }
+.perfil-game-secao { margin-bottom: 20px; }
+.perfil-game-secao-titulo { font-family: var(--mono); font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: var(--ghost); border-bottom: 1px solid var(--margin); padding-bottom: 6px; margin-bottom: 10px; }
+
+/* Gráfico semanal */
+.grafico-semanal { display: flex; gap: 6px; align-items: flex-end; height: 100px; }
+.grafico-col { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+.grafico-barra { background: linear-gradient(180deg, var(--gold), #c47820); border-radius: 3px 3px 0 0; width: 100%; min-height: 3px; transition: height .4s ease; }
+.grafico-xp { font-family: var(--mono); font-size: .55rem; color: var(--ghost); }
+.grafico-label { font-family: var(--mono); font-size: .55rem; color: var(--margin); }
+
+/* Mapa de calor */
+.mapa-calor { display: grid; grid-template-columns: repeat(14, 1fr); gap: 3px; }
+.calor-dia { aspect-ratio: 1; border-radius: 2px; cursor: default; transition: transform .1s; }
+.calor-dia:hover { transform: scale(1.3); }
+
+/* Área XP bars */
+.area-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.area-nome { font-family: var(--mono); font-size: .68rem; color: var(--ink); min-width: 80px; text-transform: capitalize; }
+.area-bar-wrap { flex: 1; background: var(--margin); border-radius: 4px; height: 6px; overflow: hidden; }
+.area-bar { height: 100%; border-radius: 4px; transition: width .5s; }
+.area-xp { font-family: var(--mono); font-size: .62rem; color: var(--ghost); min-width: 50px; text-align: right; }
+
+/* Badges grid */
+.badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.badge-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 8px; background: var(--aged); border: 1px solid var(--margin); border-radius: var(--r); text-align: center; transition: all .15s; }
+.badge-item:hover { border-color: var(--gold); }
+.badge-item.badge-locked { opacity: .35; filter: grayscale(1); }
+.badge-emoji { font-size: 1.5rem; }
+.badge-nome { font-family: var(--mono); font-size: .6rem; color: var(--ghost); letter-spacing: .05em; }
+.badge-lock { font-size: .7rem; }
+
+/* Botão flashcard no card */
+.btn-fc { background: transparent; border: 1px solid var(--margin); border-radius: var(--r); color: var(--ghost); font-family: var(--mono); font-size: .6rem; padding: 3px 7px; cursor: pointer; transition: all .15s; }
+.btn-fc:hover { border-color: var(--gold); color: var(--gold); background: rgba(196,149,42,.08); }
+
+/* ══════════════════════════════════════
+   FLASHCARD MODAL
+══════════════════════════════════════ */
+.fc-face {
+  width: 100%; min-height: 160px;
+  background: var(--paper);
+  border-radius: 8px; padding: 24px;
+  font-family: var(--display); font-size: 1.15rem; line-height: 1.6;
+  color: var(--ink); text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 20px var(--shadow);
+  border: 2px solid var(--margin);
+  word-break: break-word;
+}
+.fc-frente { font-style: italic; font-size: 1.1rem; }
+.fc-verso { margin-top: 12px; }
+.fc-verso-conteudo { font-family: var(--font-body,'Crimson Pro',serif); font-size: .9rem; text-align: left; line-height: 1.65; max-height: 200px; overflow-y: auto; }
+.fc-autor { font-family: var(--mono); font-size: .65rem; color: var(--ghost); text-align: right; margin-top: 8px; }
+.fc-btns-q { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.fc-btn-q { font-family: var(--mono); font-size: .65rem; padding: 8px 14px; border-radius: var(--r); border: none; cursor: pointer; transition: all .15s; text-transform: uppercase; letter-spacing: .06em; }
+.fc-q0 { background: #5a1a1a; color: #ff8080; }
+.fc-q1 { background: #5a3a1a; color: #ffb060; }
+.fc-q2 { background: #4a4a1a; color: #e0e060; }
+.fc-q3 { background: #1a4a1a; color: #80e080; }
+.fc-q4 { background: #1a3a5a; color: #80c0ff; }
+.fc-q5 { background: #3a1a5a; color: #c080ff; }
+.fc-btn-q:hover { filter: brightness(1.3); transform: translateY(-1px); }
+.fc-resultado { text-align: center; padding: 10px 0; }
+.fc-resultado-emoji { font-size: 2.5rem; margin-bottom: 8px; }
+.fc-resultado-pct { font-family: var(--display); font-size: 2rem; color: var(--gold); }
+.fc-resultado-txt { font-family: var(--mono); font-size: .75rem; color: var(--ghost); margin-top: 4px; }
+.fc-resultado-sub { font-family: var(--mono); font-size: .62rem; color: var(--margin); margin-top: 8px; }
+
+/* ══════════════════════════════════════
+   QUIZ MODAL
+══════════════════════════════════════ */
+.quiz-pergunta-txt { font-family: var(--display); font-size: 1.05rem; font-style: italic; color: var(--ink); line-height: 1.6; margin-bottom: 4px; }
+.quiz-autor-txt { font-family: var(--mono); font-size: .62rem; color: var(--ghost); margin-bottom: 14px; }
+.quiz-opcoes { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.quiz-opcao { background: var(--aged); border: 1px solid var(--margin); border-radius: var(--r); padding: 10px 14px; font-family: 'Crimson Pro',serif; font-size: .9rem; color: var(--ink); cursor: pointer; text-align: left; line-height: 1.5; transition: all .15s; }
+.quiz-opcao:hover:not(:disabled) { border-color: var(--gold); background: rgba(196,149,42,.08); }
+.quiz-opcao:disabled { cursor: default; }
+.quiz-correta { border-color: var(--sage) !important; background: rgba(74,103,65,.15) !important; color: var(--sage) !important; }
+.quiz-errada  { border-color: var(--rust)  !important; background: rgba(139,58,42,.15)  !important; color: var(--rust)  !important; }
+.quiz-explicacao { padding: 10px 12px; border-radius: var(--r); font-size: .85rem; font-family: 'Crimson Pro',serif; line-height: 1.6; margin-bottom: 10px; }
+.quiz-ok  { background: rgba(74,103,65,.1);  border: 1px solid rgba(74,103,65,.3);  color: var(--ink); }
+.quiz-nok { background: rgba(139,58,42,.1);  border: 1px solid rgba(139,58,42,.3);  color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- BARRA SUPERIOR -->
+<header id="bar">
+  <div id="bar-title">Study<span>Thread</span></div>
+  <!-- HUD de gamificação -->
+  <div id="game-hud" style="display:flex;align-items:center;gap:8px;flex:1;"></div>
+  <div id="bar-actions">
+    <div id="font-ctrl">
+      <button onclick="mudarFonte(-1)" title="Diminuir fonte">A−</button>
+      <span id="font-val">17px</span>
+      <button onclick="mudarFonte(1)"  title="Aumentar fonte">A+</button>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="abrirGerenciarPerfis()">👤 Perfis</button>
+    <button class="btn btn-ghost btn-sm" onclick="window.open('studythread-perfis.html','_blank')">📋 Página de Perfis</button>
+    <button class="btn btn-ghost btn-sm" id="btn-revisao" onclick="window.open('studythread-importar-lote.html','_blank')">📦 Importar Lote</button>
+    <button class="btn btn-sage btn-sm" onclick="abrirExportar()">⬆ Exportar</button>
+    <button class="btn btn-gold btn-sm" onclick="abrirImportar()">⬇ Importar IA</button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside id="side">
+  <div>
+    <div class="sec-title">Inéditos</div>
+    <div class="badge-box">
+      <div class="badge-num" id="cnt-total">0</div>
+      <div class="badge-lbl">conteúdos inéditos</div>
+      <div class="badge-detail">
+        <div id="cnt-posts">Posts s/ resposta: 0</div>
+        <div id="cnt-comments">Comentários manuais: 0</div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between;">
+      Área de Estudo
+      <button onclick="abrirGerenciarAssuntos()" title="Gerenciar assuntos" style="background:transparent;border:none;color:var(--ghost);cursor:pointer;font-size:.75rem;padding:2px 4px;border-radius:2px;transition:color .15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--ghost)'">⚙</button>
+    </div>
+    <div id="filter-tags-list" style="display:flex;flex-direction:column;gap:3px;"></div>
+  </div>
+  <div>
+    <div class="sec-title"># Hashtags</div>
+    <div id="tags-sidebar" style="display:flex;flex-direction:column;gap:2px;">
+      <div style="font-family:var(--mono);font-size:.65rem;color:#4a4030;">Nenhuma tag ainda.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:auto;">
+    <div class="sec-title">Firebase</div>
+    <div style="font-size:.66rem;color:#4a4030;font-family:var(--mono);line-height:1.7;">
+      Modo: <span style="color:#6a8a5a;">Firestore</span>
+    </div>
+  </div>
+</aside>
+
+<!-- FEED -->
+<div id="feed">
+  <!-- Abas: Recentes / Para Você -->
+  <div class="feed-tabs">
+    <button class="feed-tab active" id="tab-recentes" onclick="mudarFeedTab('recentes')">🕐 Recentes</button>
+    <button class="feed-tab" id="tab-recomendados" onclick="mudarFeedTab('recomendados')">⭐ Para Você</button>
+    <button class="feed-tab" id="tab-curtidos" onclick="mudarFeedTab('curtidos')">❤ Curtidos</button>
+  </div>
+  <div id="composer">
+    <div class="composer-lbl">✦ Novo Post de Estudo</div>
+    <textarea id="np-texto" placeholder="Formule uma questão, problema ou tema para estudo…"></textarea>
+    <div class="tags-input-wrap">
+      <input type="text" id="np-tags" placeholder="#nietzsche #moral #filosofia — separe por espaço ou vírgula" autocomplete="off" oninput="onTagsInput()" onkeydown="onTagsKeydown(event)" />
+      <div class="tag-autocomplete" id="tag-ac"></div>
+    </div>
+    <div class="composer-row">
+      <select class="tipo-sel" id="np-perfil" title="Quem está postando"></select>
+      <select class="tipo-sel" id="np-tipo"></select>
+      <button class="btn btn-primary" onclick="criarPost()">Publicar Post</button>
+    </div>
+  </div>
+  <div id="tag-filtro-bar">
+    <span id="tag-filtro-label"></span>
+    <button onclick="limparFiltroTag()" title="Limpar filtro">✕</button>
+  </div>
+  <div id="posts-list"></div>
+</div>
+
+<!-- DRAWER -->
+<div class="thread-overlay" id="thread-overlay" onclick="fecharDrawer()"></div>
+<div class="thread-drawer" id="thread-drawer">
+  <div class="drawer-header">
+    <div class="drawer-header-text">
+      <div class="drawer-title" id="drawer-title">Thread</div>
+      <div class="drawer-preview" id="drawer-preview"></div>
+    </div>
+    <button class="drawer-close" onclick="fecharDrawer()">✕ Fechar</button>
+  </div>
+  <div class="comments-scroll" id="comments-scroll"></div>
+  <div class="mini-composer">
+    <div class="mini-lbl">✦ Adicionar comentário</div>
+    <textarea id="mini-ta" placeholder="Escreva seu comentário…"></textarea>
+    <div class="mini-row">
+      <select class="dark-sel" id="mini-perfil" title="Quem está comentando"></select>
+      <select class="dark-sel" id="mini-tipo">
+        <option value="resposta">Resposta</option>
+        <option value="aula">Aula</option>
+        <option value="explicacao">Explicação</option>
+        <option value="exercicio">Exercício</option>
+        <option value="correcao">Correção</option>
+        <option value="sintese">Síntese</option>
+      </select>
+      <button class="btn btn-gold btn-sm" onclick="adicionarManualPost()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EXPORTAR -->
+<div class="modal-overlay" id="modal-exportar">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">⬆ Exportar Inéditos para IA</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-exportar')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="help-text">Cole o JSON abaixo em qualquer IA externa. Após confirmar, os itens ficam marcados como "processado_pendente".</p>
+      <div class="json-block" id="exportar-json">—</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-sage"  onclick="copiarExportacao()">📋 Copiar JSON</button>
+      <button class="btn btn-gold"  onclick="confirmarExportacao()">✓ Marcar Exportados</button>
+      <button class="btn btn-ghost" onclick="fecharModal('modal-exportar')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IMPORTAR -->
+<div class="modal-overlay" id="modal-importar">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title">⬇ Importar Respostas da IA</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-importar')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="help-text">Cole o JSON de respostas. Mantenha o tarefaId de cada item.</p>
+      <textarea class="import-ta" id="importar-json" placeholder='{"respostas":[{"tarefaId":"task_post_xxx","autor":"IA","tipo":"explicacao","conteudo":"..."}]}'></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-gold"  onclick="executarImportacao()">⬇ Importar</button>
+      <button class="btn btn-ghost" onclick="fecharModal('modal-importar')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="modal-overlay" id="modal-editar">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="edit-modal-title">✏ Editar</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-editar')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="edit-tipo-row" style="display:none;margin-bottom:10px;">
+        <label style="font-family:var(--mono);font-size:.65rem;color:var(--ghost);text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:6px;">Tipo</label>
+        <select class="tipo-sel" id="edit-tipo" style="width:100%;"></select>
+      </div>
+      <label style="font-family:var(--mono);font-size:.65rem;color:var(--ghost);text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:6px;">Conteúdo</label>
+      <textarea id="edit-conteudo" style="width:100%;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:10px 12px;font-family:'Crimson Pro',serif;font-size:1rem;color:var(--ink);resize:vertical;min-height:120px;outline:none;line-height:1.65;transition:border-color .2s;" placeholder="Edite o conteúdo…"></textarea>
+      <div id="edit-tags-row" style="display:none;margin-top:10px;">
+        <label style="font-family:var(--mono);font-size:.65rem;color:var(--ghost);text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:6px;">Hashtags</label>
+        <input type="text" id="edit-tags" style="width:100%;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:7px 11px;font-family:var(--mono);font-size:.78rem;color:var(--ink);outline:none;transition:border-color .2s;" placeholder="#tag1 #tag2" />
+      </div>
+      <div style="font-family:var(--mono);font-size:.62rem;color:var(--ghost);margin-top:8px;">
+        💡 Links serão automaticamente clicáveis. Cole URLs diretamente no texto.
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-gold" onclick="salvarEdicao()">✓ Salvar alterações</button>
+      <button class="btn btn-ghost" onclick="fecharModal('modal-editar')">Cancelar</button>
+      <button class="btn btn-rust" id="btn-excluir" onclick="excluirItem()" style="margin-left:auto;">🗑 Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GERENCIAR PERFIS -->
+<div class="modal-overlay" id="modal-perfis">
+  <div class="modal" style="max-width:700px;">
+    <div class="modal-head">
+      <span class="modal-title">👤 Perfis de Personagens</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-perfis')">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <div style="display:flex;border-bottom:1px solid var(--margin);">
+        <button class="perfil-tab active" id="tab-lista" onclick="mudarTabPerfil('lista')">Lista de Perfis</button>
+        <button class="perfil-tab" id="tab-lote"  onclick="mudarTabPerfil('lote')">Cadastro em Lote</button>
+      </div>
+
+      <!-- ABA: LISTA -->
+      <div id="tab-content-lista" style="padding:18px 20px;">
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <input type="text" id="perfil-busca" placeholder="Buscar perfil…"
+            oninput="renderListaPerfis()"
+            style="flex:1;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:7px 11px;font-family:'Crimson Pro',serif;font-size:.9rem;color:var(--ink);outline:none;" />
+          <button class="btn btn-gold" onclick="abrirEditarPerfil(null)">+ Novo perfil</button>
+        </div>
+        <div id="perfis-lista" style="display:flex;flex-direction:column;gap:6px;max-height:400px;overflow-y:auto;"></div>
+      </div>
+
+      <!-- ABA: LOTE -->
+      <div id="tab-content-lote" style="padding:18px 20px;display:none;">
+        <p style="font-family:'Crimson Pro',serif;font-style:italic;font-size:.85rem;color:var(--ghost);margin-bottom:12px;">
+          Cole um JSON com um array de perfis. Cada perfil pode ter os campos abaixo. Apenas <code style="font-family:var(--mono);font-size:.75rem;background:rgba(196,149,42,.1);padding:1px 4px;border-radius:2px;">nome</code> é obrigatório.
+        </p>
+        <pre style="background:#1a1410;border:1px solid #3d3020;border-radius:var(--r);padding:10px 12px;font-family:var(--mono);font-size:.68rem;color:#9a8a60;overflow-x:auto;margin-bottom:12px;line-height:1.7;">[
+  {
+    "nome": "Nietzsche_IA",
+    "apelido": "Friedrich",
+    "area": "Filosofia, Ética, Crítica Cultural",
+    "pensamento": "Perspectivista, antimoralista, defensor da vontade de poder e do além-do-homem",
+    "estilo": "Aforístico, provocador, metafórico, usa parábolas e ironias",
+    "ia_responsavel": "Claude",
+    "modelo": "claude-opus-4-6",
+    "instrucao_sistema": "Responda sempre na primeira pessoa como Nietzsche. Use linguagem forte, aforismos e metáforas. Critique a moral do rebanho quando pertinente."
+  }
+]</pre>
+        <textarea id="perfis-lote-json" rows="8" placeholder="Cole o JSON aqui…"
+          style="width:100%;background:#1a1410;border:1px solid var(--margin);border-radius:var(--r);padding:10px 12px;font-family:var(--mono);font-size:.72rem;color:#9a8a60;resize:vertical;outline:none;line-height:1.7;"></textarea>
+        <button class="btn btn-gold" style="margin-top:10px;width:100%;" onclick="importarPerfisLote()">⬇ Importar Perfis</button>
+        <div id="lote-resultado" style="margin-top:10px;font-family:var(--mono);font-size:.7rem;color:var(--ghost);"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span id="perfis-count" style="font-family:var(--mono);font-size:.62rem;color:var(--ghost);"></span>
+      <button class="btn btn-ghost" onclick="fecharModal('modal-perfis')" style="margin-left:auto;">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR/CRIAR PERFIL -->
+<div class="modal-overlay" id="modal-perfil-edit">
+  <div class="modal" style="max-width:580px;">
+    <div class="modal-head">
+      <span class="modal-title" id="perfil-edit-title">👤 Novo Perfil</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-perfil-edit')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+        <div style="grid-column:1/-1;">
+          <label class="field-lbl">Nome / ID do personagem *</label>
+          <input type="text" id="pe-nome" placeholder="Ex: Nietzsche_IA" class="field-input" />
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--ghost);margin-top:3px;">Este nome aparece como autor nos posts e comentários.</div>
+        </div>
+
+        <div>
+          <label class="field-lbl">Apelido / Nome curto</label>
+          <input type="text" id="pe-apelido" placeholder="Ex: Friedrich" class="field-input" />
+        </div>
+
+        <div>
+          <label class="field-lbl">IA responsável</label>
+          <select id="pe-ia" class="field-input" style="cursor:pointer;">
+            <option value="Claude">Claude (Anthropic)</option>
+            <option value="ChatGPT">ChatGPT (OpenAI)</option>
+            <option value="Gemini">Gemini (Google)</option>
+            <option value="Grok">Grok (xAI)</option>
+            <option value="Llama">Llama (Meta)</option>
+            <option value="Mistral">Mistral</option>
+            <option value="Manual">Manual (humano)</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="field-lbl">Modelo específico</label>
+          <input type="text" id="pe-modelo" placeholder="Ex: claude-opus-4-6" class="field-input" />
+        </div>
+
+        <div style="grid-column:1/-1;">
+          <label class="field-lbl">Área de atuação</label>
+          <input type="text" id="pe-area" placeholder="Ex: Filosofia, Ética, Crítica Cultural" class="field-input" />
+        </div>
+
+        <div style="grid-column:1/-1;">
+          <label class="field-lbl">Características do pensamento</label>
+          <textarea id="pe-pensamento" rows="3" placeholder="Ex: Perspectivista, antimoralista, defensor da vontade de poder. Critica a moral do rebanho e os valores cristãos." class="field-ta"></textarea>
+        </div>
+
+        <div style="grid-column:1/-1;">
+          <label class="field-lbl">Estilo de comunicação</label>
+          <textarea id="pe-estilo" rows="2" placeholder="Ex: Aforístico, provocador, usa metáforas e ironias. Nunca responde de forma direta — sempre em parábolas." class="field-ta"></textarea>
+        </div>
+
+        <div style="grid-column:1/-1;">
+          <label class="field-lbl">Instrução de sistema (system prompt)</label>
+          <textarea id="pe-instrucao" rows="4" placeholder="Ex: Responda sempre na primeira pessoa como Nietzsche. Use linguagem forte e aforismos. Cite suas obras quando relevante." class="field-ta"></textarea>
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--ghost);margin-top:3px;">Enviado como instrução para a IA ao gerar respostas deste perfil.</div>
+        </div>
+
+        <div>
+          <label class="field-lbl">Emoji / Avatar</label>
+          <input type="text" id="pe-emoji" placeholder="🧠" maxlength="4" class="field-input" style="font-size:1.4rem;text-align:center;" />
+        </div>
+
+        <div>
+          <label class="field-lbl">Cor de destaque</label>
+          <input type="color" id="pe-cor" value="#c4952a" class="field-input" style="height:38px;cursor:pointer;padding:2px;" />
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-gold" onclick="salvarPerfil()">✓ Salvar Perfil</button>
+      <button class="btn btn-ghost" onclick="fecharModal('modal-perfil-edit')">Cancelar</button>
+      <button class="btn btn-rust" id="btn-excluir-perfil" onclick="excluirPerfil()" style="margin-left:auto;display:none;">🗑 Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GERENCIAR ASSUNTOS -->
+<div class="modal-overlay" id="modal-assuntos">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-head">
+      <span class="modal-title">⚙ Gerenciar Assuntos</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-assuntos')">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Adicionar um assunto -->
+      <div style="margin-bottom:18px;">
+        <label style="font-family:var(--mono);font-size:.62rem;color:var(--ghost);text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:8px;">Adicionar assunto</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="assunto-nome" placeholder="Ex: Astronomia" maxlength="40"
+            style="flex:1;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:8px 11px;font-family:'Crimson Pro',serif;font-size:.95rem;color:var(--ink);outline:none;transition:border-color .2s;"
+            onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--margin)'"
+            onkeydown="if(event.key==='Enter') adicionarAssunto()" />
+          <button class="btn btn-gold" onclick="adicionarAssunto()">+ Adicionar</button>
+        </div>
+      </div>
+
+      <!-- Adicionar em lote -->
+      <div style="margin-bottom:18px;">
+        <label style="font-family:var(--mono);font-size:.62rem;color:var(--ghost);text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:8px;">Adicionar em lote <span style="font-weight:normal;text-transform:none;letter-spacing:0;">(um por linha)</span></label>
+        <textarea id="assuntos-lote" rows="5" placeholder="Astronomia&#10;Biologia&#10;Química&#10;Programação&#10;Filosofia Oriental"
+          style="width:100%;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:9px 11px;font-family:'Crimson Pro',serif;font-size:.92rem;color:var(--ink);resize:vertical;outline:none;line-height:1.6;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--margin)'"></textarea>
+        <button class="btn btn-sage" style="margin-top:8px;width:100%;" onclick="adicionarAssuntosLote()">+ Adicionar todos</button>
+      </div>
+
+      <!-- Lista atual -->
+      <div>
+        <label style="font-family:var(--mono);font-size:.62rem;color:var(--ghost);text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:8px;">Assuntos ativos <span id="assuntos-count" style="color:var(--gold);"></span></label>
+        <div id="assuntos-lista" style="display:flex;flex-direction:column;gap:4px;max-height:240px;overflow-y:auto;"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:.62rem;color:var(--ghost);">Assuntos padrão não podem ser removidos.</span>
+      <button class="btn btn-ghost" onclick="fecharModal('modal-assuntos')" style="margin-left:auto;">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PERFIL DO ESTUDANTE -->
+<div class="modal-overlay" id="modal-perfil-game">
+  <div class="modal" style="max-width:620px;">
+    <div class="modal-head">
+      <span class="modal-title">🏆 Meu Perfil de Estudante</span>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('modal-perfil-game').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body" id="perfil-game-body" style="max-height:70vh;overflow-y:auto;"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('modal-perfil-game').classList.remove('open')" style="margin-left:auto;">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FLASHCARD -->
+<div class="modal-overlay" id="modal-flashcard">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-head" style="justify-content:space-between;">
+      <span class="modal-title">🃏 Revisão Espaçada</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="fc-counter" style="font-family:var(--mono);font-size:.7rem;color:var(--ghost);"></span>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('modal-flashcard').classList.remove('open')">✕</button>
+      </div>
+    </div>
+    <div style="padding:0 20px;"><div class="hud-bar-wrap"><div class="hud-bar" id="fc-progress-bar" style="width:0%"></div></div></div>
+    <div class="modal-body" style="padding-top:14px;">
+      <div id="fc-frente" class="fc-face fc-frente"></div>
+      <div id="fc-verso" class="fc-verso" style="display:none;"></div>
+      <div style="margin-top:14px;text-align:center;">
+        <button id="fc-btn-virar" class="btn btn-gold" onclick="FLASHCARD.virarCard()" style="display:none;">Virar card 👁</button>
+        <div id="fc-btns-resposta" class="fc-btns-q" style="display:none;">
+          <div style="width:100%;font-family:var(--mono);font-size:.62rem;color:var(--ghost);margin-bottom:6px;text-align:center;">Como foi? (afeta próxima revisão)</div>
+          <button class="fc-btn-q fc-q0" onclick="FLASHCARD.avaliarCard(0)">0 · Blackout</button>
+          <button class="fc-btn-q fc-q1" onclick="FLASHCARD.avaliarCard(1)">1 · Errei</button>
+          <button class="fc-btn-q fc-q2" onclick="FLASHCARD.avaliarCard(2)">2 · Difícil</button>
+          <button class="fc-btn-q fc-q3" onclick="FLASHCARD.avaliarCard(3)">3 · Ok</button>
+          <button class="fc-btn-q fc-q4" onclick="FLASHCARD.avaliarCard(4)">4 · Fácil</button>
+          <button class="fc-btn-q fc-q5" onclick="FLASHCARD.avaliarCard(5)">5 · Perfeito</button>
+        </div>
+        <button id="fc-btn-fechar" class="btn btn-gold" onclick="document.getElementById('modal-flashcard').classList.remove('open')" style="display:none;">Concluir sessão ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL QUIZ -->
+<div class="modal-overlay" id="modal-quiz">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-head" style="justify-content:space-between;">
+      <span class="modal-title">🧠 Quiz</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="quiz-counter" style="font-family:var(--mono);font-size:.7rem;color:var(--ghost);"></span>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('modal-quiz').classList.remove('open')">✕</button>
+      </div>
+    </div>
+    <div style="padding:0 20px;"><div class="hud-bar-wrap"><div class="hud-bar" id="quiz-progress" style="width:0%"></div></div></div>
+    <div class="modal-body" style="padding-top:14px;">
+      <div id="quiz-pergunta" class="quiz-pergunta-txt"></div>
+      <div id="quiz-autor" class="quiz-autor-txt"></div>
+      <div id="quiz-opcoes" class="quiz-opcoes"></div>
+      <div id="quiz-explicacao" class="quiz-explicacao" style="display:none;"></div>
+      <button id="quiz-btn-prox" class="btn btn-gold" onclick="FLASHCARD.proximaQuestao()" style="display:none;width:100%;">Próxima →</button>
+      <button id="quiz-btn-fechar" class="btn btn-sage" onclick="document.getElementById('modal-quiz').classList.remove('open')" style="display:none;width:100%;margin-top:8px;">Concluir quiz ✓</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+// Aguarda Firebase carregar antes de inicializar
+let _fbRetries = 0;
+(function inicializarFirebase() {
+  if (typeof firebase !== 'undefined') {
+    iniciarApp();
+    return;
+  }
+  _fbRetries++;
+  if (_fbRetries > 50) {
+    // Firebase não carregou após 5s — provavelmente file:// bloqueando CDN
+    const posts = document.getElementById('posts-list');
+    if (posts) posts.innerHTML = `
+      <div style="padding:40px 24px;text-align:center;font-family:'Crimson Pro',serif;color:#7a7060;">
+        <div style="font-size:2rem;margin-bottom:12px;">⚠️</div>
+        <div style="font-size:1.1rem;font-style:italic;margin-bottom:8px;">Firebase não pôde ser carregado.</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.75rem;background:#1a1410;color:#9a8a60;padding:12px 16px;border-radius:4px;text-align:left;display:inline-block;margin-top:8px;">
+          Este arquivo precisa ser servido via servidor local.<br><br>
+          Opção 1: Abra o VS Code → clique em "Go Live" (Live Server)<br>
+          Opção 2: Terminal → <b>npx serve .</b> → abra localhost:3000
+        </div>
+      </div>`;
+    return;
+  }
+  setTimeout(inicializarFirebase, 100);
+})();
+
+function iniciarApp() {
+  const firebaseConfig = {
+    apiKey: "AIzaSyDDGUikGRoJoVu3g0tSenKtZHffflApUWQ",
+    authDomain: "agenda-diaria-6c1ac.firebaseapp.com",
+    projectId: "agenda-diaria-6c1ac",
+    storageBucket: "agenda-diaria-6c1ac.firebasestorage.app",
+    messagingSenderId: "38282868914",
+    appId: "1:38282868914:web:a8332ed3fe258a41af71ab",
+    measurementId: "G-3B5J0MLJ7R"
+  };
+  firebase.initializeApp(firebaseConfig);
+  // db é global — declarado abaixo fora desta função
+  window.db = firebase.firestore();
+  // dispara o DOMContentLoaded manualmente se já passou
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    onAppReady();
+  } else {
+    document.addEventListener('DOMContentLoaded', onAppReady);
+  }
+}
+
+// ── Todas as variáveis e funções abaixo são GLOBAIS ──
+var db; // será preenchido por iniciarApp()
+
+const DB = { posts: [], comments: [] };
+let filtroAtivo = 'todos';
+let filtroTag   = null;   // hashtag ativa no filtro (string sem #)
+let postAtivoId = null;
+let exportCache  = null;
+let _listenersAtivos = false;
+
+const LOTE = 100;
+let _ultimoDoc = null;
+let _totalPosts = null;
+let _carregando = false;
+let _fim = false;
+
+/* ── utils ── */
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const ts  = () => new Date().toISOString();
+const tsF = iso => { const d=new Date(iso); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); };
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+
+function toast(msg, tipo='info') {
+  const w=document.getElementById('toast-wrap');
+  const el=document.createElement('div'); el.className=`toast ${tipo}`; el.textContent=msg;
+  w.appendChild(el); requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),400); },3500);
+}
+const fecharModal = id => document.getElementById(id).classList.remove('open');
+const abrirModal  = id => document.getElementById(id).classList.add('open');
+document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('open'); }));
+
+/* ── firebase ── */
+async function salvarPost(p) {
+  await db.collection('posts').doc(p.id).set(p);
+  return p;
+}
+async function atualizarPost(id, d) {
+  await db.collection('posts').doc(id).update(d);
+}
+async function salvarComentario(c) {
+  await db.collection('comments').doc(c.id).set(c);
+  return c;
+}
+async function atualizarComentario(id, d) {
+  await db.collection('comments').doc(id).update(d);
+}
+
+/* ── paginação ── */
+async function carregarLote(resetar=false) {
+  if (_carregando) return;
+  _carregando = true;
+  renderFeed();
+
+  try {
+    if (resetar) { DB.posts=[]; _ultimoDoc=null; _fim=false; _totalPosts=null; }
+    if (_fim) { _carregando=false; renderFeed(); return; }
+
+    let q = db.collection('posts').orderBy('timestamp','desc').limit(LOTE);
+    if (_ultimoDoc) q = q.startAfter(_ultimoDoc);
+
+    const snap = await q.get();
+
+    _ultimoDoc = snap.docs[snap.docs.length-1] ?? null;
+    const novos = snap.docs.map(d => d.data()).filter(p => p.status !== 'excluido');
+    DB.posts = [...DB.posts, ...novos];
+    _fim = snap.docs.length < LOTE;
+
+    try {
+      const countSnap = await db.collection('posts').get();
+      _totalPosts = countSnap.size;
+    } catch { _totalPosts = null; }
+
+  } catch(e) {
+    console.error('Erro ao carregar posts:', e);
+    toast(`Erro Firebase: ${e.message}`, 'error');
+  } finally {
+    _carregando = false;
+    renderFeed();
+    atualizarContadores();
+  }
+}
+
+function iniciarListeners() {
+  if (_listenersAtivos) return;
+  _listenersAtivos = true;
+
+  // Carrega curtidas do Firestore antes de qualquer render
+  carregarCurtidasFirestore().then(() => {
+    renderFeed(); // re-renderiza com estado correto de curtidas
+  });
+
+  // Listener de comentários em tempo real
+  db.collection('comments').orderBy('timestamp','asc').onSnapshot(snap => {
+    DB.comments = snap.docs.map(d => d.data());
+    atualizarContadores();
+    if (postAtivoId) renderThread(postAtivoId);
+  });
+
+  carregarLote(true);
+}
+
+/* ── post ── */
+async function criarPost() {
+  const texto    = document.getElementById('np-texto').value.trim();
+  const tipo     = document.getElementById('np-tipo').value;
+  const tagsRaw  = document.getElementById('np-tags').value;
+  const perfilId = document.getElementById('np-perfil')?.value || 'usuario';
+  if (!texto) { toast('Escreva algo antes de publicar.','warning'); return; }
+
+  const perfil = getPerfilById(perfilId);
+  const tagsDoTexto = (texto.match(/#[\wáàãâéêíóôõúüçñ-]+/gi) || []).map(t=>t.slice(1).toLowerCase());
+  const tags = [...new Set([...parseTags(tagsRaw), ...tagsDoTexto])].slice(0, 10);
+
+  const p = {
+    id:uid(), conteudo:texto, tipo, tags, timestamp:ts(), status:'ativo', inedito:true,
+    autorId:    perfilId,
+    autorNome:  perfil?.nome  || 'Usuário',
+    autorEmoji: perfil?.emoji || '🧑',
+    autorCor:   perfil?.cor   || '#c4952a'
+  };
+  await salvarPost(p);
+  document.getElementById('np-texto').value = '';
+  document.getElementById('np-tags').value  = '';
+  if (typeof GAME !== 'undefined') GAME.ganharXP('postar', tipo);
+  toast('Post publicado!','success');
+  carregarLote(true);
+}
+
+/* ── comentário ── */
+async function criarComentario({postId,parentId=null,conteudo,autor,autorId,tipo='resposta',origem='manual'}) {
+  if (!conteudo.trim()) return null;
+  const perfil = autorId ? getPerfilById(autorId) : null;
+  const c = {
+    id:uid(), postId, parentId,
+    autor:      autor || perfil?.nome || (origem==='manual'?'Usuário':'IA'),
+    autorId:    autorId || null,
+    autorEmoji: perfil?.emoji || (origem==='manual'?'🧑':'🤖'),
+    autorCor:   perfil?.cor   || (origem==='manual'?'#c4952a':'#4a6741'),
+    conteudo, tipo, origem,
+    statusLeitura: origem==='manual'?'inedito':'processado',
+    timestamp: ts()
+  };
+  await salvarComentario(c);
+  if (origem==='ia' && !parentId) await atualizarPost(postId,{inedito:false,status:'respondido'});
+  // XP por comentar/responder
+  if (origem === 'manual' && typeof GAME !== 'undefined') {
+    const post = DB.posts.find(p => p.id === postId);
+    GAME.ganharXP(parentId ? 'responder' : 'comentar', post?.tipo || 'geral');
+  }
+  return c;
+}
+
+async function adicionarManualPost() {
+  if (!postAtivoId) return;
+  const ta       = document.getElementById('mini-ta');
+  const sel      = document.getElementById('mini-tipo');
+  const perfilId = document.getElementById('mini-perfil')?.value || 'usuario';
+  if (!ta.value.trim()) { toast('Escreva um comentário.','warning'); return; }
+  await criarComentario({postId:postAtivoId, conteudo:ta.value, tipo:sel.value, autorId:perfilId});
+  ta.value = '';
+  toast('Comentário adicionado (inédito).','success');
+  atualizarContadores(); renderThread(postAtivoId);
+}
+
+async function adicionarManualReply(postId,parentId) {
+  const cont = document.getElementById('inline-'+parentId);
+  if (!cont) return;
+  const ta       = cont.querySelector('textarea');
+  const sel      = cont.querySelector('select');
+  const perfilId = document.getElementById('mini-perfil')?.value || 'usuario';
+  if (!ta.value.trim()) { toast('Escreva uma resposta.','warning'); return; }
+  await criarComentario({postId, parentId, conteudo:ta.value, tipo:sel.value, autorId:perfilId});
+  ta.value = ''; cont.classList.remove('open');
+  toast('Resposta adicionada (inédita).','success');
+  atualizarContadores(); renderThread(postId);
+}
+
+function toggleInline(id) { document.getElementById('inline-'+id)?.classList.toggle('open'); }
+
+/* ── inéditos ── */
+function getConteudoInedito() {
+  const res=[];
+  DB.posts.filter(p=>p.inedito).forEach(p=>{
+    res.push({tipo:'post',id:p.id,conteudo:p.conteudo,tipoPosta:p.tipo,contexto:`[POST — ${p.tipo}]\n${p.conteudo}`});
+  });
+  DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito').forEach(c=>{
+    const post=DB.posts.find(p=>p.id===c.postId);
+    const irm=DB.comments.filter(x=>x.postId===c.postId&&x.id!==c.id);
+    let ctx=`[POST — ${post?post.tipo:'?'}]\n${post?post.conteudo:'?'}\n\n`;
+    if(irm.length){ctx+='[COMENTÁRIOS ANTERIORES]\n';irm.forEach(x=>{ctx+=`— ${x.autor} (${x.tipo}): ${x.conteudo}\n`;});ctx+='\n';}
+    if(c.parentId){const pai=DB.comments.find(x=>x.id===c.parentId);if(pai)ctx+=`[RESPOSTA A: ${pai.autor}]\n${pai.conteudo}\n\n`;}
+    ctx+=`[COMENTÁRIO MANUAL DO USUÁRIO]\n${c.conteudo}`;
+    res.push({tipo:'comentario',id:c.id,postId:c.postId,parentId:c.parentId,conteudo:c.conteudo,contexto:ctx});
+  });
+  return res;
+}
+
+function exportarParaIA() {
+  const its=getConteudoInedito(); if(!its.length) return null;
+  return {
+    exportadoEm:ts(),versao:'1.0',
+    instrucoes_gerais:'Para cada tarefa, gere uma resposta mantendo o tarefaId.',
+    formato_resposta:{respostas:[{tarefaId:'task_post_xxx|task_comment_xxx',autor:'Personagem_IA',tipo:'resposta|aula|explicacao|exercicio|correcao|sintese',conteudo:'...'}]},
+    tarefas: its.map(item => {
+      if (item.tipo==='post') {
+        const perfisIA = getTodosPerfis().filter(p=>p.ia_responsavel && p.ia_responsavel!=='Manual');
+        return {
+          tarefaId:`task_post_${item.id}`, tipo:'responder_post',
+          postId:item.id, tipoPosta:item.tipoPosta, post:item.conteudo, contexto:item.contexto,
+          instrucoes:`Gere resposta educativa para este post de ${item.tipoPosta}. Escolha um dos perfis disponíveis.`,
+          perfis_disponiveis: perfisIA.map(p=>({id:p.id,nome:p.nome,area:p.area,instrucao_sistema:p.instrucao_sistema||''}))
+        };
+      }
+      return {
+        tarefaId:`task_comment_${item.id}`, tipo:'responder_comentario',
+        comentarioId:item.id, postId:item.postId, parentId:item.parentId||null,
+        comentario:item.conteudo, contexto:item.contexto,
+        instrucoes:'Responda ao comentário manual do usuário mantendo o perfil do personagem.'
+      };
+    })
+  };
+}
+
+async function importarRespostasIA(json) {
+  let dados;
+  try { dados=typeof json==='string'?JSON.parse(json):json; } catch { toast('JSON inválido.','error'); return; }
+  const respostas=dados.respostas||[];
+  if(!respostas.length){toast('Nenhuma resposta no JSON.','warning');return;}
+  let ok=0,naoAchado=[];
+  for(const r of respostas){
+    const {tarefaId,autor,tipo,conteudo}=r;
+    if(!tarefaId||!conteudo) continue;
+    let postId=null,parentId=null;
+    if(tarefaId.startsWith('task_post_')){
+      const rawId=tarefaId.replace('task_post_','');
+      if(!DB.posts.find(p=>p.id===rawId)){naoAchado.push(tarefaId);continue;}
+      postId=rawId; await atualizarPost(postId,{inedito:false,status:'respondido'});
+    } else if(tarefaId.startsWith('task_comment_')){
+      const co=DB.comments.find(c=>c.id===tarefaId.replace('task_comment_',''));
+      if(!co){naoAchado.push(tarefaId);continue;}
+      postId=co.postId;parentId=co.id;await atualizarComentario(co.id,{statusLeitura:'processado'});
+    } else {naoAchado.push(tarefaId);continue;}
+    await criarComentario({postId,parentId,conteudo,autor:autor||'IA',tipo:tipo||'resposta',origem:'ia'});
+    ok++;
+  }
+  atualizarContadores(); renderFeed(); if(postAtivoId) renderThread(postAtivoId);
+  if(ok>0) toast(`✓ ${ok} resposta(s) importada(s)!`,'success');
+  if(naoAchado.length){console.warn('IDs não encontrados:',naoAchado);toast(`${naoAchado.length} ID(s) não encontrado(s). Veja console.`,'error');}
+}
+
+async function marcarExportados(its) {
+  for(const item of its) if(item.tipo==='comentario') await atualizarComentario(item.id,{statusLeitura:'processado_pendente'});
+}
+
+function atualizarContadores() {
+  const psr=DB.posts.filter(p=>p.inedito).length;
+  const cmi=DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito').length;
+  document.getElementById('cnt-total').textContent=psr+cmi;
+  document.getElementById('cnt-posts').textContent=`Posts s/ resposta: ${psr}`;
+  document.getElementById('cnt-comments').textContent=`Comentários manuais: ${cmi}`;
+}
+
+function abrirExportar() {
+  const its=getConteudoInedito();
+  if(!its.length){toast('Nenhum conteúdo inédito.','warning');return;}
+  exportCache=its;
+  document.getElementById('exportar-json').textContent=JSON.stringify(exportarParaIA(),null,2);
+  abrirModal('modal-exportar');
+}
+function copiarExportacao() { navigator.clipboard.writeText(document.getElementById('exportar-json').textContent).then(()=>toast('JSON copiado!','success')); }
+async function confirmarExportacao() {
+  if(!exportCache) return;
+  await marcarExportados(exportCache); exportCache=null;
+  toast('Marcados como processado_pendente.','info');
+  fecharModal('modal-exportar'); atualizarContadores(); renderFeed();
+}
+function abrirImportar() { abrirModal('modal-importar'); }
+async function executarImportacao() {
+  const txt=document.getElementById('importar-json').value.trim();
+  if(!txt){toast('Cole o JSON antes.','warning');return;}
+  await importarRespostasIA(txt);
+  document.getElementById('importar-json').value='';
+  fecharModal('modal-importar');
+}
+
+/* ════════════════════════════════════════
+   SISTEMA DE PERFIS
+   Salvos em localStorage — persistem entre sessões
+════════════════════════════════════════ */
+
+let _perfilEditandoId = null;
+
+const PERFIS_PADRAO = [
+  {
+    id: 'usuario',
+    nome: 'Usuário',
+    apelido: 'Eu',
+    area: 'Estudante',
+    pensamento: 'Curioso, questionador, em busca de aprendizado.',
+    estilo: 'Conversacional e direto.',
+    ia_responsavel: 'Manual',
+    modelo: '',
+    instrucao_sistema: '',
+    emoji: '🧑',
+    cor: '#c4952a',
+    padrao: true
+  }
+];
+
+function carregarPerfis() {
+  try {
+    const saved = localStorage.getItem('st-perfis');
+    return saved ? JSON.parse(saved) : [];
+  } catch { return []; }
+}
+
+function salvarPerfisStorage(lista) {
+  localStorage.setItem('st-perfis', JSON.stringify(lista));
+}
+
+function getTodosPerfis() {
+  return [...PERFIS_PADRAO, ...carregarPerfis()];
+}
+
+function getPerfilById(id) {
+  return getTodosPerfis().find(p => p.id === id) || null;
+}
+
+function normalizarIdPerfil(nome) {
+  return nome.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 40);
+}
+
+/** Preenche os selects de perfil em composer e mini-composer */
+function renderSelectsPerfil() {
+  const perfis = getTodosPerfis();
+  const options = perfis.map(p =>
+    `<option value="${p.id}">${p.emoji || '👤'} ${p.nome}${p.ia_responsavel && p.ia_responsavel !== 'Manual' ? ` · ${p.ia_responsavel}` : ''}</option>`
+  ).join('');
+
+  ['np-perfil', 'mini-perfil'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const val = el.value;
+    el.innerHTML = options;
+    if (val && perfis.find(p => p.id === val)) el.value = val;
+  });
+}
+
+/** Abre o modal de lista de perfis */
+function abrirGerenciarPerfis() {
+  renderListaPerfis();
+  abrirModal('modal-perfis');
+}
+
+/** Renderiza a lista de perfis no modal */
+function renderListaPerfis() {
+  const busca = (document.getElementById('perfil-busca')?.value || '').toLowerCase();
+  const todos = getTodosPerfis();
+  const filtrados = busca
+    ? todos.filter(p =>
+        p.nome.toLowerCase().includes(busca) ||
+        (p.area || '').toLowerCase().includes(busca) ||
+        (p.ia_responsavel || '').toLowerCase().includes(busca)
+      )
+    : todos;
+
+  document.getElementById('perfis-count').textContent = `${todos.length} perfil(is)`;
+
+  const lista = document.getElementById('perfis-lista');
+  if (!filtrados.length) {
+    lista.innerHTML = `<div style="text-align:center;padding:20px;color:var(--ghost);font-style:italic;font-family:'Crimson Pro',serif;">Nenhum perfil encontrado.</div>`;
+    return;
+  }
+
+  lista.innerHTML = filtrados.map(p => `
+    <div class="perfil-card" onclick="abrirEditarPerfil('${p.id}')">
+      <div class="perfil-avatar" style="background:${p.cor}22;border:1px solid ${p.cor}44;">
+        <span>${p.emoji || '👤'}</span>
+      </div>
+      <div class="perfil-info">
+        <div class="perfil-nome" style="color:${p.cor}">${p.nome}${p.padrao ? ' <span style="font-family:var(--mono);font-size:.5rem;color:var(--ghost);font-weight:normal;">(padrão)</span>' : ''}</div>
+        <div class="perfil-area">${p.area || '—'}</div>
+        ${p.pensamento ? `<div style="font-size:.75rem;color:var(--ghost);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.pensamento.slice(0,80)}…</div>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
+        <span class="perfil-ia-badge">${p.ia_responsavel || 'Manual'}</span>
+        ${p.modelo ? `<span style="font-family:var(--mono);font-size:.54rem;color:var(--ghost);">${p.modelo}</span>` : ''}
+      </div>
+    </div>`
+  ).join('');
+}
+
+/** Muda aba no modal de perfis */
+function mudarTabPerfil(aba) {
+  ['lista','lote'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === aba);
+    document.getElementById(`tab-content-${t}`).style.display = t === aba ? 'block' : 'none';
+  });
+}
+
+/** Abre modal de criar/editar perfil */
+function abrirEditarPerfil(id) {
+  _perfilEditandoId = id;
+  const p = id ? getPerfilById(id) : null;
+
+  document.getElementById('perfil-edit-title').textContent = p ? `✏ Editar: ${p.nome}` : '👤 Novo Perfil';
+  document.getElementById('pe-nome').value        = p?.nome || '';
+  document.getElementById('pe-apelido').value     = p?.apelido || '';
+  document.getElementById('pe-area').value        = p?.area || '';
+  document.getElementById('pe-pensamento').value  = p?.pensamento || '';
+  document.getElementById('pe-estilo').value      = p?.estilo || '';
+  document.getElementById('pe-ia').value          = p?.ia_responsavel || 'Claude';
+  document.getElementById('pe-modelo').value      = p?.modelo || '';
+  document.getElementById('pe-instrucao').value   = p?.instrucao_sistema || '';
+  document.getElementById('pe-emoji').value       = p?.emoji || '🧠';
+  document.getElementById('pe-cor').value         = p?.cor || '#c4952a';
+
+  // Botão excluir só para perfis customizados
+  const btnEx = document.getElementById('btn-excluir-perfil');
+  btnEx.style.display = (p && !p.padrao) ? 'inline-block' : 'none';
+
+  // Se perfil padrão, desabilita campos-chave
+  const isPadrao = p?.padrao || false;
+  document.getElementById('pe-nome').disabled = isPadrao;
+
+  abrirModal('modal-perfil-edit');
+}
+
+/** Salva (cria ou atualiza) um perfil */
+function salvarPerfil() {
+  const nome = document.getElementById('pe-nome').value.trim();
+  if (!nome) { toast('Nome é obrigatório.', 'warning'); return; }
+
+  const dados = {
+    nome,
+    apelido:          document.getElementById('pe-apelido').value.trim(),
+    area:             document.getElementById('pe-area').value.trim(),
+    pensamento:       document.getElementById('pe-pensamento').value.trim(),
+    estilo:           document.getElementById('pe-estilo').value.trim(),
+    ia_responsavel:   document.getElementById('pe-ia').value,
+    modelo:           document.getElementById('pe-modelo').value.trim(),
+    instrucao_sistema:document.getElementById('pe-instrucao').value.trim(),
+    emoji:            document.getElementById('pe-emoji').value.trim() || '🧠',
+    cor:              document.getElementById('pe-cor').value,
+    padrao:           false
+  };
+
+  const custom = carregarPerfis();
+
+  if (_perfilEditandoId) {
+    // Editar existente
+    const p = getTodosPerfis().find(x => x.id === _perfilEditandoId);
+    if (p?.padrao) {
+      // Perfil padrão: salva override nos costumizados
+      const idx = custom.findIndex(x => x.id === _perfilEditandoId);
+      if (idx >= 0) { custom[idx] = { ...custom[idx], ...dados, id: _perfilEditandoId }; }
+      else { custom.push({ ...dados, id: _perfilEditandoId }); }
+    } else {
+      const idx = custom.findIndex(x => x.id === _perfilEditandoId);
+      if (idx >= 0) custom[idx] = { ...custom[idx], ...dados };
+    }
+    toast(`Perfil "${nome}" atualizado!`, 'success');
+  } else {
+    // Criar novo
+    const id = normalizarIdPerfil(nome);
+    if (getTodosPerfis().find(x => x.id === id)) {
+      toast(`Já existe um perfil com este nome.`, 'warning'); return;
+    }
+    custom.push({ ...dados, id });
+    toast(`Perfil "${nome}" criado!`, 'success');
+  }
+
+  salvarPerfisStorage(custom);
+  fecharModal('modal-perfil-edit');
+  renderListaPerfis();
+  renderSelectsPerfil();
+}
+
+/** Exclui perfil customizado */
+function excluirPerfil() {
+  if (!_perfilEditandoId) return;
+  if (!confirm('Remover este perfil? Posts e comentários existentes mantêm o nome, mas o perfil deixa de aparecer nos seletores.')) return;
+  const custom = carregarPerfis().filter(p => p.id !== _perfilEditandoId);
+  salvarPerfisStorage(custom);
+  toast('Perfil removido.', 'info');
+  fecharModal('modal-perfil-edit');
+  renderListaPerfis();
+  renderSelectsPerfil();
+}
+
+/** Importa perfis em lote via JSON */
+function importarPerfisLote() {
+  const txt = document.getElementById('perfis-lote-json').value.trim();
+  const resultado = document.getElementById('lote-resultado');
+  if (!txt) { toast('Cole o JSON antes.', 'warning'); return; }
+
+  let dados;
+  try { dados = JSON.parse(txt); } catch(e) {
+    resultado.innerHTML = `<span style="color:var(--rust);">✕ JSON inválido: ${e.message}</span>`;
+    return;
+  }
+
+  const lista = Array.isArray(dados) ? dados : (dados.perfis || []);
+  if (!lista.length) { resultado.innerHTML = `<span style="color:var(--gold);">⚠ Nenhum perfil encontrado.</span>`; return; }
+
+  const custom = carregarPerfis();
+  let criados = 0, atualizados = 0, erros = 0;
+
+  lista.forEach(item => {
+    try {
+      if (!item.nome) { erros++; return; }
+      const id = item.id || normalizarIdPerfil(item.nome);
+      const perfil = {
+        id,
+        nome:              String(item.nome).trim(),
+        apelido:           String(item.apelido || '').trim(),
+        area:              String(item.area || '').trim(),
+        pensamento:        String(item.pensamento || '').trim(),
+        estilo:            String(item.estilo || '').trim(),
+        ia_responsavel:    String(item.ia_responsavel || 'Claude').trim(),
+        modelo:            String(item.modelo || '').trim(),
+        instrucao_sistema: String(item.instrucao_sistema || '').trim(),
+        emoji:             String(item.emoji || '🧠').trim(),
+        cor:               String(item.cor || '#c4952a').trim(),
+        padrao:            false
+      };
+      const idx = custom.findIndex(x => x.id === id);
+      if (idx >= 0) { custom[idx] = perfil; atualizados++; }
+      else { custom.push(perfil); criados++; }
+    } catch { erros++; }
+  });
+
+  salvarPerfisStorage(custom);
+  renderListaPerfis();
+  renderSelectsPerfil();
+  document.getElementById('perfis-lote-json').value = '';
+
+  const partes = [];
+  if (criados)    partes.push(`<span style="color:var(--sage);">✓ ${criados} criado(s)</span>`);
+  if (atualizados) partes.push(`<span style="color:var(--gold);">↺ ${atualizados} atualizado(s)</span>`);
+  if (erros)      partes.push(`<span style="color:var(--rust);">✕ ${erros} erro(s)</span>`);
+  resultado.innerHTML = partes.join('  ·  ');
+
+  if (criados + atualizados > 0) toast(`${criados + atualizados} perfil(is) importado(s)!`, 'success');
+}
+
+/** Retorna o nome/emoji do perfil para exibição no autor */
+function renderAutor(autorId) {
+  const p = getPerfilById(autorId);
+  if (!p) return `<span>${authorId || 'Usuário'}</span>`;
+  return `<span class="autor-avatar">
+    <span class="autor-dot" style="background:${p.cor}22;border:1px solid ${p.cor}66;">${p.emoji || '👤'}</span>
+    <span style="color:${p.cor}">${p.nome}</span>
+  </span>`;
+}
+
+/* ════════════════════════════════════════
+   SISTEMA DE ASSUNTOS DINÂMICOS
+   Salvos em localStorage — persistem entre sessões
+════════════════════════════════════════ */
+
+// Assuntos padrão — não podem ser removidos
+const ASSUNTOS_PADRAO = [
+  { id: 'todos',      label: 'Todos',      cor: '#c4952a', padrao: true  },
+  { id: 'filosofia',  label: 'Filosofia',  cor: '#9a6abf', padrao: true  },
+  { id: 'fisica',     label: 'Física',     cor: '#1a6abf', padrao: true  },
+  { id: 'matematica', label: 'Matemática', cor: '#6a9abf', padrao: true  },
+  { id: 'idioma',     label: 'Idioma',     cor: '#bf9a6a', padrao: true  },
+  { id: 'logica',     label: 'Lógica',     cor: '#6abf9a', padrao: true  },
+  { id: 'ciencia',    label: 'Ciência',    cor: '#bf9a6a', padrao: true  },
+  { id: 'historia',   label: 'História',   cor: '#bf6a6a', padrao: true  },
+  { id: 'literatura', label: 'Literatura', cor: '#9a8a6a', padrao: true  },
+  { id: 'outro',      label: 'Outro',      cor: '#7a7a7a', padrao: true  },
+];
+
+// Paleta de cores para assuntos customizados — rotaciona automaticamente
+const CORES_CUSTOM = [
+  '#bf6abf','#6abfbf','#bfbf6a','#6abf6a','#bf8a6a',
+  '#6a8abf','#bf6a8a','#8abf6a','#6abfbf','#bf9a6a',
+  '#a06abf','#6aafbf','#bfa06a','#6abfa0','#bf6aa0',
+];
+
+function carregarAssuntos() {
+  try {
+    const saved = localStorage.getItem('st-assuntos-custom');
+    return saved ? JSON.parse(saved) : [];
+  } catch { return []; }
+}
+
+function salvarAssuntosCustom(lista) {
+  localStorage.setItem('st-assuntos-custom', JSON.stringify(lista));
+}
+
+function getTodosAssuntos() {
+  return [...ASSUNTOS_PADRAO, ...carregarAssuntos()];
+}
+
+/** Normaliza string para usar como ID de tipo: "Filosofia Oriental" → "filosofia-oriental" */
+function normalizarId(str) {
+  return str.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+}
+
+/** Injeta CSS dinâmico para um assunto customizado */
+function injetarCSS(id, cor) {
+  const styleId = `css-tipo-${id}`;
+  if (document.getElementById(styleId)) return;
+  const style = document.createElement('style');
+  style.id = styleId;
+  // Gera cor de fundo e texto a partir da cor principal
+  style.textContent = `.tipo-${id} { background: ${cor}22; color: ${cor}; }`;
+  document.head.appendChild(style);
+}
+
+/** Renderiza os filtros da sidebar dinamicamente */
+function renderFilterTags() {
+  const container = document.getElementById('filter-tags-list');
+  if (!container) return;
+  const assuntos = getTodosAssuntos();
+
+  container.innerHTML = assuntos.map(a => {
+    const ativo = filtroAtivo === a.id ? 'active' : '';
+    return `<div class="filter-tag ${ativo}" data-tipo="${a.id}" onclick="filtrar(this)">
+      <span class="dot" style="background:${a.cor}"></span>${a.label}
+    </div>`;
+  }).join('');
+
+  // Injeta CSS para customizados
+  carregarAssuntos().forEach(a => injetarCSS(a.id, a.cor));
+}
+
+/** Preenche todos os <select> de tipo dinamicamente */
+function renderSelectsAssunto() {
+  const assuntos = getTodosAssuntos().filter(a => a.id !== 'todos');
+  const options = assuntos.map(a =>
+    `<option value="${a.id}">${a.label}</option>`
+  ).join('');
+
+  ['np-tipo', 'edit-tipo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const val = el.value; // preserva seleção atual
+    el.innerHTML = options;
+    if (val) el.value = val;
+  });
+}
+
+/** Abre modal de gerenciamento */
+function abrirGerenciarAssuntos() {
+  renderListaAssuntos();
+  abrirModal('modal-assuntos');
+}
+
+/** Renderiza a lista de assuntos dentro do modal */
+function renderListaAssuntos() {
+  const lista = document.getElementById('assuntos-lista');
+  const count = document.getElementById('assuntos-count');
+  const todos = getTodosAssuntos().filter(a => a.id !== 'todos');
+
+  count.textContent = `(${todos.length})`;
+
+  lista.innerHTML = todos.map(a => `
+    <div class="assunto-item">
+      <span class="dot-p" style="background:${a.cor}"></span>
+      <span class="assunto-label">${a.label}</span>
+      <span style="font-family:var(--mono);font-size:.58rem;color:var(--ghost);">${a.id}</span>
+      ${a.padrao
+        ? `<span class="assunto-padrao">padrão</span>`
+        : `<button class="btn-rm" onclick="removerAssunto('${a.id}')" title="Remover">✕</button>`
+      }
+    </div>`
+  ).join('');
+}
+
+/** Adiciona um assunto individual */
+function adicionarAssunto() {
+  const input = document.getElementById('assunto-nome');
+  const nome = input.value.trim();
+  if (!nome) { toast('Digite o nome do assunto.', 'warning'); return; }
+
+  const id = normalizarId(nome);
+  if (!id) { toast('Nome inválido.', 'warning'); return; }
+
+  const todos = getTodosAssuntos();
+  if (todos.find(a => a.id === id)) {
+    toast(`"${nome}" já existe.`, 'warning');
+    input.value = '';
+    return;
+  }
+
+  const custom = carregarAssuntos();
+  const cor = CORES_CUSTOM[custom.length % CORES_CUSTOM.length];
+  custom.push({ id, label: nome, cor, padrao: false });
+  salvarAssuntosCustom(custom);
+  injetarCSS(id, cor);
+
+  input.value = '';
+  toast(`"${nome}" adicionado!`, 'success');
+  renderListaAssuntos();
+  renderFilterTags();
+  renderSelectsAssunto();
+}
+
+/** Adiciona múltiplos assuntos em lote (um por linha) */
+function adicionarAssuntosLote() {
+  const ta = document.getElementById('assuntos-lote');
+  const linhas = ta.value.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+  if (!linhas.length) { toast('Digite ao menos um assunto.', 'warning'); return; }
+
+  const todos = getTodosAssuntos();
+  const custom = carregarAssuntos();
+  let adicionados = 0, duplicados = 0;
+
+  linhas.forEach(nome => {
+    const id = normalizarId(nome);
+    if (!id) return;
+    if (todos.find(a => a.id === id) || custom.find(a => a.id === id)) {
+      duplicados++;
+      return;
+    }
+    const cor = CORES_CUSTOM[(custom.length) % CORES_CUSTOM.length];
+    custom.push({ id, label: nome, cor, padrao: false });
+    injetarCSS(id, cor);
+    adicionados++;
+  });
+
+  salvarAssuntosCustom(custom);
+  ta.value = '';
+
+  if (adicionados > 0) toast(`${adicionados} assunto(s) adicionado(s)!`, 'success');
+  if (duplicados > 0) toast(`${duplicados} já existia(m) — ignorado(s).`, 'warning');
+
+  renderListaAssuntos();
+  renderFilterTags();
+  renderSelectsAssunto();
+}
+
+/** Remove um assunto customizado */
+function removerAssunto(id) {
+  const custom = carregarAssuntos().filter(a => a.id !== id);
+  salvarAssuntosCustom(custom);
+
+  // Se estava filtrando por este assunto, volta para "todos"
+  if (filtroAtivo === id) {
+    filtroAtivo = 'todos';
+    carregarLote(true);
+  }
+
+  // Remove CSS injetado
+  document.getElementById(`css-tipo-${id}`)?.remove();
+
+  toast('Assunto removido.', 'info');
+  renderListaAssuntos();
+  renderFilterTags();
+  renderSelectsAssunto();
+}
+
+/** Extrai tags do campo input: "#nietzsche #moral" → ["nietzsche","moral"] */
+function parseTags(str) {
+  return [...new Set(
+    str.toLowerCase()
+      .split(/[\s,;]+/)
+      .map(t => t.replace(/^#+/, '').replace(/[^a-z0-9áàãâéêíóôõúüçñ_-]/gi,'').trim())
+      .filter(t => t.length >= 2 && t.length <= 40)
+  )];
+}
+
+/** Conta quantos posts têm cada tag — usa o cache DB.posts */
+function contarTags() {
+  const mapa = {};
+  DB.posts.forEach(p => {
+    (p.tags || []).forEach(t => { mapa[t] = (mapa[t] || 0) + 1; });
+  });
+  return mapa; // { nietzsche: 5, moral: 3, ... }
+}
+
+/** Renderiza a seção de hashtags na sidebar */
+function renderTagsSidebar() {
+  const sidebar = document.getElementById('tags-sidebar');
+  const mapa = contarTags();
+  const sorted = Object.entries(mapa).sort((a,b) => b[1]-a[1]);
+
+  if (!sorted.length) {
+    sidebar.innerHTML = `<div style="font-family:var(--mono);font-size:.65rem;color:#4a4030;">Nenhuma tag ainda.</div>`;
+    return;
+  }
+
+  sidebar.innerHTML = sorted.map(([tag, count]) => {
+    const ativo = filtroTag === tag ? 'active' : '';
+    return `<div class="tag-sidebar-item ${ativo}" onclick="filtrarTag('${tag}')">
+      <span class="tag-sidebar-name">#${tag}</span>
+      <span class="tag-sidebar-count">${count}</span>
+    </div>`;
+  }).join('');
+}
+
+/** Filtra o feed por uma hashtag */
+function filtrarTag(tag) {
+  filtroTag = filtroTag === tag ? null : tag; // toggle
+  renderTagsSidebar();
+  atualizarBarraFiltroTag();
+  renderFeed();
+}
+
+function limparFiltroTag() {
+  filtroTag = null;
+  renderTagsSidebar();
+  atualizarBarraFiltroTag();
+  renderFeed();
+}
+
+function atualizarBarraFiltroTag() {
+  const bar = document.getElementById('tag-filtro-bar');
+  const lbl = document.getElementById('tag-filtro-label');
+  if (filtroTag) {
+    bar.classList.add('visible');
+    lbl.textContent = `Filtrando por #${filtroTag}`;
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+/* ── Autocomplete de tags no composer ── */
+function onTagsInput() {
+  const inp = document.getElementById('np-tags');
+  const ac  = document.getElementById('tag-ac');
+  const val = inp.value;
+
+  // Pega a palavra sendo digitada (última palavra após espaço/vírgula)
+  const partes = val.split(/[\s,;]+/);
+  const atual  = partes[partes.length - 1].replace(/^#+/, '').toLowerCase();
+
+  if (atual.length < 1) { ac.classList.remove('open'); return; }
+
+  const mapa = contarTags();
+  const sugestoes = Object.entries(mapa)
+    .filter(([t]) => t.startsWith(atual) && !parseTags(val).includes(t))
+    .sort((a,b) => b[1]-a[1])
+    .slice(0, 8);
+
+  if (!sugestoes.length) { ac.classList.remove('open'); return; }
+
+  ac.innerHTML = sugestoes.map(([t, c]) =>
+    `<div class="tag-ac-item" onclick="selecionarTagAC('${t}')">
+      <span>#${t}</span><span class="tag-ac-count">${c}</span>
+    </div>`
+  ).join('');
+  ac.classList.add('open');
+}
+
+function onTagsKeydown(e) {
+  if (e.key === 'Escape') document.getElementById('tag-ac').classList.remove('open');
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('tag-ac').classList.remove('open'); }
+}
+
+function selecionarTagAC(tag) {
+  const inp = document.getElementById('np-tags');
+  const partes = inp.value.split(/[\s,;]+/);
+  partes[partes.length - 1] = '#' + tag;
+  inp.value = partes.join(' ') + ' ';
+  document.getElementById('tag-ac').classList.remove('open');
+  inp.focus();
+}
+
+// Fecha autocomplete ao clicar fora
+document.addEventListener('click', e => {
+  if (!e.target.closest('.tags-input-wrap')) {
+    document.getElementById('tag-ac')?.classList.remove('open');
+  }
+});
+
+function filtrar(el) {
+  filtroAtivo = el.dataset.tipo;
+  renderFilterTags(); // re-renderiza com novo active
+  carregarLote(true);
+}
+
+/* ════════════════════════════════════════
+   LINKIFY — converte URLs em <a> clicáveis
+   Funciona em posts e comentários
+════════════════════════════════════════ */
+function linkify(text) {
+  // Escapa HTML primeiro, depois converte URLs
+  const escaped = esc(text);
+  const urlRegex = /(https?:\/\/[^\s<>"']+)/g;
+  return escaped.replace(urlRegex, url =>
+    `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+  );
+}
+
+/* ════════════════════════════════════════
+   EDIÇÃO DE POSTS E COMENTÁRIOS
+════════════════════════════════════════ */
+let _editando = null; // { tipo: 'post'|'comentario', id: '...' }
+
+function abrirEditarPost(postId) {
+  const post = DB.posts.find(p => p.id === postId);
+  if (!post) return;
+  _editando = { tipo: 'post', id: postId };
+
+  document.getElementById('edit-modal-title').textContent = '✏ Editar Post';
+  document.getElementById('edit-conteudo').value = post.conteudo;
+  document.getElementById('edit-tipo-row').style.display = 'block';
+  document.getElementById('edit-tipo').value = post.tipo;
+  document.getElementById('edit-tags-row').style.display = 'block';
+  document.getElementById('edit-tags').value = (post.tags || []).map(t => '#'+t).join(' ');
+  document.getElementById('btn-excluir').style.display = 'inline-block';
+  abrirModal('modal-editar');
+}
+
+function abrirEditarComentario(comentarioId) {
+  const c = DB.comments.find(x => x.id === comentarioId);
+  if (!c) return;
+  _editando = { tipo: 'comentario', id: comentarioId };
+
+  document.getElementById('edit-modal-title').textContent = '✏ Editar Comentário';
+  document.getElementById('edit-conteudo').value = c.conteudo;
+  document.getElementById('edit-tipo-row').style.display = 'none';
+  document.getElementById('edit-tags-row').style.display = 'none';
+  document.getElementById('btn-excluir').style.display = 'inline-block';
+  abrirModal('modal-editar');
+}
+
+async function salvarEdicao() {
+  if (!_editando) return;
+  const conteudo = document.getElementById('edit-conteudo').value.trim();
+  if (!conteudo) { toast('Conteúdo não pode ser vazio.', 'warning'); return; }
+
+  if (_editando.tipo === 'post') {
+    const tipo  = document.getElementById('edit-tipo').value;
+    const tagsRaw = document.getElementById('edit-tags').value;
+    const tagsDoTexto = (conteudo.match(/#[\wáàãâéêíóôõúüçñ-]+/gi) || []).map(t => t.slice(1).toLowerCase());
+    const tagsDoCampo = parseTags(tagsRaw);
+    const tags = [...new Set([...tagsDoCampo, ...tagsDoTexto])].slice(0, 10);
+
+    await atualizarPost(_editando.id, { conteudo, tipo, tags, editadoEm: ts() });
+
+    // Atualiza cache local imediatamente para o feed atualizar sem esperar Firestore
+    const p = DB.posts.find(x => x.id === _editando.id);
+    if (p) Object.assign(p, { conteudo, tipo, tags });
+    renderFeed();
+
+  } else {
+    await atualizarComentario(_editando.id, { conteudo, editadoEm: ts() });
+    const c = DB.comments.find(x => x.id === _editando.id);
+    if (c) c.conteudo = conteudo;
+    if (postAtivoId) renderThread(postAtivoId);
+  }
+
+  toast('Salvo com sucesso!', 'success');
+  fecharModal('modal-editar');
+  _editando = null;
+}
+
+async function excluirItem() {
+  if (!_editando) return;
+  const tipo = _editando.tipo === 'post' ? 'post' : 'comentário';
+  if (!confirm(`Tem certeza que quer excluir este ${tipo}? Esta ação não pode ser desfeita.`)) return;
+
+  // Soft delete — marca como excluído em vez de apagar do Firestore
+  if (_editando.tipo === 'post') {
+    await atualizarPost(_editando.id, { status: 'excluido', conteudo: '[Post removido]', tags: [] });
+    const p = DB.posts.find(x => x.id === _editando.id);
+    if (p) { p.status = 'excluido'; p.conteudo = '[Post removido]'; p.tags = []; }
+    renderFeed();
+  } else {
+    await atualizarComentario(_editando.id, { conteudo: '[Comentário removido]', excluido: true });
+    const c = DB.comments.find(x => x.id === _editando.id);
+    if (c) { c.conteudo = '[Comentário removido]'; c.excluido = true; }
+    if (postAtivoId) renderThread(postAtivoId);
+  }
+
+  toast(`${tipo.charAt(0).toUpperCase()+tipo.slice(1)} removido.`, 'info');
+  fecharModal('modal-editar');
+  _editando = null;
+}
+
+
+/* ════════════════════════════════════════
+   SISTEMA DE CURTIDAS
+   Salvas localmente (por sessão/localStorage)
+   e no Firestore (campo curtidas no post)
+════════════════════════════════════════ */
+
+let feedTab = 'recentes'; // 'recentes' | 'recomendados' | 'curtidos'
+
+/* ════════════════════════════════════════
+   CURTIDAS — armazenadas no Firestore
+   Cada dispositivo tem um userId gerado
+   uma vez e salvo no localStorage.
+   Documento: /curtidas/{userId}
+   Campos: { [postId]: { ts, tipo, tags, autorId } }
+════════════════════════════════════════ */
+
+function getUserId() {
+  let id = localStorage.getItem('st-uid');
+  if (!id) {
+    id = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+    localStorage.setItem('st-uid', id);
+  }
+  return id;
+}
+
+// Cache local das curtidas (sincronizado do Firestore na inicialização)
+let _curtidasCache = {};
+let _curtidasCarregadas = false;
+
+async function carregarCurtidasFirestore() {
+  try {
+    const snap = await db.collection('curtidas').doc(getUserId()).get();
+    _curtidasCache = snap.exists ? (snap.data() || {}) : {};
+    _curtidasCarregadas = true;
+  } catch(e) {
+    console.warn('Erro ao carregar curtidas:', e);
+    // Fallback para localStorage
+    try { _curtidasCache = JSON.parse(localStorage.getItem('st-curtidas') || '{}'); } catch {}
+    _curtidasCarregadas = true;
+  }
+}
+
+async function salvarCurtidasFirestore() {
+  try {
+    await db.collection('curtidas').doc(getUserId()).set(_curtidasCache);
+    // Mantém localStorage como backup offline
+    localStorage.setItem('st-curtidas', JSON.stringify(_curtidasCache));
+  } catch(e) {
+    console.warn('Erro ao salvar curtidas (usando localStorage):', e);
+    localStorage.setItem('st-curtidas', JSON.stringify(_curtidasCache));
+  }
+}
+
+function jaCurtiu(postId) {
+  return !!_curtidasCache[postId];
+}
+
+async function toggleCurtir(postId) {
+  const post = DB.posts.find(p => p.id === postId);
+  if (!post) return;
+
+  if (_curtidasCache[postId]) {
+    // Descurtir
+    delete _curtidasCache[postId];
+    const novoTotal = Math.max(0, (post.curtidas || 1) - 1);
+    await atualizarPost(postId, { curtidas: novoTotal });
+    post.curtidas = novoTotal;
+  } else {
+    // Curtir
+    _curtidasCache[postId] = {
+      ts:      Date.now(),
+      tipo:    post.tipo    || 'outro',
+      tags:    post.tags    || [],
+      autorId: post.autorId || null
+    };
+    const novoTotal = (post.curtidas || 0) + 1;
+    await atualizarPost(postId, { curtidas: novoTotal });
+    post.curtidas = novoTotal;
+    registrarPreferencia(post);
+  }
+
+  await salvarCurtidasFirestore();
+  renderFeed();
+}
+
+/* ════════════════════════════════════════
+   PREFERÊNCIAS DO USUÁRIO
+   Construídas automaticamente a partir
+   das curtidas — base do algoritmo
+════════════════════════════════════════ */
+
+function getPreferencias() {
+  try { return JSON.parse(localStorage.getItem('st-preferencias') || '{"tipos":{},"tags":{},"autores":{},"totalCurtidas":0}'); }
+  catch { return { tipos:{}, tags:{}, autores:{}, totalCurtidas:0 }; }
+}
+
+function salvarPreferencias(p) {
+  localStorage.setItem('st-preferencias', JSON.stringify(p));
+}
+
+function registrarPreferencia(post) {
+  const prefs = getPreferencias();
+  prefs.totalCurtidas = (prefs.totalCurtidas || 0) + 1;
+
+  // Peso por tipo
+  const tipo = post.tipo || 'outro';
+  prefs.tipos[tipo] = (prefs.tipos[tipo] || 0) + 1;
+
+  // Peso por tag
+  (post.tags || []).forEach(t => {
+    prefs.tags[t] = (prefs.tags[t] || 0) + 1;
+  });
+
+  // Peso por autor
+  if (post.autorId) {
+    prefs.autores[post.autorId] = (prefs.autores[post.autorId] || 0) + 1;
+  }
+
+  salvarPreferencias(prefs);
+}
+
+/* ════════════════════════════════════════
+   ALGORITMO DE RECOMENDAÇÃO
+   Score composto por 4 sinais:
+   1. Afinidade de tipo   (40%)
+   2. Afinidade de tags   (30%)
+   3. Afinidade de autor  (20%)
+   4. Popularidade global (10%)
+════════════════════════════════════════ */
+
+function calcularScore(post, prefs) {
+  const total = prefs.totalCurtidas || 1;
+  let score = 0;
+  const razoes = [];
+
+  // 1. Tipo (40%)
+  const pesoTipo = (prefs.tipos[post.tipo] || 0) / total;
+  if (pesoTipo > 0) {
+    score += pesoTipo * 40;
+    razoes.push(`Você curte ${post.tipo}`);
+  }
+
+  // 2. Tags (30%)
+  const tags = post.tags || [];
+  if (tags.length > 0) {
+    const matchTags = tags.filter(t => prefs.tags[t]);
+    if (matchTags.length > 0) {
+      const pesoTag = matchTags.reduce((s, t) => s + (prefs.tags[t] || 0), 0) / (total * tags.length);
+      score += pesoTag * 30;
+      razoes.push(`#${matchTags[0]}${matchTags.length > 1 ? ` +${matchTags.length-1}` : ''}`);
+    }
+  }
+
+  // 3. Autor (20%)
+  if (post.autorId && prefs.autores[post.autorId]) {
+    const pesoAutor = prefs.autores[post.autorId] / total;
+    score += pesoAutor * 20;
+    razoes.push(`De ${post.autorNome || post.autorId}`);
+  }
+
+  // 4. Popularidade global (10%)
+  const curtidas = post.curtidas || 0;
+  const maxCurtidas = Math.max(...DB.posts.map(p => p.curtidas || 0), 1);
+  score += (curtidas / maxCurtidas) * 10;
+  if (curtidas > 0) razoes.push(`${curtidas} curtida${curtidas !== 1 ? 's' : ''}`);
+
+  // Penalidade para posts já curtidos (não re-recomendar)
+  if (_curtidasCache[post.id]) score *= 0.3;
+
+  return { score: Math.round(score * 10) / 10, razoes };
+}
+
+function getPostsRecomendados() {
+  const prefs = getPreferencias();
+  if (prefs.totalCurtidas === 0) return []; // sem histórico, sem recomendação
+
+  return DB.posts
+    .map(p => ({ ...p, _rec: calcularScore(p, prefs) }))
+    .filter(p => p._rec.score > 0 && p.status !== 'excluido')
+    .sort((a, b) => b._rec.score - a._rec.score)
+    .slice(0, 20);
+}
+
+function getPostsCurtidos() {
+  const ids = Object.keys(_curtidasCache);
+  return DB.posts.filter(p => ids.includes(p.id));
+}
+
+/* ── Muda aba do feed ── */
+function mudarFeedTab(aba) {
+  feedTab = aba;
+  ['recentes','recomendados','curtidos'].forEach(t => {
+    document.getElementById(`tab-${t}`)?.classList.toggle('active', t === aba);
+  });
+  renderFeed();
+}
+
+function renderFeed() {
+  const container = document.getElementById('posts-list');
+  if (!container) return;
+
+  if (_carregando && DB.posts.length === 0) {
+    container.innerHTML = `<div class="empty-feed"><div class="empty-icon" style="animation:pulse 1s infinite;">⏳</div><div class="empty-text">Carregando posts…</div></div>`;
+    return;
+  }
+
+  let posts = [];
+  let isRec = false;
+
+  if (feedTab === 'recomendados') {
+    posts = getPostsRecomendados();
+    isRec = true;
+    if (!posts.length) {
+      container.innerHTML = `<div class="empty-feed"><div class="empty-icon">⭐</div><div class="empty-text">Curta alguns posts para ativar as recomendações personalizadas.</div></div>`;
+      return;
+    }
+  } else if (feedTab === 'curtidos') {
+    posts = getPostsCurtidos();
+    if (!posts.length) {
+      container.innerHTML = `<div class="empty-feed"><div class="empty-icon">❤</div><div class="empty-text">Você ainda não curtiu nenhum post.</div></div>`;
+      return;
+    }
+  } else {
+    posts = [...DB.posts];
+    if (filtroAtivo !== 'todos') posts = posts.filter(p => p.tipo === filtroAtivo);
+    if (filtroTag) posts = posts.filter(p => Array.isArray(p.tags) && p.tags.includes(filtroTag));
+    if (!posts.length) {
+      container.innerHTML = `<div class="empty-feed"><div class="empty-icon">📖</div><div class="empty-text">${
+        filtroTag ? `Nenhum post com #${filtroTag}.` :
+        filtroAtivo !== 'todos' ? `Nenhum post de ${filtroAtivo}.` : 'Nenhum post ainda.'
+      }</div></div>`;
+      return;
+    }
+  }
+
+  const cards = posts.map(p => {
+    const total    = DB.comments.filter(c => c.postId === p.id).length;
+    const curtidas = p.curtidas || 0;
+    const curtido  = jaCurtiu(p.id);
+    const sc       = p.inedito ? 's-inedito' : 's-processado';
+    const st       = p.inedito ? 'Sem resposta' : 'Respondido';
+    const ac       = postAtivoId === p.id ? 'active' : '';
+    const recClass = isRec ? 'recomendado' : '';
+    const tags     = Array.isArray(p.tags) ? p.tags : [];
+    const tagsHtml = tags.length
+      ? `<div class="tag-chips">${tags.map(t =>
+          `<span class="tag-chip${filtroTag===t?' active':''}" onclick="event.stopPropagation();filtrarTag('${t}')">#${t}</span>`
+        ).join('')}</div>` : '';
+    const autorEmoji = p.autorEmoji || '🧑';
+    const autorCor   = p.autorCor   || '#c4952a';
+    const autorNome  = p.autorNome  || p.autor || 'Usuário';
+    const score      = p._rec?.score;
+    const razoes     = p._rec?.razoes || [];
+
+    return `<div class="post-card ${ac} ${recClass}" id="pc-${p.id}">
+      <div class="post-head">
+        <span class="tipo-badge tipo-${p.tipo}">${p.tipo}</span>
+        <span class="post-ts">${tsF(p.timestamp)}${p.editadoEm?' <span style="color:var(--ghost);font-size:.55rem;">(editado)</span>':''}</span>
+        <span class="status-badge ${sc}">${st}</span>
+        ${score!=null?`<span class="score-badge" title="Score de recomendação">⭐${score}</span>`:''}
+        <button class="btn-edit" onclick="event.stopPropagation();abrirEditarPost('${p.id}')" title="Editar post">✏</button>
+      </div>
+      ${isRec && razoes.length ? `<div class="rec-why">✦ ${razoes.join(' · ')}</div>` : ''}
+      <div class="post-body" onclick="abrirThread('${p.id}')">${linkify(p.conteudo)}</div>
+      ${tagsHtml}
+      <div class="post-foot">
+        <button class="btn-curtir${curtido?' curtido':''}" onclick="event.stopPropagation();toggleCurtir('${p.id}')" title="${curtido?'Descurtir':'Curtir'}">
+          <span class="heart">${curtido?'❤':'🤍'}</span> ${curtidas}
+        </button>
+        <span class="autor-avatar">
+          <span class="autor-dot" style="background:${autorCor}22;border:1px solid ${autorCor}66;">${autorEmoji}</span>
+          <span style="font-family:var(--mono);font-size:.62rem;color:${autorCor};">${esc(autorNome)}</span>
+        </span>
+        <button class="btn btn-ghost btn-sm" onclick="abrirThread('${p.id}')">🧵 Ver thread</button>
+        <button class="btn-fc" onclick="event.stopPropagation();abrirAprofundamento('${p.id}')" title="Aprofundar neste post">📖 Aprofundar</button>
+        <span class="comment-count">${total} comentário${total!==1?'s':''}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  const prog = _totalPosts!=null?`${DB.posts.length} de ${_totalPosts} posts carregados`:`${DB.posts.length} posts`;
+  const rodape = feedTab==='recentes' ? `<div class="lote-footer">
+    <div class="lote-progresso">${prog}</div>
+    ${!_fim
+      ?`<button class="btn btn-ghost btn-sm" onclick="carregarMais()" ${_carregando?'disabled':''}>${_carregando?'⏳ Carregando…':`↓ Carregar mais ${LOTE}`}</button>`
+      :`<div class="lote-fim">— fim dos posts —</div>`}
+  </div>` : '';
+
+  container.innerHTML = cards + rodape;
+  renderTagsSidebar();
+}
+
+/* ── render thread ── */
+function abrirThread(postId) {
+  if(postAtivoId) document.getElementById('pc-'+postAtivoId)?.classList.remove('active');
+  postAtivoId=postId;
+  document.getElementById('pc-'+postId)?.classList.add('active');
+  document.getElementById('thread-overlay').classList.add('open');
+  document.getElementById('thread-drawer').classList.add('open');
+  renderThread(postId);
+}
+function fecharDrawer() {
+  document.getElementById('thread-overlay').classList.remove('open');
+  document.getElementById('thread-drawer').classList.remove('open');
+}
+function renderThread(postId) {
+  const post=DB.posts.find(p=>p.id===postId); if(!post) return;
+  document.getElementById('drawer-title').textContent='Thread — '+post.tipo;
+  document.getElementById('drawer-preview').textContent=post.conteudo;
+  const all=DB.comments.filter(c=>c.postId===postId);
+  const raiz=all.filter(c=>!c.parentId);
+  document.getElementById('comments-scroll').innerHTML=!raiz.length
+    ?'<div class="no-comments">Nenhum comentário ainda.</div>'
+    :raiz.map(c=>renderNode(c,all,postId)).join('');
+}
+function renderNode(c,all,postId,depth=0){
+  const replies  = all.filter(x=>x.parentId===c.id);
+  const nc       = depth>0?'nested':'';
+  const emoji    = c.autorEmoji || (c.origem==='manual'?'🧑':'🤖');
+  const cor      = c.autorCor   || (c.origem==='manual'?'#c4952a':'#4a6741');
+  const nome     = c.autor || 'Usuário';
+  const excluido = c.excluido || false;
+  const sb = c.statusLeitura==='inedito'
+    ?`<span class="status-badge s-inedito" style="font-size:.5rem;padding:1px 5px;animation:pulse 2.5s infinite;">Inédito</span>`
+    :c.statusLeitura==='processado_pendente'
+    ?`<span class="status-badge s-pendente" style="font-size:.5rem;padding:1px 5px;">Pendente</span>`:'';
+  const editadoTag = c.editadoEm
+    ?`<span style="font-family:var(--mono);font-size:.52rem;color:#4a4030;">(editado)</span>`:'';
+
+  return `<div class="comment-node ${nc}" id="cn-${c.id}">
+    <div class="c-bubble">
+      <div class="c-head">
+        <span class="autor-dot" style="background:${cor}33;border:1px solid ${cor}66;font-size:.72rem;width:18px;height:18px;flex-shrink:0;">${emoji}</span>
+        <span class="c-autor" style="color:${cor};">${esc(nome)}</span>
+        <span class="c-tipo ct-${c.tipo}">${c.tipo}</span>
+        <span class="c-origin ${c.origem==='manual'?'o-manual':'o-ia'}">${c.origem==='manual'?'Manual':'IA'}</span>
+        ${sb}${editadoTag}
+        ${!excluido?`<button class="btn-edit" onclick="abrirEditarComentario('${c.id}')" title="Editar" style="margin-left:auto;">✏</button>`:''}
+      </div>
+      <div class="c-body">${excluido?`<em style="color:#4a4030;">[Comentário removido]</em>`:linkify(c.conteudo)}</div>
+      ${!excluido?`<div class="c-foot">
+        <button class="btn-dark-ghost" onclick="toggleInline('${c.id}')">↩ Responder</button>
+        <span class="c-ts">${tsF(c.timestamp)}</span>
+      </div>`:''}
+    </div>
+    ${!excluido?`<div class="inline-composer" id="inline-${c.id}">
+      <div style="font-family:var(--mono);font-size:.57rem;color:#5a4d3a;text-transform:uppercase;letter-spacing:.12em;margin-bottom:5px;">↩ ${esc(nome)}</div>
+      <textarea placeholder="Sua resposta…"></textarea>
+      <div class="inline-row">
+        <select class="dark-sel">
+          <option value="resposta">Resposta</option><option value="correcao">Correção</option>
+          <option value="sintese">Síntese</option><option value="exercicio">Exercício</option><option value="explicacao">Explicação</option>
+        </select>
+        <button class="btn btn-rust btn-sm" onclick="adicionarManualReply('${postId}','${c.id}')">Enviar</button>
+        <button class="btn-dark-ghost" onclick="toggleInline('${c.id}')">Cancelar</button>
+      </div>
+    </div>`:''}
+    ${replies.map(r=>renderNode(r,all,postId,depth+1)).join('')}
+  </div>`;
+}
+
+async function carregarMais() { await carregarLote(false); }
+
+/* ── wrappers para os módulos de jogo ── */
+function criarFlashcard(postId) {
+  const post = DB.posts.find(p => p.id === postId);
+  if (!post) return;
+  FLASHCARD.criarDePost(post, DB.comments);
+  toast('Flashcard criado! 🃏 Revise em "Revisar"','success');
+}
+
+function iniciarQuizPost(postId) {
+  FLASHCARD.gerarQuiz(postId, DB.comments, DB.posts);
+}
+
+/* ── CONTROLE DE FONTE ── */
+const FONTE_MIN = 13, FONTE_MAX = 26, FONTE_PASSO = 1;
+let fonteAtual = parseInt(localStorage.getItem('st-fonte') || '17');
+
+function aplicarFonte(px) {
+  fonteAtual = Math.min(FONTE_MAX, Math.max(FONTE_MIN, px));
+  document.body.style.fontSize = fonteAtual + 'px';
+  document.getElementById('font-val').textContent = fonteAtual + 'px';
+  localStorage.setItem('st-fonte', fonteAtual);
+  // Atualiza botões de limite
+  document.querySelector('#font-ctrl button:first-child').style.opacity = fonteAtual <= FONTE_MIN ? '.3' : '1';
+  document.querySelector('#font-ctrl button:last-child').style.opacity  = fonteAtual >= FONTE_MAX ? '.3' : '1';
+}
+
+function mudarFonte(delta) { aplicarFonte(fonteAtual + delta * FONTE_PASSO); }
+
+function abrirAprofundamento(postId) {
+  localStorage.setItem('st-aprofundamento-postId', postId);
+  window.open('studythread-aprofundamento.html', '_blank');
+}
+
+// ── Chamada quando Firebase + DOM estão prontos ──
+function onAppReady() {
+  carregarAssuntos().forEach(a => injetarCSS(a.id, a.cor));
+  renderFilterTags();
+  renderSelectsAssunto();
+  renderSelectsPerfil();
+  if (typeof GAME !== 'undefined') GAME.atualizarHUD();
+  if (typeof FLASHCARD !== 'undefined') {
+    const pendentes = FLASHCARD.getParaRevisar().length;
+    const btn = document.getElementById('btn-revisao');
+    if (btn && pendentes > 0) btn.textContent = `🃏 Revisar (${pendentes})`;
+  }
+
+  document.getElementById('posts-list').innerHTML =
+    `<div class="empty-feed"><div class="empty-icon" style="animation:pulse 1s infinite;">⏳</div><div class="empty-text">Conectando ao Firebase…</div></div>`;
+  try {
+    iniciarListeners();
+  } catch(e) {
+    console.error(e);
+    toast('Erro Firebase. Veja console.','error');
+  }
+  aplicarFonte(fonteAtual);
+}
+
+// aplicarFonte é chamado em onAppReady
+</script>
+</body>
+</html>

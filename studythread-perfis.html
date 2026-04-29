@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>StudyThread — Perfis</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#1a1410;--paper:#f5f0e8;--aged:#e8e0ce;--sepia:#c8b89a;
+  --rust:#8b3a2a;--gold:#c4952a;--sage:#4a6741;--ghost:#7a7060;--margin:#d4c9b0;
+  --font-d:'Playfair Display',Georgia,serif;
+  --font-b:'Crimson Pro','Times New Roman',serif;
+  --font-m:'DM Mono','Courier New',monospace;
+  --r:5px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:#2a2218;}
+body{font-family:var(--font-b);font-size:16px;color:var(--ink);}
+
+/* ── TOPBAR ── */
+#topbar{
+  position:sticky;top:0;z-index:30;
+  background:var(--ink);border-bottom:3px double var(--gold);
+  display:flex;align-items:center;gap:16px;padding:0 28px;height:56px;
+}
+.logo{font-family:var(--font-d);font-size:1.5rem;font-weight:700;color:var(--paper);}
+.logo span{color:var(--gold);font-style:italic;}
+.topbar-sub{font-family:var(--font-m);font-size:.62rem;color:var(--sepia);letter-spacing:.14em;text-transform:uppercase;flex:1;}
+.btn{font-family:var(--font-m);font-size:.68rem;letter-spacing:.07em;padding:7px 14px;border-radius:var(--r);border:none;cursor:pointer;transition:all .15s;text-transform:uppercase;}
+.btn-gold{background:var(--gold);color:var(--ink);font-weight:500;}.btn-gold:hover{background:#b5882a;}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--sepia);}.btn-ghost:hover{background:rgba(255,255,255,.08);color:var(--paper);}
+.btn-sage{background:var(--sage);color:var(--paper);}.btn-sage:hover{background:#3d5835;}
+.btn-rust{background:var(--rust);color:var(--paper);}.btn-rust:hover{background:#73301f;}
+.btn-sm{padding:4px 10px;font-size:.62rem;}
+
+/* ── LAYOUT ── */
+#main{max-width:1100px;margin:0 auto;padding:28px 24px 80px;}
+
+/* ── CONTROLES ── */
+.controls-bar{
+  background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);
+  padding:16px 20px;margin-bottom:20px;
+  display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;
+}
+.ctrl-group{display:flex;flex-direction:column;gap:5px;}
+.ctrl-label{font-family:var(--font-m);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ghost);}
+.ctrl-input{
+  background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);
+  padding:7px 11px;font-family:var(--font-b);font-size:.92rem;color:var(--ink);
+  outline:none;transition:border-color .2s;
+}
+.ctrl-input:focus{border-color:var(--gold);}
+.ctrl-search{flex:1;min-width:220px;}
+.ctrl-search input{width:100%;}
+
+/* ── RAMOS FILTER ── */
+.ramos-wrap{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.ramo-chip{
+  font-family:var(--font-m);font-size:.62rem;padding:3px 10px;border-radius:12px;
+  background:var(--aged);border:1px solid var(--margin);color:var(--ghost);
+  cursor:pointer;transition:all .15s;
+}
+.ramo-chip:hover{border-color:var(--gold);color:var(--gold);}
+.ramo-chip.active{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+
+/* ── GRID DE PERFIS ── */
+#perfis-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:16px;
+}
+
+/* ── CARD DE PERFIL ── */
+.perfil-card{
+  background:var(--paper);
+  border:1px solid var(--margin);
+  border-radius:8px;
+  box-shadow:0 2px 8px rgba(26,20,16,.12),inset 0 1px 0 rgba(255,255,255,.8);
+  overflow:hidden;
+  transition:transform .2s,box-shadow .2s;
+  display:flex;flex-direction:column;
+}
+.perfil-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,20,16,.18);}
+
+.pc-head{
+  padding:16px 16px 12px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--margin);
+}
+.pc-avatar{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;flex-shrink:0;
+}
+.pc-info{flex:1;min-width:0;}
+.pc-nome{font-family:var(--font-m);font-size:.82rem;font-weight:500;color:var(--ink);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pc-area{font-size:.82rem;color:var(--ghost);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pc-ia{font-family:var(--font-m);font-size:.58rem;padding:2px 7px;border-radius:10px;background:rgba(196,149,42,.1);color:var(--gold);border:1px solid rgba(196,149,42,.2);white-space:nowrap;}
+
+.pc-body{padding:12px 16px;flex:1;}
+.pc-campo{margin-bottom:8px;}
+.pc-campo-label{font-family:var(--font-m);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ghost);margin-bottom:2px;}
+.pc-campo-val{font-size:.88rem;color:var(--ink);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-ramos{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+.pc-ramo{font-family:var(--font-m);font-size:.58rem;padding:2px 7px;border-radius:10px;background:var(--aged);color:var(--ghost);border:1px solid var(--margin);}
+
+.pc-foot{
+  padding:8px 16px;display:flex;gap:6px;
+  border-top:1px solid var(--margin);background:var(--aged);
+}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(10,8,4,.75);backdrop-filter:blur(3px);
+  z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--paper);
+  background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(196,149,42,.06) 27px,rgba(196,149,42,.06) 28px);
+  border:1px solid var(--margin);border-radius:8px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+  max-width:620px;width:100%;max-height:90vh;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.modal-head{padding:16px 20px;border-bottom:2px solid var(--margin);display:flex;align-items:center;gap:12px;background:var(--aged);flex-shrink:0;}
+.modal-title{font-family:var(--font-d);font-size:1.2rem;color:var(--ink);flex:1;}
+.modal-body{padding:18px 20px;overflow-y:auto;flex:1;}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--margin);display:flex;gap:8px;background:var(--aged);flex-wrap:wrap;flex-shrink:0;}
+
+/* ── FORM FIELDS ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-full{grid-column:1/-1;}
+.field-lbl{display:block;font-family:var(--font-m);font-size:.6rem;color:var(--ghost);text-transform:uppercase;letter-spacing:.12em;margin-bottom:5px;}
+.field-input{width:100%;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:7px 10px;font-family:var(--font-b);font-size:.92rem;color:var(--ink);outline:none;transition:border-color .2s;}
+.field-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(196,149,42,.1);}
+.field-ta{width:100%;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:7px 10px;font-family:var(--font-b);font-size:.92rem;color:var(--ink);resize:vertical;outline:none;line-height:1.55;transition:border-color .2s;}
+.field-ta:focus{border-color:var(--gold);}
+.field-hint{font-family:var(--font-m);font-size:.58rem;color:var(--ghost);margin-top:3px;}
+
+/* Ramos input */
+.ramos-input-wrap{display:flex;gap:6px;align-items:center;margin-bottom:6px;}
+.ramos-input-wrap input{flex:1;}
+.ramos-chips-edit{display:flex;flex-wrap:wrap;gap:4px;}
+.ramo-chip-edit{font-family:var(--font-m);font-size:.62rem;padding:3px 8px;border-radius:10px;background:var(--aged);border:1px solid var(--margin);color:var(--ink);display:inline-flex;align-items:center;gap:5px;}
+.ramo-rm{background:transparent;border:none;color:var(--ghost);cursor:pointer;font-size:.8rem;line-height:1;padding:0;}
+.ramo-rm:hover{color:var(--rust);}
+
+/* Toast */
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:200;display:flex;flex-direction:column;gap:7px;pointer-events:none;}
+.toast{font-family:var(--font-m);font-size:.68rem;padding:9px 14px;border-radius:var(--r);box-shadow:0 4px 20px rgba(0,0,0,.4);transform:translateX(120%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-width:280px;}
+.toast.show{transform:translateX(0);}
+.toast.success{background:var(--sage);color:var(--paper);}
+.toast.error{background:var(--rust);color:var(--paper);}
+.toast.info{background:#3d4f5c;color:var(--paper);}
+.toast.warning{background:var(--gold);color:var(--ink);}
+
+/* Estado vazio */
+.empty{text-align:center;padding:60px 20px;color:var(--ghost);}
+.empty-icon{font-size:3rem;margin-bottom:12px;opacity:.4;}
+.empty-text{font-family:var(--font-d);font-style:italic;font-size:1rem;}
+
+/* Badge padrão */
+.badge-padrao{font-family:var(--font-m);font-size:.55rem;padding:1px 6px;border-radius:8px;background:var(--aged);color:var(--ghost);border:1px solid var(--margin);}
+
+::-webkit-scrollbar{width:5px;}.:-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#4a3d2a;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<header id="topbar">
+  <div class="logo">Study<span>Thread</span></div>
+  <div class="topbar-sub">Gerenciar Perfis de Personagens</div>
+  <button class="btn btn-ghost" onclick="window.close()">← Voltar</button>
+  <button class="btn btn-gold" onclick="abrirNovoPerfil()">+ Novo Perfil</button>
+</header>
+
+<div id="main">
+
+  <!-- Controles -->
+  <div class="controls-bar">
+    <div class="ctrl-group ctrl-search">
+      <div class="ctrl-label">Buscar</div>
+      <input class="ctrl-input" type="text" id="busca" placeholder="Nome, área, IA…" oninput="renderGrid()"/>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-label">IA responsável</div>
+      <select class="ctrl-input" id="filtro-ia" onchange="renderGrid()">
+        <option value="">Todas as IAs</option>
+        <option>Claude</option>
+        <option>ChatGPT</option>
+        <option>Gemini</option>
+        <option>Grok</option>
+        <option>Llama</option>
+        <option>Mistral</option>
+        <option>Manual</option>
+        <option>Outro</option>
+      </select>
+    </div>
+    <div class="ctrl-group" style="flex:1;min-width:200px;">
+      <div class="ctrl-label">Filtrar por ramo <span id="ramo-ativo-label"></span></div>
+      <div class="ramos-wrap" id="ramos-filter"></div>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-label">Total</div>
+      <div style="font-family:var(--font-d);font-size:1.5rem;color:var(--gold);line-height:1;" id="total-label">—</div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div id="perfis-grid"></div>
+</div>
+
+<!-- MODAL EDITAR/CRIAR -->
+<div class="modal-overlay" id="modal-perfil">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-titulo">Novo Perfil</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-full">
+          <label class="field-lbl">Nome / ID do personagem *</label>
+          <input class="field-input" id="pe-nome" placeholder="Ex: Nietzsche_IA"/>
+          <div class="field-hint">Aparece como autor nos posts e comentários.</div>
+        </div>
+        <div>
+          <label class="field-lbl">Apelido / nome curto</label>
+          <input class="field-input" id="pe-apelido" placeholder="Ex: Friedrich"/>
+        </div>
+        <div>
+          <label class="field-lbl">Emoji / avatar</label>
+          <input class="field-input" id="pe-emoji" placeholder="🧠" maxlength="4" style="font-size:1.3rem;text-align:center;"/>
+        </div>
+        <div>
+          <label class="field-lbl">Cor de destaque</label>
+          <input class="field-input" id="pe-cor" type="color" value="#c4952a" style="height:38px;cursor:pointer;padding:2px;"/>
+        </div>
+        <div>
+          <label class="field-lbl">IA responsável</label>
+          <select class="field-input" id="pe-ia">
+            <option>Claude</option><option>ChatGPT</option><option>Gemini</option>
+            <option>Grok</option><option>Llama</option><option>Mistral</option>
+            <option>Manual</option><option>Outro</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-lbl">Modelo específico</label>
+          <input class="field-input" id="pe-modelo" placeholder="Ex: claude-opus-4-6"/>
+        </div>
+        <div class="form-full">
+          <label class="field-lbl">Área de atuação</label>
+          <input class="field-input" id="pe-area" placeholder="Ex: Filosofia, Ética, Crítica Cultural"/>
+        </div>
+        <div class="form-full">
+          <label class="field-lbl">Ramos / especialidades <span style="color:var(--ghost);font-weight:normal;text-transform:none;letter-spacing:0;">(ex: grego, latim, lógica)</span></label>
+          <div class="ramos-input-wrap">
+            <input class="field-input" id="pe-ramo-input" placeholder="Digite um ramo e pressione Enter…" onkeydown="if(event.key==='Enter'){event.preventDefault();adicionarRamo();}"/>
+            <button class="btn btn-sage btn-sm" onclick="adicionarRamo()">+ Add</button>
+          </div>
+          <div class="ramos-chips-edit" id="pe-ramos-chips"></div>
+        </div>
+        <div class="form-full">
+          <label class="field-lbl">Características do pensamento</label>
+          <textarea class="field-ta" id="pe-pensamento" rows="3" placeholder="Ex: Perspectivista, antimoralista, defensor da vontade de poder…"></textarea>
+        </div>
+        <div class="form-full">
+          <label class="field-lbl">Estilo de comunicação</label>
+          <textarea class="field-ta" id="pe-estilo" rows="2" placeholder="Ex: Aforístico, provocador, usa metáforas e ironias…"></textarea>
+        </div>
+        <div class="form-full">
+          <label class="field-lbl">Instrução de sistema (system prompt)</label>
+          <textarea class="field-ta" id="pe-instrucao" rows="4" placeholder="Ex: Responda sempre na primeira pessoa como Nietzsche. Use linguagem forte e aforismos…"></textarea>
+          <div class="field-hint">Enviado como instrução para a IA ao gerar respostas deste perfil.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-gold" onclick="salvarPerfil()">✓ Salvar</button>
+      <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-rust btn-sm" id="btn-excluir" onclick="excluirPerfil()" style="margin-left:auto;display:none;">🗑 Excluir perfil</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ════════════════
+   PERFIS (localStorage)
+════════════════ */
+const PADRAO = [
+  { id:'usuario', nome:'Usuário', apelido:'Eu', area:'Estudante', pensamento:'Curioso, questionador.',
+    estilo:'Conversacional.', ia_responsavel:'Manual', modelo:'', instrucao_sistema:'',
+    emoji:'🧑', cor:'#c4952a', ramos:[], padrao:true }
+];
+
+function carregar() {
+  try { return JSON.parse(localStorage.getItem('st-perfis')||'[]'); } catch { return []; }
+}
+function salvarLS(lista) { localStorage.setItem('st-perfis', JSON.stringify(lista)); }
+function todos() { return [...PADRAO, ...carregar()]; }
+function normId(nome) {
+  return nome.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,40);
+}
+
+/* ════════════════
+   ESTADO
+════════════════ */
+let ramosFiltro  = [];   // ramos selecionados
+let editandoId   = null; // id do perfil em edição
+let ramosEdit    = [];   // ramos no form
+
+/* ════════════════
+   TOAST
+════════════════ */
+function toast(msg, tipo='info') {
+  const w=document.getElementById('toast-wrap');
+  const el=document.createElement('div'); el.className=`toast ${tipo}`; el.textContent=msg;
+  w.appendChild(el); requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),400); },3000);
+}
+
+/* ════════════════
+   RAMOS — extrai todos os ramos únicos de todos os perfis
+════════════════ */
+function todosRamos() {
+  const set = new Set();
+  todos().forEach(p => (p.ramos||[]).forEach(r => set.add(r.toLowerCase())));
+  return [...set].sort();
+}
+
+function renderRamosFilter() {
+  const ramos = todosRamos();
+  const container = document.getElementById('ramos-filter');
+  if (!ramos.length) { container.innerHTML = '<span style="font-family:var(--font-m);font-size:.65rem;color:var(--ghost);">Nenhum ramo cadastrado ainda.</span>'; return; }
+  container.innerHTML = ramos.map(r =>
+    `<div class="ramo-chip${ramosFiltro.includes(r)?' active':''}" onclick="toggleRamo('${r}')">${r}</div>`
+  ).join('');
+}
+
+function toggleRamo(ramo) {
+  if (ramosFiltro.includes(ramo)) ramosFiltro = ramosFiltro.filter(r=>r!==ramo);
+  else ramosFiltro.push(ramo);
+  renderRamosFilter();
+  renderGrid();
+  const lbl = document.getElementById('ramo-ativo-label');
+  lbl.textContent = ramosFiltro.length ? `· ${ramosFiltro.join(', ')}` : '';
+}
+
+/* ════════════════
+   RENDER GRID
+════════════════ */
+function renderGrid() {
+  const busca   = document.getElementById('busca').value.toLowerCase();
+  const filtroIA = document.getElementById('filtro-ia').value;
+
+  let lista = todos().filter(p => {
+    // Busca
+    const haystack = `${p.nome} ${p.area} ${p.ia_responsavel} ${p.pensamento} ${(p.ramos||[]).join(' ')}`.toLowerCase();
+    if (busca && !haystack.includes(busca)) return false;
+    // IA
+    if (filtroIA && p.ia_responsavel !== filtroIA) return false;
+    // Ramos
+    if (ramosFiltro.length) {
+      const pRamos = (p.ramos||[]).map(r=>r.toLowerCase());
+      if (!ramosFiltro.every(r => pRamos.includes(r))) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('total-label').textContent = lista.length;
+  const grid = document.getElementById('perfis-grid');
+
+  if (!lista.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">👤</div><div class="empty-text">Nenhum perfil encontrado.</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = lista.map(p => renderCard(p)).join('');
+}
+
+function renderCard(p) {
+  const ramos = (p.ramos||[]).map(r=>`<span class="pc-ramo">${r}</span>`).join('');
+  return `<div class="perfil-card">
+    <div class="pc-head">
+      <div class="pc-avatar" style="background:${p.cor}22;border:2px solid ${p.cor}55;">${p.emoji||'👤'}</div>
+      <div class="pc-info">
+        <div class="pc-nome" style="color:${p.cor};">${esc(p.nome)} ${p.padrao?'<span class="badge-padrao">padrão</span>':''}</div>
+        <div class="pc-area">${esc(p.area||'—')}</div>
+      </div>
+      <span class="pc-ia">${p.ia_responsavel||'—'}</span>
+    </div>
+    <div class="pc-body">
+      ${p.modelo?`<div class="pc-campo"><div class="pc-campo-label">Modelo</div><div class="pc-campo-val" style="font-family:var(--font-m);font-size:.72rem;">${esc(p.modelo)}</div></div>`:''}
+      ${p.pensamento?`<div class="pc-campo"><div class="pc-campo-label">Pensamento</div><div class="pc-campo-val">${esc(p.pensamento)}</div></div>`:''}
+      ${p.instrucao_sistema?`<div class="pc-campo"><div class="pc-campo-label">System prompt</div><div class="pc-campo-val" style="font-family:var(--font-m);font-size:.7rem;color:var(--ghost);">${esc(p.instrucao_sistema)}</div></div>`:''}
+      ${ramos?`<div class="pc-campo"><div class="pc-campo-label">Ramos</div><div class="pc-ramos">${ramos}</div></div>`:''}
+    </div>
+    <div class="pc-foot">
+      <button class="btn btn-sage btn-sm" onclick="abrirEditar('${p.id}')">✏ Editar</button>
+      ${!p.padrao?`<button class="btn btn-rust btn-sm" onclick="confirmarExcluir('${p.id}')">🗑 Excluir</button>`:''}
+    </div>
+  </div>`;
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ════════════════
+   MODAL
+════════════════ */
+function abrirNovoPerfil() {
+  editandoId = null;
+  ramosEdit  = [];
+  document.getElementById('modal-titulo').textContent = '👤 Novo Perfil';
+  document.getElementById('btn-excluir').style.display = 'none';
+  limparForm();
+  document.getElementById('modal-perfil').classList.add('open');
+}
+
+function abrirEditar(id) {
+  const p = todos().find(x=>x.id===id);
+  if (!p) return;
+  editandoId = id;
+  ramosEdit  = [...(p.ramos||[])];
+  document.getElementById('modal-titulo').textContent = `✏ Editar: ${p.nome}`;
+  document.getElementById('btn-excluir').style.display = p.padrao?'none':'inline-block';
+  preencherForm(p);
+  renderRamosEdit();
+  document.getElementById('modal-perfil').classList.add('open');
+}
+
+function fecharModal() {
+  document.getElementById('modal-perfil').classList.remove('open');
+}
+
+document.getElementById('modal-perfil').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-perfil')) fecharModal();
+});
+
+function limparForm() {
+  ['pe-nome','pe-apelido','pe-area','pe-pensamento','pe-estilo','pe-instrucao','pe-modelo','pe-ramo-input']
+    .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('pe-emoji').value = '🧠';
+  document.getElementById('pe-cor').value   = '#c4952a';
+  document.getElementById('pe-ia').value    = 'Claude';
+  renderRamosEdit();
+}
+
+function preencherForm(p) {
+  document.getElementById('pe-nome').value      = p.nome||'';
+  document.getElementById('pe-apelido').value   = p.apelido||'';
+  document.getElementById('pe-area').value      = p.area||'';
+  document.getElementById('pe-pensamento').value= p.pensamento||'';
+  document.getElementById('pe-estilo').value    = p.estilo||'';
+  document.getElementById('pe-instrucao').value = p.instrucao_sistema||'';
+  document.getElementById('pe-modelo').value    = p.modelo||'';
+  document.getElementById('pe-emoji').value     = p.emoji||'🧠';
+  document.getElementById('pe-cor').value       = p.cor||'#c4952a';
+  document.getElementById('pe-ia').value        = p.ia_responsavel||'Claude';
+  document.getElementById('pe-nome').disabled   = !!p.padrao;
+}
+
+/* ── Ramos no form ── */
+function adicionarRamo() {
+  const inp = document.getElementById('pe-ramo-input');
+  const val = inp.value.trim().toLowerCase();
+  if (!val || ramosEdit.includes(val)) { inp.value=''; return; }
+  ramosEdit.push(val);
+  inp.value = '';
+  renderRamosEdit();
+}
+
+function removerRamoEdit(ramo) {
+  ramosEdit = ramosEdit.filter(r=>r!==ramo);
+  renderRamosEdit();
+}
+
+function renderRamosEdit() {
+  document.getElementById('pe-ramos-chips').innerHTML = ramosEdit.map(r=>
+    `<span class="ramo-chip-edit">${r}<button class="ramo-rm" onclick="removerRamoEdit('${r}')">×</button></span>`
+  ).join('');
+}
+
+/* ── Salvar ── */
+function salvarPerfil() {
+  const nome = document.getElementById('pe-nome').value.trim();
+  if (!nome) { toast('Nome é obrigatório.','warning'); return; }
+
+  const dados = {
+    nome,
+    apelido:           document.getElementById('pe-apelido').value.trim(),
+    area:              document.getElementById('pe-area').value.trim(),
+    pensamento:        document.getElementById('pe-pensamento').value.trim(),
+    estilo:            document.getElementById('pe-estilo').value.trim(),
+    ia_responsavel:    document.getElementById('pe-ia').value,
+    modelo:            document.getElementById('pe-modelo').value.trim(),
+    instrucao_sistema: document.getElementById('pe-instrucao').value.trim(),
+    emoji:             document.getElementById('pe-emoji').value.trim()||'🧠',
+    cor:               document.getElementById('pe-cor').value,
+    ramos:             [...ramosEdit],
+    padrao:            false,
+  };
+
+  const custom = carregar();
+
+  if (editandoId) {
+    const isPadrao = PADRAO.find(x=>x.id===editandoId);
+    if (isPadrao) {
+      // override de padrão
+      const idx = custom.findIndex(x=>x.id===editandoId);
+      if (idx>=0) custom[idx] = {...custom[idx],...dados,id:editandoId};
+      else custom.push({...dados,id:editandoId});
+    } else {
+      const idx = custom.findIndex(x=>x.id===editandoId);
+      if (idx>=0) custom[idx] = {...custom[idx],...dados};
+    }
+    toast(`Perfil "${nome}" atualizado!`,'success');
+  } else {
+    const id = normId(nome);
+    if (todos().find(x=>x.id===id)) { toast('Já existe um perfil com este nome.','warning'); return; }
+    custom.push({...dados, id});
+    toast(`Perfil "${nome}" criado!`,'success');
+  }
+
+  salvarLS(custom);
+  fecharModal();
+  renderRamosFilter();
+  renderGrid();
+}
+
+/* ── Excluir ── */
+function confirmarExcluir(id) {
+  const p = todos().find(x=>x.id===id);
+  if (!p || p.padrao) return;
+  if (!confirm(`Excluir o perfil "${p.nome}"? Posts e comentários mantêm o nome, mas o perfil sai dos seletores.`)) return;
+  const custom = carregar().filter(x=>x.id!==id);
+  salvarLS(custom);
+  toast('Perfil excluído.','info');
+  renderRamosFilter();
+  renderGrid();
+}
+
+function excluirPerfil() {
+  if (editandoId) { fecharModal(); confirmarExcluir(editandoId); }
+}
+
+/* ════════════════
+   INICIALIZAÇÃO
+════════════════ */
+renderRamosFilter();
+renderGrid();
+</script>
+</body>
+</html>
