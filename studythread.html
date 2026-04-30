@@ -106,8 +106,60 @@ body {
   padding: 14px 22px;
 }
 
-/* Lista de posts — pega TODO o espaço restante e rola */
-#posts-list {
+/* ── COMPOSER RECOLHÍVEL ── */
+#composer {
+  flex-shrink: 0;
+  background: var(--aged);
+  border-bottom: 2px solid var(--margin);
+  padding: 16px 24px;
+  transition: transform .3s cubic-bezier(.4,0,.2,1), opacity .3s ease, max-height .3s ease;
+  max-height: 300px;
+  overflow: hidden;
+}
+#composer.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom-width: 0;
+}
+
+/* Botão flutuante para reabrir o composer */
+#btn-novo-post {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 50;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s, background .2s;
+}
+#btn-novo-post:hover { background: #b5882a; transform: scale(1.08); }
+#btn-novo-post.visible { display: flex; }
+
+/* Aba de filtro de tag recolhível também */
+#tag-filtro-bar {
+  transition: max-height .25s ease, opacity .25s ease;
+  max-height: 48px;
+  opacity: 1;
+}
+#tag-filtro-bar:not(.visible) { max-height: 0; opacity: 0; overflow: hidden; }
+
+@media (max-width: 640px) {
+  #composer { padding: 12px 16px; }
+  #btn-novo-post { bottom: 20px; right: 20px; width: 48px; height: 48px; font-size: 1.3rem; }
+}
   flex: 1;
   overflow-y: auto;
   padding: 18px 24px 40px;
@@ -1039,6 +1091,9 @@ body {
   </div>
   <div id="posts-list"></div>
 </div>
+
+<!-- Botão flutuante — aparece quando o composer está oculto -->
+<button id="btn-novo-post" onclick="abrirComposer()" title="Novo post">✦</button>
 
 <!-- DRAWER -->
 <div class="thread-overlay" id="thread-overlay" onclick="fecharDrawer()"></div>
@@ -2491,7 +2546,62 @@ async function excluirItem() {
 let feedTab = 'recentes'; // 'recentes' | 'recomendados' | 'curtidos'
 
 /* ════════════════════════════════════════
-   CURTIDAS — armazenadas no Firestore
+   COMPOSER — esconde ao rolar, aparece ao subir
+════════════════════════════════════════ */
+let _lastScroll    = 0;
+let _composerOculto = false;
+
+function initScrollComposer() {
+  const lista = document.getElementById('posts-list');
+  if (!lista) return;
+
+  // Detecta scroll dentro do #posts-list (que é o container que rola)
+  const feedCol = document.getElementById('feed');
+  if (!feedCol) return;
+
+  feedCol.addEventListener('scroll', () => {
+    const st = feedCol.scrollTop;
+    const composer = document.getElementById('composer');
+    const btnFlutuante = document.getElementById('btn-novo-post');
+
+    if (st > _lastScroll && st > 80) {
+      // Rolando para BAIXO — oculta composer
+      if (!_composerOculto) {
+        composer.classList.add('hidden');
+        btnFlutuante.classList.add('visible');
+        _composerOculto = true;
+      }
+    } else if (st < _lastScroll - 20 || st < 40) {
+      // Rolando para CIMA — mostra composer
+      if (_composerOculto) {
+        composer.classList.remove('hidden');
+        btnFlutuante.classList.remove('visible');
+        _composerOculto = false;
+      }
+    }
+    _lastScroll = st;
+  }, { passive: true });
+}
+
+function abrirComposer() {
+  const composer = document.getElementById('composer');
+  const btnFlutuante = document.getElementById('btn-novo-post');
+  const feedCol = document.getElementById('feed');
+
+  composer.classList.remove('hidden');
+  btnFlutuante.classList.remove('visible');
+  _composerOculto = false;
+
+  // Rola suavemente para o topo para mostrar o composer
+  feedCol.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Foca o textarea após a animação
+  setTimeout(() => {
+    document.getElementById('np-texto')?.focus();
+  }, 320);
+}
+
+
    Cada dispositivo tem um userId gerado
    uma vez e salvo no localStorage.
    Documento: /curtidas/{userId}
@@ -2898,6 +3008,7 @@ function onAppReady() {
     toast('Erro Firebase. Veja console.','error');
   }
   aplicarFonte(fonteAtual);
+  initScrollComposer();
 }
 
 // aplicarFonte é chamado em onAppReady
