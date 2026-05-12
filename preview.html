@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Curso de Latim</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f5f5f5;
+}
+
+/* Layout principal */
+.container{
+    display:flex;
+    height:100vh;
+}
+
+/* Área do player */
+.audio-area{
+
+    width:40%;
+
+    background:#111;
+
+    padding:25px;
+
+    box-sizing:border-box;
+
+    position:sticky;
+
+    top:0;
+
+    height:100vh;
+
+    overflow:hidden;
+
+    color:white;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-start;
+}
+
+.audio-title{
+    margin-bottom:20px;
+}
+
+/* player */
+audio{
+    width:100%;
+}
+
+/* Área do texto */
+.texto-area{
+
+    width:60%;
+
+    background:white;
+
+    overflow-y:auto;
+
+    padding:30px;
+
+    box-sizing:border-box;
+
+    font-size:20px;
+
+    line-height:2;
+}
+
+/* timestamps */
+.timestamp{
+
+    color:#0066cc;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    text-decoration:none;
+}
+
+.timestamp:hover{
+
+    color:#cc0000;
+}
+
+/* responsivo */
+@media(max-width:900px){
+
+    .container{
+
+        flex-direction:column;
+
+        height:auto;
+    }
+
+    .audio-area{
+
+        width:100%;
+
+        height:auto;
+
+        position:relative;
+    }
+
+    .texto-area{
+
+        width:100%;
+
+        height:auto;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- PLAYER -->
+    <div class="audio-area">
+
+        <h2 class="audio-title">
+            Curso de Latim — Aula 1
+        </h2>
+
+        <audio id="audio" controls>
+
+            <source
+                src="https://jonathanbitt.github.io/InstaIA/audio.mp3"
+                type="audio/mpeg">
+
+            Seu navegador não suporta áudio.
+
+        </audio>
+
+    </div>
+
+    <!-- TEXTO -->
+    <div class="texto-area" id="texto">
+
+(0:00) Salvete carissimi! Sejam bem-vindos ao curso de latim do Instituto Angélicum.
+
+(0:07) Sou o professor William Bottasini e acompanharei vocês ao longo desta viagem maravilhosa.
+
+(0:14) Pela Antiguidade Romana, uma viagem que, estou certo, será repleta de novas descobertas.
+
+(0:22) Bem, antes de iniciar o curso, deixa eu pedir para vocês pegarem em mãos o livro de latim de vocês.
+
+(0:31) O Família Romana, que será o nosso guia.
+
+(0:39) É através dele que vamos aprender não só o latim, mas muita coisa interessante.
+
+(0:47) O livro Família Romana está composto em 35 capítulos.
+
+(0:57) Hoje, nós vamos estudar a primeira lição do primeiro capítulo.
+
+(1:06) E quais são os nossos objetivos nesta primeira lição do primeiro capítulo?
+
+(1:18) Localizar no espaço nomes de rios, províncias e ilhas importantes do Império Romano.
+
+(1:30) Vamos estudar também as formas verbais básicas este e sunt.
+
+(1:41) Estudaremos a partícula NE e o plural das palavras em US.
+
+(1:52) Então, vamos dar início à nossa viagem.
+
+(2:03) Ou seja, por onde vamos passear ao longo dos nossos estudos.
+
+(2:10) Eis aí uma representação do Império Romano da Antiguidade.
+
+(2:24) Aqui vocês têm representado um mapa territorial do Império Romano do segundo século d.C.
+
+(2:35) Quando o Império atingiu a sua expansão máxima.
+
+(2:45) Como vocês podem observar, o Império Romano se dividia por três continentes.
+
+(3:03) Vejam que o domínio romano corresponde a esta parte mais escura no mapa.
+
+(3:20) Mare Nostrum.
+
+(3:32) Ao norte, chegaram até a Britânia.
+
+(3:47) Esta foi a extensão máxima que o Império Romano atingiu.
+
+(4:04) Esta região estava dividida em províncias para facilitar a administração.
+
+(4:16) A Hispânia.
+
+(4:23) A Itália.
+
+(4:29) E a Grécia.
+
+(4:46) Além das províncias, é importante conhecermos o nome de alguns rios principais.
+
+(4:52) O Renos.
+
+(5:02) O Nilos.
+
+(5:08) E o Tíberes.
+
+(5:21) Além dos nomes das províncias e rios, vale lembrar também o nome de ilhas importantes.
+
+(5:40) Trouxeram a paz para o mar Mediterrâneo.
+
+(5:58) Essas ilhas são frequentemente citadas ao longo dos textos.
+
+(6:11) As principais ilhas são Britânia, Córsica, Sardínia e Creta.
+
+(6:43) Textos romanos propriamente ditos.
+
+(7:05) Roma, a capital deste imenso império.
+
+(7:18) Brundisium.
+
+(7:31) Aqui fica a cidade de Atenas.
+
+(7:49) A Germânia e a Arábia ficaram livres da dominação romana.
+
+(8:17) Nem do deserto da Arábia, nem das densas florestas da Germânia.
+
+(8:37) Está aí feita a apresentação do que foi o Impérium Romanum.
+
+(8:50) Podemos agora partir para o estudo da língua latina propriamente dita.
+
+(8:56) Deixe-me explicar para vocês qual será o método de trabalho que eu vou adotar.
+
+(9:15) Em primeiro lugar, destaque aqui para estes numerozinhos que estão na margem da página.
+
+    </div>
+
+</div>
+
+<script>
+
+const audio = document.getElementById("audio");
+
+const texto = document.getElementById("texto");
+
+/* converter tempo para segundos */
+function tempoParaSegundos(tempo){
+
+    const partes = tempo.split(":");
+
+    if(partes.length === 2){
+
+        return parseInt(partes[0]) * 60 +
+               parseInt(partes[1]);
+    }
+
+    if(partes.length === 3){
+
+        return parseInt(partes[0]) * 3600 +
+               parseInt(partes[1]) * 60 +
+               parseInt(partes[2]);
+    }
+
+    return 0;
+}
+
+/* transformar timestamps em links */
+texto.innerHTML = texto.innerHTML.replace(
+
+    /\((\d+:\d+(?::\d+)?)\)/g,
+
+    (match, tempo) => {
+
+        return `
+            <span
+                class="timestamp"
+                data-time="${tempo}">
+                (${tempo})
+            </span>
+        `;
+    }
+);
+
+/* clique nos timestamps */
+document.querySelectorAll(".timestamp")
+.forEach(el => {
+
+    el.addEventListener("click", () => {
+
+        const segundos =
+            tempoParaSegundos(
+                el.dataset.time
+            );
+
+        audio.currentTime = segundos;
+
+        audio.play();
+    });
+
+});
+
+</script>
+
+</body>
+</html>
