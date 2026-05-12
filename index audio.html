@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Player com timestamps</title>
+
+<style>
+    body{
+        font-family: Arial;
+        max-width: 900px;
+        margin: 40px auto;
+        line-height: 1.8;
+        padding: 20px;
+    }
+
+    .timestamp{
+        color: blue;
+        cursor: pointer;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    .timestamp:hover{
+        color: darkred;
+    }
+</style>
+</head>
+<body>
+
+<h2>Aula de Gramática Latina</h2>
+
+<audio id="audio" controls style="width:100%;">
+    <source src="audio.mp3" type="audio/mpeg">
+</audio>
+
+<div id="texto">
+
+(0:00) Salvete carissimi! Sejam bem-vindos ao curso de latim do Instituto Angélicum. 
+(0:07) Sou o professor William Bottasini e acompanharei vocês ao longo desta viagem maravilhosa 
+(0:14) pela Antiguidade Romana, uma viagem que, estou certo, será repleta de novas descobertas. 
+(0:22) Bem, antes de iniciar o curso, deixa eu pedir para vocês pegarem em mãos o livro de latim de vocês, 
+(0:31) o Família Romana, que será o nosso guia.
+É através dele que vamos aprender não só o latim, 
+(0:39) mas muita coisa interessante, muita coisa relacionada à cultura romana, à mitologia, enfim, 
+(0:47) a todo o mundo da Antiguidade. O livro Família Romana está composto em 35 capítulos 
+(0:57) e cada capítulo é dividido em diversas lições. Hoje, nós vamos estudar a primeira lição do primeiro capítulo.
+(1:06) E quais são os nossos objetivos nesta primeira lição do primeiro capítulo? (1:11) Os nossos objetivos são conhecer a extensão territorial do Império Romano, ou seja, (1:18) localizar no espaço nomes de rios, províncias e ilhas mais importantes que compunham o Império Romano. (1:30) Vamos estudar também as formas verbais básicas, este e sunt, que são as mais comuns nos textos latinos. (1:38) Vamos ver como elas são utilizadas e o que elas significam.
+(1:41) Estudaremos a partícula NE e o plural das palavras em US, isto é, o plural das palavras masculinas em latim. (1:52) Então, vamos dar início à nossa viagem. E, como bons viajantes, temos que ver o mapa do nosso roteiro, (2:03) ou seja, por onde vamos passear ao longo dos textos, ao longo dos nossos estudos.
+(2:10) Eis aí, portanto, uma representação do Império Romano da Antiguidade, 
+
+</div>
+
+<script>
+
+const audio = document.getElementById("audio");
+const texto = document.getElementById("texto");
+
+function tempoParaSegundos(tempo){
+    const partes = tempo.split(":");
+
+    if(partes.length === 2){
+        return parseInt(partes[0]) * 60 + parseInt(partes[1]);
+    }
+
+    if(partes.length === 3){
+        return parseInt(partes[0]) * 3600 +
+               parseInt(partes[1]) * 60 +
+               parseInt(partes[2]);
+    }
+
+    return 0;
+}
+
+texto.innerHTML = texto.innerHTML.replace(
+    /\((\d+:\d+(?::\d+)?)\)/g,
+    (match, tempo) => {
+        return `<span class="timestamp" data-time="${tempo}">
+                    (${tempo})
+                </span>`;
+    }
+);
+
+document.querySelectorAll(".timestamp").forEach(el => {
+
+    el.addEventListener("click", () => {
+
+        const segundos = tempoParaSegundos(
+            el.dataset.time
+        );
+
+        audio.currentTime = segundos;
+        audio.play();
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
