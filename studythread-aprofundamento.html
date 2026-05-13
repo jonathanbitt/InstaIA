@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>StudyThread — Aprofundamento</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+
 <style>
 :root {
   --ink:#1a1410;--paper:#f9f6f0;--aged:#f0ebe0;--sepia:#c8b89a;--rust:#8b3a2a;--gold:#c4952a;--sage:#4a6741;--slate:#3d4f5c;--ghost:#7a7060;--margin:#d4c9b0;
@@ -239,7 +240,8 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   background:#1c1610;
   border-left:1px solid #3d3020;
   overflow-y:auto;
-  display:flex;flex-direction:column;
+  display:flex;
+  flex-direction:column;
 }
 .sidebar-head{
   padding:16px 18px;
@@ -258,7 +260,12 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .stab:hover{color:var(--sepia);}
 .stab.active{color:var(--gold);border-bottom-color:var(--gold);}
 
-.sidebar-body{flex:1;overflow-y:auto;padding:14px;}
+.sidebar-body{
+  flex:1;
+  overflow-y:auto;
+  padding:14px;
+  padding-bottom: 48px;
+}
 
 /* Comentários na sidebar */
 .sc-node{margin-bottom:10px;}
@@ -280,12 +287,21 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 
 /* Status bar */
 #status-bar{
-  position:fixed;bottom:0;left:0;right:var(--sidebar);
-  background:var(--aged);border-top:1px solid var(--margin);
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:var(--sidebar);
+  background:var(--aged);
+  border-top:1px solid var(--margin);
   padding:6px 48px;
-  display:flex;align-items:center;gap:16px;
-  font-family:var(--font-m);font-size:.62rem;color:var(--ghost);
+  display:flex;
+  align-items:center;
+  gap:16px;
+  font-family:var(--font-m);
+  font-size:.62rem;
+  color:var(--ghost);
   z-index:20;
+  pointer-events: none;
 }
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);}
 .status-dot.saving{background:var(--gold);animation:pulse 1s infinite;}
@@ -316,6 +332,9 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .notion-block.dragging{opacity:.4;}
 .notion-block.drag-over{border-top:2px solid var(--gold);}
 </style>
+
+
+
 </head>
 <body>
 <div id="layout">
@@ -593,6 +612,32 @@ function criarBlocoEl(bloco) {
               >${bloco.conteudo||''}</div>`;
   }
 
+  // Dentro da função criarBlocoEl, depois de criar o contenteditable, ADICIONE:
+if (bloco.tipo !== 'youtube' && bloco.tipo !== 'link') {
+  const ce = wrapper.querySelector('.block-content');
+  if (ce) {
+    ce.addEventListener('keydown', e => onKeyDown(e, wrapper));
+    ce.addEventListener('input', () => { 
+      agendarAutoSave(); 
+      mostrarToolbarSeSelecionado(); 
+    });
+    ce.addEventListener('mouseup', mostrarToolbarSeSelecionado);
+    ce.addEventListener('keyup', mostrarToolbarSeSelecionado);
+    
+    // ADICIONE ESTA LINHA:
+    adicionarInputListener(wrapper, bloco.id);
+    
+    // Links clicáveis
+    ce.addEventListener('click', e => {
+      const link = e.target.closest('a');
+      if (link) { 
+        e.preventDefault(); 
+        window.open(link.href, '_blank', 'noopener'); 
+      }
+    });
+  }
+}
+
   wrapper.innerHTML = '';
   wrapper.appendChild(handle);
   const innerDiv = document.createElement('div');
@@ -719,45 +764,176 @@ function removerLink(blocoId) {
 ════════════════════════════════════════ */
 let slashBlocoId = null;
 
+
+// Função para detectar e converter link do YouTube
+function detectarEConverterYoutube(blockEl, blocoId, texto) {
+  // Extrai ID do YouTube de várias formas de URL
+  let youtubeId = null;
+  
+  // Padrões de URL do YouTube
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([\w-]+)/,
+    /(?:youtu\.be\/)([\w-]+)/,
+    /(?:youtube\.com\/embed\/)([\w-]+)/,
+    /(?:youtube\.com\/shorts\/)([\w-]+)/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = texto.match(pattern);
+    if (match) {
+      youtubeId = match[1];
+      break;
+    }
+  }
+  
+  // Se encontrou ID do YouTube
+  if (youtubeId) {
+    // Pega o bloco atual
+    const idx = blocos.findIndex(b => b.id === blocoId);
+    if (idx !== -1) {
+      // Converte o bloco para tipo 'youtube' e salva a URL original
+      blocos[idx].tipo = 'youtube';
+      blocos[idx].conteudo = texto; // Salva a URL original
+      blocos[idx].youtubeId = youtubeId;
+      
+      // Re-renderiza o editor
+      renderEditor();
+      
+      // Mostra toast de confirmação
+      toast('📹 Vídeo do YouTube embedado!', 'success');
+      
+      // Salva automaticamente
+      agendarAutoSave();
+      
+      return true;
+    }
+  }
+  return false;
+}
+
+// Função para mostrar toast na página de aprofundamento
+function toast(msg, tipo = 'info') {
+  // Se não existir toast container, cria um
+  let toastContainer = document.getElementById('toast-container-aprofundamento');
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    toastContainer.id = 'toast-container-aprofundamento';
+    toastContainer.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    `;
+    document.body.appendChild(toastContainer);
+  }
+  
+  const toastEl = document.createElement('div');
+  toastEl.style.cssText = `
+    background: ${tipo === 'success' ? 'var(--sage)' : 'var(--gold)'};
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: var(--font-m);
+    font-size: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transform: translateX(120%);
+    transition: transform 0.3s;
+  `;
+  toastEl.textContent = msg;
+  toastContainer.appendChild(toastEl);
+  
+  setTimeout(() => toastEl.style.transform = 'translateX(0)', 10);
+  setTimeout(() => {
+    toastEl.style.transform = 'translateX(120%)';
+    setTimeout(() => toastEl.remove(), 300);
+  }, 3000);
+}v
+
+
+
+// Substitua a função onKeyDown existente por esta versão melhorada
 function onKeyDown(e, blockEl) {
   const blocoId = blockEl.dataset.id;
   const ce      = blockEl.querySelector('.block-content');
   const tipo    = blockEl.dataset.tipo;
-
+  
+  // Detecta colagem (Ctrl+V)
+  if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+    // Pequeno delay para o conteúdo ser colado
+    setTimeout(() => {
+      const texto = ce.innerText || ce.textContent;
+      const isYoutube = /youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\//i.test(texto);
+      
+      if (isYoutube) {
+        e.preventDefault(); // Previne a colagem normal para processar
+        detectarEConverterYoutube(blockEl, blocoId, texto);
+      }
+    }, 10);
+  }
+  
   // "/" abre menu de inserção
   if (e.key === '/' && ce.textContent.trim() === '') {
     e.preventDefault();
     abrirSlashMenu(blockEl, blocoId);
     return;
   }
-
+  
   // Fecha slash menu em qualquer outra tecla
   fecharSlashMenu();
-
+  
   // Enter = novo bloco parágrafo abaixo
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    const novoBloco = { id:uid(), tipo:'p', conteudo:'' };
-    const idx = blocos.findIndex(b=>b.id===blocoId);
-    blocos = coletarBlocos(); // sincroniza antes de inserir
-    blocos.splice(idx+1, 0, novoBloco);
+    const novoBloco = { id: uid(), tipo: 'p', conteudo: '' };
+    const idx = blocos.findIndex(b => b.id === blocoId);
+    blocos = coletarBlocos();
+    blocos.splice(idx + 1, 0, novoBloco);
     renderEditor();
     focarBloco(novoBloco.id);
     agendarAutoSave();
     return;
   }
-
-  // Backspace em bloco vazio = remover bloco e focar anterior
+  
+  // Backspace em bloco vazio = remover bloco
   if (e.key === 'Backspace' && ce.textContent === '' && blocos.length > 1) {
     e.preventDefault();
-    const idx = blocos.findIndex(b=>b.id===blocoId);
+    const idx = blocos.findIndex(b => b.id === blocoId);
     blocos = coletarBlocos();
-    blocos.splice(idx,1);
+    blocos.splice(idx, 1);
     renderEditor();
-    focarBloco(blocos[Math.max(0,idx-1)]?.id);
+    focarBloco(blocos[Math.max(0, idx - 1)]?.id);
     agendarAutoSave();
     return;
   }
+}
+
+// Também adicione um evento 'input' para detectar quando o usuário digitar ou colar via mouse
+function adicionarInputListener(blockEl, blocoId) {
+  const ce = blockEl.querySelector('.block-content');
+  if (!ce) return;
+  
+  let timeoutId = null;
+  
+  ce.addEventListener('input', () => {
+    // Limpa timeout anterior
+    if (timeoutId) clearTimeout(timeoutId);
+    
+    // Espera um momento para o usuário terminar de digitar/colar
+    timeoutId = setTimeout(() => {
+      const texto = ce.innerText || ce.textContent;
+      const isYoutube = /youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\//i.test(texto);
+      
+      // Se for um link do YouTube E o bloco ainda não é do tipo youtube
+      if (isYoutube && blockEl.dataset.tipo !== 'youtube') {
+        detectarEConverterYoutube(blockEl, blocoId, texto);
+      } else {
+        agendarAutoSave();
+      }
+    }, 500);
+  });
 }
 
 function focarBloco(id) {
