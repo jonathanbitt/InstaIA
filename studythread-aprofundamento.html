@@ -670,12 +670,11 @@ async function carregarComentarios() {
 // ============================================================
 // NOTAS FIREBASE
 // ============================================================
-async function carregarNotas() {
 
+async function carregarNotas() {
   try {
 
-    const snap =
-      await db.collection('anotacoes')
+    const snap = await db.collection('anotacoes')
       .where('postId', '==', postId)
       .orderBy('criadoEm', 'desc')
       .get();
@@ -686,11 +685,12 @@ async function carregarNotas() {
     }));
 
   } catch (e) {
-
-    console.error(e);
+    console.error('Erro ao carregar notas:', e);
     return [];
   }
 }
+
+
 
 async function salvarNotaFirestore(nota) {
 
