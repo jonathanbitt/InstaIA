@@ -1017,69 +1017,150 @@ function renderScNode(c, all, depth=0) {
   </div>`;
 }
 
+
+
 /* ════════════════════════════════════════
-   ANOTAÇÕES — FIRESTORE
+   ANOTAÇÕES — COM FALLBACK PARA LOCALSTORAGE
 ════════════════════════════════════════ */
 
+// Chave do localStorage para fallback
+function getStorageKey() {
+  return `st-notas-${postId}`;
+}
+
+// Tenta carregar do Firestore, fallback para localStorage
 async function carregarNotas() {
+  if (useFirestore) {
+    try {
+      const snap = await db.collection('anotacoes')
+        .where('postId', '==', postId)
+        .orderBy('criadoEm', 'desc')
+        .get();
+      
+      const notas = snap.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      if (notas.length > 0) {
+        console.log('Notas carregadas do Firestore:', notas.length);
+        return notas;
+      }
+    } catch(e) {
+      console.warn('Erro ao carregar do Firestore, usando localStorage:', e);
+      useFirestore = false;
+    }
+  }
+  
+  // Fallback para localStorage
   try {
-    const snap = await db.collection('anotacoes')
-      .where('postId', '==', postId)
-      .orderBy('criadoEm', 'desc')
-      .get();
-    return snap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const localNotas = JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
+    console.log('Notas carregadas do localStorage:', localNotas.length);
+    return localNotas;
   } catch(e) {
-    console.error('Erro ao carregar anotações:', e);
+    console.error('Erro ao carregar do localStorage:', e);
     return [];
   }
 }
 
+// Salva no Firestore ou localStorage
 async function salvarNotaStorage(nota) {
+  if (useFirestore) {
+    try {
+      if (nota.id && !nota.id.startsWith('local_')) {
+        // Atualiza nota existente no Firestore
+        await db.collection('anotacoes').doc(nota.id).update({
+          texto: nota.texto,
+          tipo: nota.tipo,
+          embedUrl: nota.embedUrl || null,
+          editadoEm: new Date().toISOString()
+        });
+        console.log('Nota atualizada no Firestore');
+      } else {
+        // Cria nova nota no Firestore
+        const novaNota = {
+          postId: postId,
+          texto: nota.texto,
+          tipo: nota.tipo,
+          embedUrl: nota.embedUrl || null,
+          criadoEm: new Date().toISOString(),
+          editadoEm: null
+        };
+        const docRef = await db.collection('anotacoes').add(novaNota);
+        console.log('Nota salva no Firestore com ID:', docRef.id);
+      }
+      return true;
+    } catch(e) {
+      console.warn('Erro ao salvar no Firestore, usando localStorage:', e);
+      useFirestore = false;
+    }
+  }
+  
+  // Fallback para localStorage
   try {
-    if (nota.id) {
-      await db.collection('anotacoes').doc(nota.id).update({
-        texto: nota.texto,
-        tipo: nota.tipo,
-        embedUrl: nota.embedUrl || null,
-        editadoEm: new Date().toISOString()
-      });
+    const notas = JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
+    if (nota.id && nota.id.startsWith('local_')) {
+      // Atualiza existente
+      const index = notas.findIndex(n => n.id === nota.id);
+      if (index !== -1) {
+        notas[index] = { ...nota, editadoEm: new Date().toISOString() };
+      } else {
+        notas.unshift({ ...nota, id: 'local_' + Date.now(), criadoEm: new Date().toISOString() });
+      }
     } else {
-      const novaNota = {
-        postId: postId,
-        texto: nota.texto,
-        tipo: nota.tipo,
-        embedUrl: nota.embedUrl || null,
+      // Nova nota
+      notas.unshift({ 
+        ...nota, 
+        id: 'local_' + Date.now(), 
         criadoEm: new Date().toISOString(),
         editadoEm: null
-      };
-      await db.collection('anotacoes').add(novaNota);
+      });
     }
+    localStorage.setItem(getStorageKey(), JSON.stringify(notas));
+    console.log('Nota salva no localStorage');
     return true;
   } catch(e) {
-    console.error('Erro ao salvar anotação:', e);
+    console.error('Erro ao salvar no localStorage:', e);
     toast('Erro ao salvar anotação', 'error');
     return false;
   }
 }
 
+// Exclui do Firestore ou localStorage
 async function excluirNotaFirestore(notaId) {
+  if (useFirestore && !notaId.startsWith('local_')) {
+    try {
+      await db.collection('anotacoes').doc(notaId).delete();
+      console.log('Nota excluída do Firestore');
+      return true;
+    } catch(e) {
+      console.warn('Erro ao excluir do Firestore:', e);
+    }
+  }
+  
+  // Fallback localStorage
   try {
-    await db.collection('anotacoes').doc(notaId).delete();
+    const notas = JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
+    const filtered = notas.filter(n => n.id !== notaId);
+    localStorage.setItem(getStorageKey(), JSON.stringify(filtered));
+    console.log('Nota excluída do localStorage');
     return true;
   } catch(e) {
-    console.error('Erro ao excluir anotação:', e);
-    toast('Erro ao excluir anotação', 'error');
+    console.error('Erro ao excluir do localStorage:', e);
     return false;
   }
 }
 
+// Adiciona nova anotação
 async function adicionarNota() {
   const ta = document.getElementById('nota-nova-txt');
+  if (!ta) return;
+  
   const txt = ta.value.trim();
-  if (!txt) return;
+  if (!txt) {
+    toast('Digite algo antes de salvar', 'warning');
+    return;
+  }
 
   const nota = { texto: txt, tipo: 'texto' };
   const ytEmbed = youtubeEmbedUrl(txt);
@@ -1090,12 +1171,15 @@ async function adicionarNota() {
     nota.tipo = 'link'; 
   }
 
-  await salvarNotaStorage(nota);
-  ta.value = '';
-  await renderSidebar();
-  toast('Anotação salva!', 'success');
+  const success = await salvarNotaStorage(nota);
+  if (success) {
+    ta.value = '';
+    await renderSidebar();
+    toast('Anotação salva!', 'success');
+  }
 }
 
+// Editar anotação
 async function editarNota(notaId) {
   const editForm = document.getElementById(`nota-edit-${notaId}`);
   if (editForm) editForm.style.display = 'block';
@@ -1108,8 +1192,13 @@ async function cancelarEdicaoNota(notaId) {
 
 async function salvarEdicaoNota(notaId, btn) {
   const form = document.getElementById(`nota-edit-${notaId}`);
+  if (!form) return;
+  
   const novoTxt = form.querySelector('textarea').value.trim();
-  if (!novoTxt) return;
+  if (!novoTxt) {
+    toast('O conteúdo não pode estar vazio', 'warning');
+    return;
+  }
   
   const ytEmbed = youtubeEmbedUrl(novoTxt);
   let tipo = 'texto';
@@ -1121,24 +1210,30 @@ async function salvarEdicaoNota(notaId, btn) {
     tipo = 'link'; 
   }
   
-  await salvarNotaStorage({
+  const success = await salvarNotaStorage({
     id: notaId,
     texto: novoTxt,
     tipo: tipo,
     embedUrl: embedUrl
   });
   
-  await renderSidebar();
-  toast('Anotação atualizada!', 'success');
+  if (success) {
+    await renderSidebar();
+    toast('Anotação atualizada!', 'success');
+  }
 }
 
+// Excluir anotação
 async function excluirNota(notaId) {
   if (!confirm('Excluir esta anotação?')) return;
-  await excluirNotaFirestore(notaId);
-  await renderSidebar();
-  toast('Anotação excluída!', 'success');
+  const success = await excluirNotaFirestore(notaId);
+  if (success) {
+    await renderSidebar();
+    toast('Anotação excluída!', 'success');
+  }
 }
 
+// Renderiza anotações na sidebar
 async function renderAnotacoesSidebar(container) {
   const notas = await carregarNotas();
   
@@ -1158,12 +1253,12 @@ async function renderAnotacoesSidebar(container) {
     <div id="notas-lista" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
       ${notas.length === 0
         ? `<div style="color:#4a4030;font-family:var(--font-d);font-style:italic;font-size:.82rem;padding:16px 0;text-align:center;">Nenhuma anotação ainda.</div>`
-        : notas.map(nota => renderNotaItemFirestore(nota)).join('')
+        : notas.map(nota => renderNotaItem(nota)).join('')
       }
     </div>`;
 }
 
-function renderNotaItemFirestore(nota) {
+function renderNotaItem(nota) {
   const isYt  = nota.tipo === 'youtube';
   const isUrl = nota.tipo === 'link';
   const ts    = nota.criadoEm ? new Date(nota.criadoEm).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
@@ -1202,6 +1297,8 @@ function renderNotaItemFirestore(nota) {
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
+
+
 
 function youtubeEmbedUrl(url) {
   let id = null;
