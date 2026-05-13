@@ -198,6 +198,77 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
   #bar-actions{gap:4px;}
   .btn-sm{padding:3px 6px;font-size:.55rem;}
 }
+/* ─────────────────────────────
+   MOBILE
+───────────────────────────── */
+@media (max-width: 900px){
+
+  /* layout vertical */
+  #layout{
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    min-height:100vh;
+  }
+
+  /* sidebar ocupa largura total */
+  #sidebar-col{
+    width:100%;
+    border-left:none;
+    border-top:1px solid #3d3020;
+    min-height:400px;
+  }
+
+  /* libera scroll natural */
+  html,body{
+    overflow:auto;
+    height:auto;
+  }
+
+  /* remove barra fixa no celular */
+  #status-bar{
+    position:relative;
+    right:auto;
+    bottom:auto;
+    margin-top:auto;
+  }
+
+  /* evita conteúdo escondido */
+  .sidebar-body{
+    padding-bottom:80px;
+  }
+
+  /* editor mais compacto */
+  #notion-editor{
+    padding:24px 18px 100px;
+  }
+
+  #post-origem{
+    padding:22px 18px;
+  }
+
+  /* topbar adaptável */
+  #topbar{
+    flex-wrap:wrap;
+    height:auto;
+    padding:10px 14px;
+  }
+
+  .topbar-actions{
+    width:100%;
+  }
+
+  .topbar-actions .btn{
+    flex:1;
+  }
+
+  /* toolbar não sair da tela */
+  #toolbar{
+    max-width:95vw;
+    left:10px !important;
+  }
+}
+
 </style>
 </head>
 <body>
