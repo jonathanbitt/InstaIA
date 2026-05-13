@@ -391,8 +391,13 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   <span id="status-blocos"></span>
 </div>
 
+
+
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+
 <script>
 // Firebase Config
 firebase.initializeApp({
@@ -403,6 +408,7 @@ firebase.initializeApp({
   messagingSenderId: "38282868914",
   appId: "1:38282868914:web:a8332ed3fe258a41af71ab"
 });
+
 const db = firebase.firestore();
 
 // ============================================================
@@ -418,32 +424,86 @@ let draggingId = null;
 let slashBlocoId = null;
 
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+
+const esc = s =>
+  String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\n/g, '<br>');
+
 const tsF = iso => {
+  if (!iso) return '';
   const d = new Date(iso);
-  return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('pt-BR') + ' ' +
+         d.toLocaleTimeString('pt-BR', {
+           hour: '2-digit',
+           minute: '2-digit'
+         });
 };
 
 // ============================================================
 // TOAST
 // ============================================================
 function toast(msg, tipo = 'info') {
+
   let container = document.getElementById('toast-container');
+
   if (!container) {
+
     container = document.createElement('div');
     container.id = 'toast-container';
-    container.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;';
+
+    container.style.cssText = `
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      z-index:9999;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    `;
+
     document.body.appendChild(container);
   }
+
   const el = document.createElement('div');
-  const bg = tipo === 'success' ? 'var(--sage)' : tipo === 'error' ? 'var(--rust)' : 'var(--gold)';
-  el.style.cssText = `background:${bg};color:var(--ink);padding:8px 16px;border-radius:4px;font-family:var(--font-m);font-size:0.75rem;box-shadow:0 2px 8px rgba(0,0,0,0.2);transform:translateX(120%);transition:transform 0.3s;`;
+
+  const bg =
+    tipo === 'success'
+      ? 'var(--sage)'
+      : tipo === 'error'
+      ? 'var(--rust)'
+      : 'var(--gold)';
+
+  el.style.cssText = `
+    background:${bg};
+    color:var(--ink);
+    padding:8px 16px;
+    border-radius:4px;
+    font-family:var(--font-m);
+    font-size:0.75rem;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    transform:translateX(120%);
+    transition:transform .3s;
+  `;
+
   el.textContent = msg;
+
   container.appendChild(el);
-  setTimeout(() => el.style.transform = 'translateX(0)', 10);
+
   setTimeout(() => {
+    el.style.transform = 'translateX(0)';
+  }, 10);
+
+  setTimeout(() => {
+
     el.style.transform = 'translateX(120%)';
-    setTimeout(() => el.remove(), 300);
+
+    setTimeout(() => {
+      el.remove();
+    }, 300);
+
   }, 3000);
 }
 
@@ -451,458 +511,206 @@ function toast(msg, tipo = 'info') {
 // INICIALIZAÇÃO
 // ============================================================
 window.addEventListener('DOMContentLoaded', async () => {
+
   postId = localStorage.getItem('st-aprofundamento-postId');
+
   if (!postId) {
-    document.getElementById('origem-conteudo').textContent = 'Post não encontrado.';
+
+    document.getElementById('origem-conteudo').textContent =
+      'Post não encontrado.';
+
     return;
   }
+
   await carregarPost();
   await carregarBlocos();
   await carregarComentarios();
+
   renderEditor();
   await renderSidebar();
 });
 
+// ============================================================
+// POST
+// ============================================================
 async function carregarPost() {
+
   try {
-    const snap = await db.collection('posts').doc(postId).get();
+
+    const snap =
+      await db.collection('posts')
+      .doc(postId)
+      .get();
+
     if (!snap.exists) return;
+
     postData = snap.data();
-    document.getElementById('origem-conteudo').textContent = postData.conteudo;
-    document.getElementById('topbar-tipo').textContent = postData.tipo || 'post';
+
+    document.getElementById('origem-conteudo').textContent =
+      postData.conteudo || '';
+
+    document.getElementById('topbar-tipo').textContent =
+      postData.tipo || 'post';
+
     const autorEl = document.getElementById('origem-autor');
+
     if (postData.autorEmoji || postData.autorNome) {
-      autorEl.innerHTML = `<span class="origem-dot">${postData.autorEmoji || '🧑'}</span>
-        <span>${postData.autorNome || 'Usuário'}</span>
-        <span>· ${tsF(postData.timestamp)}</span>`;
+
+      autorEl.innerHTML = `
+        <span class="origem-dot">
+          ${postData.autorEmoji || '🧑'}
+        </span>
+
+        <span>
+          ${postData.autorNome || 'Usuário'}
+        </span>
+
+        <span>
+          · ${tsF(postData.timestamp)}
+        </span>
+      `;
     }
+
     const tagsEl = document.getElementById('origem-tags');
+
+    tagsEl.innerHTML = '';
+
     (postData.tags || []).forEach(t => {
+
       const s = document.createElement('span');
+
       s.className = 'origem-tag';
       s.textContent = '#' + t;
+
       tagsEl.appendChild(s);
     });
-  } catch (e) { console.error(e); }
-}
 
-async function carregarBlocos() {
-  try {
-    const snap = await db.collection('aprofundamentos').doc(postId).get();
-    if (snap.exists && snap.data().blocos) {
-      blocos = snap.data().blocos;
-    } else {
-      blocos = [
-        { id: uid(), tipo: 'h1', conteudo: 'Meu Aprofundamento' },
-        { id: uid(), tipo: 'p', conteudo: '' }
-      ];
-    }
   } catch (e) {
-    blocos = [{ id: uid(), tipo: 'h1', conteudo: 'Meu Aprofundamento' }, { id: uid(), tipo: 'p', conteudo: '' }];
-  }
-}
-
-async function carregarComentarios() {
-  try {
-    const snap = await db.collection('comments').where('postId', '==', postId).orderBy('timestamp', 'asc').get();
-    comentarios = snap.docs.map(d => d.data());
-  } catch (e) { comentarios = []; }
-}
-
-// ============================================================
-// SALVAR BLOCOS
-// ============================================================
-function coletarBlocos() {
-  const editor = document.getElementById('notion-editor');
-  const resultado = [];
-  editor.querySelectorAll('.notion-block').forEach(blockEl => {
-    const id = blockEl.dataset.id;
-    const tipo = blockEl.dataset.tipo;
-    if (tipo === 'divider') {
-      resultado.push({ id, tipo, conteudo: '' });
-    } else if (tipo === 'youtube' || tipo === 'link') {
-      const bloco = blocos.find(b => b.id === id) || {};
-      resultado.push({ id, tipo, conteudo: bloco.conteudo || '' });
-    } else {
-      const contentEl = blockEl.querySelector('.block-content');
-      resultado.push({ id, tipo, conteudo: contentEl ? contentEl.innerHTML : '' });
-    }
-  });
-  return resultado;
-}
-
-async function salvar(silencioso = false) {
-  setStatus('saving', 'Salvando…');
-  blocos = coletarBlocos();
-  try {
-    await db.collection('aprofundamentos').doc(postId).set({ blocos, atualizadoEm: new Date().toISOString() }, { merge: true });
-    setStatus('ok', silencioso ? 'Salvo' : 'Salvo!');
-  } catch (e) {
-    setStatus('ok', 'Erro');
     console.error(e);
   }
 }
 
-function salvarManual() { salvar(false); }
-function agendarAutoSave() {
-  clearTimeout(autoSaveTimer);
-  autoSaveTimer = setTimeout(() => salvar(true), 2500);
-}
-
-function setStatus(tipo, msg) {
-  const dot = document.getElementById('status-dot');
-  const txt = document.getElementById('status-txt');
-  if (dot) dot.className = 'status-dot' + (tipo === 'saving' ? ' saving' : '');
-  if (txt) txt.textContent = msg;
-}
-
 // ============================================================
-// RENDER EDITOR
+// BLOCOS
 // ============================================================
-function renderEditor() {
-  const editor = document.getElementById('notion-editor');
-  editor.innerHTML = '';
-  blocos.forEach(b => editor.appendChild(criarBlocoEl(b)));
-  const blocosEl = document.getElementById('status-blocos');
-  if (blocosEl) blocosEl.textContent = `${blocos.length} bloco${blocos.length !== 1 ? 's' : ''}`;
-}
+async function carregarBlocos() {
 
-function criarBlocoEl(bloco) {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'notion-block';
-  wrapper.dataset.id = bloco.id;
-  wrapper.dataset.tipo = bloco.tipo;
-  wrapper.draggable = true;
+  try {
 
-  const handle = document.createElement('div');
-  handle.className = 'block-handle';
-  handle.textContent = '⠿';
-  handle.title = 'Arrastar';
+    const snap =
+      await db.collection('aprofundamentos')
+      .doc(postId)
+      .get();
 
-  if (bloco.tipo === 'divider') {
-    wrapper.appendChild(handle);
-    const hr = document.createElement('hr');
-    hr.className = 'block-divider';
-    hr.style.flex = '1';
-    wrapper.appendChild(hr);
-    return wrapper;
-  }
+    if (snap.exists && snap.data().blocos) {
 
-  let inner = '';
-  if (bloco.tipo === 'youtube') {
-    inner = renderBlocoYoutube(bloco);
-  } else if (bloco.tipo === 'link') {
-    inner = renderBlocoLink(bloco);
-  } else {
-    const ph = { h1: 'Título', h2: 'Subtítulo', h3: 'Seção', p: 'Escreva algo...', bullet: 'Item da lista', num: 'Item numerado', quote: 'Citação...', callout: '💡 Nota importante...', code: '// Código...' }[bloco.tipo] || '';
-    inner = `<div class="block-content block-${bloco.tipo}" contenteditable="true" data-ph="${ph}">${bloco.conteudo || ''}</div>`;
-  }
+      blocos = snap.data().blocos;
 
-  wrapper.appendChild(handle);
-  const innerDiv = document.createElement('div');
-  innerDiv.style.flex = '1';
-  innerDiv.style.minWidth = '0';
-  innerDiv.innerHTML = inner;
-  wrapper.appendChild(innerDiv);
+    } else {
 
-  if (bloco.tipo !== 'youtube' && bloco.tipo !== 'link') {
-    const ce = wrapper.querySelector('.block-content');
-    if (ce) {
-      ce.addEventListener('keydown', e => onKeyDown(e, wrapper));
-      ce.addEventListener('input', () => { agendarAutoSave(); mostrarToolbarSeSelecionado(); });
-      ce.addEventListener('mouseup', mostrarToolbarSeSelecionado);
-      ce.addEventListener('keyup', mostrarToolbarSeSelecionado);
-      ce.addEventListener('click', e => {
-        const link = e.target.closest('a');
-        if (link) { e.preventDefault(); window.open(link.href, '_blank'); }
-      });
+      blocos = [
+        {
+          id: uid(),
+          tipo: 'h1',
+          conteudo: 'Meu Aprofundamento'
+        },
+        {
+          id: uid(),
+          tipo: 'p',
+          conteudo: ''
+        }
+      ];
     }
+
+  } catch (e) {
+
+    console.error(e);
+
+    blocos = [
+      {
+        id: uid(),
+        tipo: 'h1',
+        conteudo: 'Meu Aprofundamento'
+      },
+      {
+        id: uid(),
+        tipo: 'p',
+        conteudo: ''
+      }
+    ];
   }
-
-  wrapper.addEventListener('dragstart', e => { draggingId = bloco.id; wrapper.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
-  wrapper.addEventListener('dragend', () => { wrapper.classList.remove('dragging'); document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over')); });
-  wrapper.addEventListener('dragover', e => { e.preventDefault(); wrapper.classList.add('drag-over'); });
-  wrapper.addEventListener('dragleave', () => wrapper.classList.remove('drag-over'));
-  wrapper.addEventListener('drop', e => { e.preventDefault(); wrapper.classList.remove('drag-over'); moverBloco(draggingId, bloco.id); });
-  return wrapper;
-}
-
-function moverBloco(fromId, toId) {
-  if (fromId === toId) return;
-  const fromIdx = blocos.findIndex(b => b.id === fromId);
-  const toIdx = blocos.findIndex(b => b.id === toId);
-  if (fromIdx < 0 || toIdx < 0) return;
-  const [item] = blocos.splice(fromIdx, 1);
-  blocos.splice(toIdx, 0, item);
-  renderEditor();
-  agendarAutoSave();
-}
-
-function renderBlocoYoutube(bloco) {
-  if (bloco.conteudo) {
-    const embedUrl = youtubeEmbedUrl(bloco.conteudo) || bloco.conteudo;
-    return `<div class="block-youtube">
-      <div class="youtube-label">▶ Vídeo YouTube <button onclick="removerYoutube('${bloco.id}')" style="background:transparent;border:none;color:var(--ghost);cursor:pointer;">✕</button></div>
-      <div class="youtube-embed"><iframe src="${embedUrl}" allowfullscreen loading="lazy"></iframe></div>
-    </div>`;
-  }
-  return `<div class="block-youtube">
-    <div class="youtube-label">▶ Embed YouTube</div>
-    <div class="youtube-input-wrap">
-      <input type="text" placeholder="Cole o link do YouTube" onkeydown="if(event.key==='Enter'){embedYoutube('${bloco.id}',this.value);}" />
-      <button class="btn btn-gold" onclick="embedYoutube('${bloco.id}',this.previousElementSibling.value)">Embed</button>
-    </div>
-  </div>`;
-}
-
-function renderBlocoLink(bloco) {
-  if (bloco.conteudo) {
-    const url = bloco.conteudo;
-    const domain = (() => { try { return new URL(url).hostname; } catch { return url; } })();
-    return `<a class="block-link" href="${url}" target="_blank">
-      <span class="link-icon">🔗</span>
-      <div class="link-info"><div class="link-title">${domain}</div><div class="link-url">${url}</div></div>
-      <button onclick="event.preventDefault();removerLink('${bloco.id}')">✕</button>
-    </a>`;
-  }
-  return `<div><input type="text" placeholder="Cole a URL" onkeydown="if(event.key==='Enter'){embedLink('${bloco.id}',this.value);}" /><button onclick="embedLink('${bloco.id}',this.previousElementSibling.value)">Adicionar</button></div>`;
-}
-
-function embedYoutube(blocoId, url) {
-  const id = extrairYoutubeId(url);
-  if (!id) { toast('URL inválida', 'error'); return; }
-  const b = blocos.find(x => x.id === blocoId);
-  if (b) { b.conteudo = url; renderEditor(); agendarAutoSave(); }
-}
-
-function removerYoutube(blocoId) {
-  const b = blocos.find(x => x.id === blocoId);
-  if (b) { b.conteudo = ''; renderEditor(); agendarAutoSave(); }
-}
-
-function embedLink(blocoId, url) {
-  const b = blocos.find(x => x.id === blocoId);
-  if (b && url.trim()) { b.conteudo = url.trim(); renderEditor(); agendarAutoSave(); }
-}
-
-function removerLink(blocoId) {
-  const b = blocos.find(x => x.id === blocoId);
-  if (b) { b.conteudo = ''; renderEditor(); agendarAutoSave(); }
-}
-
-function extrairYoutubeId(url) {
-  if (!url) return null;
-  const patterns = [/(?:youtube\.com\/watch\?v=)([\w-]+)/, /(?:youtu\.be\/)([\w-]+)/, /(?:youtube\.com\/embed\/)([\w-]+)/];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-function youtubeEmbedUrl(url) {
-  const id = extrairYoutubeId(url);
-  return id ? `https://www.youtube.com/embed/${id}` : null;
 }
 
 // ============================================================
-// EVENTOS DE TECLADO
+// COMENTÁRIOS
 // ============================================================
-function onKeyDown(e, blockEl) {
-  const blocoId = blockEl.dataset.id;
-  const ce = blockEl.querySelector('.block-content');
-  if (e.key === '/' && ce.textContent.trim() === '') {
-    e.preventDefault();
-    abrirSlashMenu(blockEl, blocoId);
-    return;
+async function carregarComentarios() {
+
+  try {
+
+    const snap =
+      await db.collection('comments')
+      .where('postId', '==', postId)
+      .orderBy('timestamp', 'asc')
+      .get();
+
+    comentarios =
+      snap.docs.map(d => ({
+        id: d.id,
+        ...d.data()
+      }));
+
+  } catch (e) {
+
+    console.error(e);
+    comentarios = [];
   }
-  fecharSlashMenu();
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    const novoBloco = { id: uid(), tipo: 'p', conteudo: '' };
-    const idx = blocos.findIndex(b => b.id === blocoId);
-    blocos = coletarBlocos();
-    blocos.splice(idx + 1, 0, novoBloco);
-    renderEditor();
-    focarBloco(novoBloco.id);
-    agendarAutoSave();
-    return;
-  }
-  if (e.key === 'Backspace' && ce.textContent === '' && blocos.length > 1) {
-    e.preventDefault();
-    const idx = blocos.findIndex(b => b.id === blocoId);
-    blocos = coletarBlocos();
-    blocos.splice(idx, 1);
-    renderEditor();
-    focarBloco(blocos[Math.max(0, idx - 1)]?.id);
-    agendarAutoSave();
-    return;
-  }
-}
-
-function focarBloco(id) {
-  const el = document.querySelector(`[data-id="${id}"] .block-content`);
-  if (el) { el.focus(); placeCaretAtEnd(el); }
-}
-
-function placeCaretAtEnd(el) {
-  const range = document.createRange();
-  const sel = window.getSelection();
-  range.selectNodeContents(el);
-  range.collapse(false);
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
-
-function abrirSlashMenu(blockEl, blocoId) {
-  slashBlocoId = blocoId;
-  const rect = blockEl.getBoundingClientRect();
-  const menu = document.getElementById('slash-menu');
-  menu.style.top = (rect.bottom + 4) + 'px';
-  menu.style.left = rect.left + 'px';
-  menu.classList.add('open');
-}
-
-function fecharSlashMenu() {
-  document.getElementById('slash-menu').classList.remove('open');
-  slashBlocoId = null;
-}
-
-function inserirBloco(tipo) {
-  fecharSlashMenu();
-  const novoBloco = { id: uid(), tipo, conteudo: '' };
-  if (slashBlocoId === null) {
-    blocos = coletarBlocos();
-    blocos.push(novoBloco);
-  } else {
-    const idx = blocos.findIndex(b => b.id === slashBlocoId);
-    blocos = coletarBlocos();
-    blocos.splice(idx + 1, 0, novoBloco);
-  }
-  renderEditor();
-  if (tipo !== 'divider' && tipo !== 'youtube' && tipo !== 'link') focarBloco(novoBloco.id);
-  agendarAutoSave();
-}
-
-document.addEventListener('click', e => {
-  if (!e.target.closest('#slash-menu') && !e.target.closest('.block-content')) fecharSlashMenu();
-});
-
-// ============================================================
-// TOOLBAR
-// ============================================================
-function mostrarToolbarSeSelecionado() {
-  const sel = window.getSelection();
-  if (!sel || sel.isCollapsed || sel.toString().trim() === '') {
-    document.getElementById('toolbar').classList.remove('visible');
-    return;
-  }
-  const range = sel.getRangeAt(0);
-  const rect = range.getBoundingClientRect();
-  const tb = document.getElementById('toolbar');
-  tb.style.top = (rect.top - 48 + window.scrollY) + 'px';
-  tb.style.left = (rect.left + rect.width / 2 - 130) + 'px';
-  tb.classList.add('visible');
-}
-
-document.addEventListener('mousedown', e => {
-  if (!e.target.closest('#toolbar')) document.getElementById('toolbar').classList.remove('visible');
-});
-
-function fmt(cmd) { document.execCommand(cmd, false, null); }
-
-function converterBloco(novoTipo) {
-  const sel = window.getSelection();
-  const blockEl = sel?.anchorNode?.closest?.('.notion-block');
-  if (!blockEl) return;
-  const id = blockEl.dataset.id;
-  const b = blocos.find(x => x.id === id);
-  if (b) { b.tipo = novoTipo; renderEditor(); focarBloco(id); agendarAutoSave(); }
-  document.getElementById('toolbar').classList.remove('visible');
-}
-
-function excluirBlocoSelecionado() {
-  const sel = window.getSelection();
-  const blockEl = sel?.anchorNode?.closest?.('.notion-block');
-  if (!blockEl || blocos.length <= 1) return;
-  const id = blockEl.dataset.id;
-  const idx = blocos.findIndex(b => b.id === id);
-  blocos.splice(idx, 1);
-  renderEditor();
-  focarBloco(blocos[Math.max(0, idx - 1)]?.id);
-  agendarAutoSave();
-  document.getElementById('toolbar').classList.remove('visible');
 }
 
 // ============================================================
-// SIDEBAR - COMENTÁRIOS
-// ============================================================
-async function mudarStab(aba) {
-  stab = aba;
-  document.getElementById('stab-comentarios').classList.toggle('active', aba === 'comentarios');
-  document.getElementById('stab-anotacoes').classList.toggle('active', aba === 'anotacoes');
-  await renderSidebar();
-}
-
-async function renderSidebar() {
-  const body = document.getElementById('sidebar-body');
-  if (stab === 'comentarios') {
-    renderComentariosSidebar(body);
-  } else {
-    await renderAnotacoesSidebar(body);
-  }
-}
-
-function renderComentariosSidebar(container) {
-  const raiz = comentarios.filter(c => !c.parentId);
-  if (!raiz.length) {
-    container.innerHTML = '<div class="sc-empty">Nenhum comentário ainda.</div>';
-    return;
-  }
-  container.innerHTML = raiz.map(c => renderScNode(c, comentarios)).join('');
-}
-
-function renderScNode(c, all, depth = 0) {
-  const replies = all.filter(x => x.parentId === c.id);
-  const nc = depth > 0 ? 'nested' : '';
-  return `<div class="sc-node ${nc}">
-    <div class="sc-bubble">
-      <div class="sc-head">
-        <span>${c.autorEmoji || '👤'}</span>
-        <span class="sc-autor">${c.autor || 'Usuário'}</span>
-        <span class="sc-tipo ct-${c.tipo || 'resposta'}">${c.tipo || 'resposta'}</span>
-      </div>
-      <div class="sc-body">${esc(c.conteudo || '')}</div>
-      <div class="sc-ts">${tsF(c.timestamp)}</div>
-    </div>
-    ${replies.map(r => renderScNode(r, all, depth + 1)).join('')}
-  </div>`;
-}
-
-// ============================================================
-// ANOTAÇÕES - FIRESTORE
+// NOTAS FIREBASE
 // ============================================================
 async function carregarNotas() {
+
   try {
-    const snap = await db.collection('anotacoes').where('postId', '==', postId).orderBy('criadoEm', 'desc').get();
-    return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const snap =
+      await db.collection('anotacoes')
+      .where('postId', '==', postId)
+      .orderBy('criadoEm', 'desc')
+      .get();
+
+    return snap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
   } catch (e) {
-    console.error('Erro ao carregar anotações:', e);
+
+    console.error(e);
     return [];
   }
 }
 
 async function salvarNotaFirestore(nota) {
+
   try {
+
     if (nota.id) {
-      await db.collection('anotacoes').doc(nota.id).update({
+
+      await db.collection('anotacoes')
+      .doc(nota.id)
+      .update({
         texto: nota.texto,
         tipo: nota.tipo,
         embedUrl: nota.embedUrl || null,
         editadoEm: new Date().toISOString()
       });
+
     } else {
-      await db.collection('anotacoes').add({
+
+      await db.collection('anotacoes')
+      .add({
         postId: postId,
         texto: nota.texto,
         tipo: nota.tipo,
@@ -911,187 +719,867 @@ async function salvarNotaFirestore(nota) {
         editadoEm: null
       });
     }
+
     return true;
+
   } catch (e) {
-    console.error('Erro ao salvar anotação:', e);
+
+    console.error(e);
+
     toast('Erro ao salvar', 'error');
+
     return false;
   }
 }
 
 async function excluirNotaFirestore(notaId) {
+
   try {
-    await db.collection('anotacoes').doc(notaId).delete();
+
+    await db.collection('anotacoes')
+      .doc(notaId)
+      .delete();
+
     return true;
+
   } catch (e) {
-    console.error('Erro ao excluir:', e);
+
+    console.error(e);
+
     toast('Erro ao excluir', 'error');
+
     return false;
   }
 }
 
-async function adicionarNota() {
-  const ta = document.getElementById('nota-nova-txt');
-  if (!ta) return;
-  const txt = ta.value.trim();
-  if (!txt) { toast('Digite algo', 'warning'); return; }
+// ============================================================
+// SALVAR BLOCOS
+// ============================================================
+function coletarBlocos() {
 
-  const nota = { texto: txt, tipo: 'texto' };
-  const ytEmbed = youtubeEmbedUrl(txt);
+  const editor =
+    document.getElementById('notion-editor');
+
+  const resultado = [];
+
+  editor.querySelectorAll('.notion-block')
+    .forEach(blockEl => {
+
+      const id = blockEl.dataset.id;
+      const tipo = blockEl.dataset.tipo;
+
+      if (tipo === 'divider') {
+
+        resultado.push({
+          id,
+          tipo,
+          conteudo: ''
+        });
+
+      } else if (
+        tipo === 'youtube' ||
+        tipo === 'link'
+      ) {
+
+        const bloco =
+          blocos.find(b => b.id === id) || {};
+
+        resultado.push({
+          id,
+          tipo,
+          conteudo: bloco.conteudo || ''
+        });
+
+      } else {
+
+        const contentEl =
+          blockEl.querySelector('.block-content');
+
+        resultado.push({
+          id,
+          tipo,
+          conteudo:
+            contentEl
+              ? contentEl.innerHTML
+              : ''
+        });
+      }
+    });
+
+  return resultado;
+}
+
+async function salvar(silencioso = false) {
+
+  setStatus('saving', 'Salvando…');
+
+  blocos = coletarBlocos();
+
+  try {
+
+    await db.collection('aprofundamentos')
+      .doc(postId)
+      .set({
+        blocos,
+        atualizadoEm: new Date().toISOString()
+      }, {
+        merge: true
+      });
+
+    setStatus(
+      'ok',
+      silencioso ? 'Salvo' : 'Salvo!'
+    );
+
+  } catch (e) {
+
+    console.error(e);
+
+    setStatus('ok', 'Erro');
+  }
+}
+
+function salvarManual() {
+  salvar(false);
+}
+
+function agendarAutoSave() {
+
+  clearTimeout(autoSaveTimer);
+
+  autoSaveTimer =
+    setTimeout(() => {
+      salvar(true);
+    }, 2500);
+}
+
+function setStatus(tipo, msg) {
+
+  const dot =
+    document.getElementById('status-dot');
+
+  const txt =
+    document.getElementById('status-txt');
+
+  if (dot) {
+
+    dot.className =
+      'status-dot' +
+      (tipo === 'saving' ? ' saving' : '');
+  }
+
+  if (txt) {
+    txt.textContent = msg;
+  }
+}
+
+// ============================================================
+// YOUTUBE
+// ============================================================
+function extrairYoutubeId(url) {
+
+  if (!url) return null;
+
+  const patterns = [
+
+    /(?:youtube\.com\/watch\?v=)([\w-]+)/,
+
+    /(?:youtu\.be\/)([\w-]+)/,
+
+    /(?:youtube\.com\/embed\/)([\w-]+)/
+  ];
+
+  for (const p of patterns) {
+
+    const m = url.match(p);
+
+    if (m) return m[1];
+  }
+
+  return null;
+}
+
+function youtubeEmbedUrl(url) {
+
+  const id = extrairYoutubeId(url);
+
+  return id
+    ? `https://www.youtube.com/embed/${id}`
+    : null;
+}
+
+// ============================================================
+// EDITOR
+// ============================================================
+function renderEditor() {
+
+  const editor =
+    document.getElementById('notion-editor');
+
+  editor.innerHTML = '';
+
+  blocos.forEach(b => {
+    editor.appendChild(
+      criarBlocoEl(b)
+    );
+  });
+
+  const blocosEl =
+    document.getElementById('status-blocos');
+
+  if (blocosEl) {
+
+    blocosEl.textContent =
+      `${blocos.length} bloco${blocos.length !== 1 ? 's' : ''}`;
+  }
+}
+
+function criarBlocoEl(bloco) {
+
+  const wrapper =
+    document.createElement('div');
+
+  wrapper.className = 'notion-block';
+
+  wrapper.dataset.id = bloco.id;
+  wrapper.dataset.tipo = bloco.tipo;
+
+  const handle =
+    document.createElement('div');
+
+  handle.className = 'block-handle';
+  handle.textContent = '⠿';
+
+  wrapper.appendChild(handle);
+
+  const inner =
+    document.createElement('div');
+
+  inner.style.flex = '1';
+
+  if (bloco.tipo === 'divider') {
+
+    inner.innerHTML =
+      `<hr class="block-divider">`;
+
+  } else {
+
+    inner.innerHTML = `
+      <div
+        class="block-content block-${bloco.tipo}"
+        contenteditable="true"
+      >
+        ${bloco.conteudo || ''}
+      </div>
+    `;
+  }
+
+  wrapper.appendChild(inner);
+
+  return wrapper;
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+async function mudarStab(aba) {
+
+  stab = aba;
+
+  document.getElementById('stab-comentarios')
+    .classList.toggle(
+      'active',
+      aba === 'comentarios'
+    );
+
+  document.getElementById('stab-anotacoes')
+    .classList.toggle(
+      'active',
+      aba === 'anotacoes'
+    );
+
+  await renderSidebar();
+}
+
+async function renderSidebar() {
+
+  const body =
+    document.getElementById('sidebar-body');
+
+  if (stab === 'comentarios') {
+
+    renderComentariosSidebar(body);
+
+  } else {
+
+    await renderAnotacoesSidebar(body);
+  }
+}
+
+// ============================================================
+// COMENTÁRIOS SIDEBAR
+// ============================================================
+function renderComentariosSidebar(container) {
+
+  const raiz =
+    comentarios.filter(c => !c.parentId);
+
+  if (!raiz.length) {
+
+    container.innerHTML =
+      '<div class="sc-empty">Nenhum comentário ainda.</div>';
+
+    return;
+  }
+
+  container.innerHTML =
+    raiz.map(c =>
+      renderScNode(c, comentarios)
+    ).join('');
+}
+
+function renderScNode(c, all, depth = 0) {
+
+  const replies =
+    all.filter(x => x.parentId === c.id);
+
+  const nc =
+    depth > 0 ? 'nested' : '';
+
+  return `
+    <div class="sc-node ${nc}">
+
+      <div class="sc-bubble">
+
+        <div class="sc-head">
+
+          <span>
+            ${c.autorEmoji || '👤'}
+          </span>
+
+          <span class="sc-autor">
+            ${c.autor || 'Usuário'}
+          </span>
+
+          <span class="sc-tipo">
+            ${c.tipo || 'resposta'}
+          </span>
+
+        </div>
+
+        <div class="sc-body">
+          ${esc(c.conteudo || '')}
+        </div>
+
+        <div class="sc-ts">
+          ${tsF(c.timestamp)}
+        </div>
+
+      </div>
+
+      ${replies.map(r =>
+        renderScNode(r, all, depth + 1)
+      ).join('')}
+
+    </div>
+  `;
+}
+
+// ============================================================
+// ANOTAÇÕES
+// ============================================================
+async function adicionarNota() {
+
+  const ta =
+    document.getElementById('nota-nova-txt');
+
+  if (!ta) return;
+
+  const txt = ta.value.trim();
+
+  if (!txt) {
+
+    toast('Digite algo', 'warning');
+
+    return;
+  }
+
+  const nota = {
+    texto: txt,
+    tipo: 'texto'
+  };
+
+  const ytEmbed =
+    youtubeEmbedUrl(txt);
+
   if (ytEmbed) {
+
     nota.tipo = 'youtube';
     nota.embedUrl = ytEmbed;
+
   } else if (/^https?:\/\//.test(txt)) {
+
     nota.tipo = 'link';
   }
 
-  const ok = await salvarNotaFirestore(nota);
+  const ok =
+    await salvarNotaFirestore(nota);
+
   if (ok) {
+
     ta.value = '';
+
     await renderSidebar();
-    toast('Anotação salva!', 'success');
+
+    toast(
+      'Anotação salva!',
+      'success'
+    );
   }
 }
 
 async function editarNota(notaId) {
-  const form = document.getElementById(`nota-edit-${notaId}`);
-  if (form) form.style.display = 'block';
+
+  const form =
+    document.getElementById(
+      `nota-edit-${notaId}`
+    );
+
+  if (form) {
+    form.style.display = 'block';
+  }
 }
 
 async function cancelarEdicaoNota(notaId) {
-  const form = document.getElementById(`nota-edit-${notaId}`);
-  if (form) form.style.display = 'none';
+
+  const form =
+    document.getElementById(
+      `nota-edit-${notaId}`
+    );
+
+  if (form) {
+    form.style.display = 'none';
+  }
 }
 
 async function salvarEdicaoNota(notaId) {
-  const form = document.getElementById(`nota-edit-${notaId}`);
-  if (!form) return;
-  const novoTxt = form.querySelector('textarea').value.trim();
-  if (!novoTxt) { toast('Conteúdo vazio', 'warning'); return; }
 
-  const ytEmbed = youtubeEmbedUrl(novoTxt);
+  const form =
+    document.getElementById(
+      `nota-edit-${notaId}`
+    );
+
+  if (!form) return;
+
+  const novoTxt =
+    form.querySelector('textarea')
+    .value
+    .trim();
+
+  if (!novoTxt) {
+
+    toast(
+      'Conteúdo vazio',
+      'warning'
+    );
+
+    return;
+  }
+
   let tipo = 'texto';
   let embedUrl = null;
+
+  const ytEmbed =
+    youtubeEmbedUrl(novoTxt);
+
   if (ytEmbed) {
+
     tipo = 'youtube';
     embedUrl = ytEmbed;
-  } else if (/^https?:\/\//.test(novoTxt)) {
+
+  } else if (
+    /^https?:\/\//.test(novoTxt)
+  ) {
+
     tipo = 'link';
   }
 
-  const ok = await salvarNotaFirestore({ id: notaId, texto: novoTxt, tipo, embedUrl });
+  const ok =
+    await salvarNotaFirestore({
+      id: notaId,
+      texto: novoTxt,
+      tipo,
+      embedUrl
+    });
+
   if (ok) {
+
     await renderSidebar();
-    toast('Atualizada!', 'success');
+
+    toast(
+      'Atualizada!',
+      'success'
+    );
   }
 }
 
 async function excluirNota(notaId) {
-  if (!confirm('Excluir esta anotação?')) return;
-  const ok = await excluirNotaFirestore(notaId);
+
+  if (!confirm('Excluir esta anotação?')) {
+    return;
+  }
+
+  const ok =
+    await excluirNotaFirestore(notaId);
+
   if (ok) {
+
     await renderSidebar();
-    toast('Excluída!', 'success');
+
+    toast(
+      'Excluída!',
+      'success'
+    );
   }
 }
 
 async function renderAnotacoesSidebar(container) {
-  const notas = await carregarNotas();
+
+  const notas =
+    await carregarNotas();
 
   container.innerHTML = `
-    <div style="font-family:var(--font-m);font-size:.6rem;color:var(--ghost);margin-bottom:10px;">
-      Anotações <span style="color:var(--gold);">(${notas.length})</span>
+
+    <div style="
+      font-family:var(--font-m);
+      font-size:.6rem;
+      color:var(--ghost);
+      margin-bottom:10px;
+    ">
+      Anotações
+      <span style="color:var(--gold);">
+        (${notas.length})
+      </span>
     </div>
+
     <div id="nota-composer">
-      <textarea id="nota-nova-txt" placeholder="Nova anotação… Cole um link, YouTube ou escreva um pensamento."
-        style="width:100%;min-height:80px;background:#252018;border:1px solid #3d3020;border-radius:var(--r);padding:9px 10px;font-family:var(--font-b);font-size:.86rem;color:#bfb090;resize:vertical;outline:none;line-height:1.6;"></textarea>
-      <button onclick="adicionarNota()" style="width:100%;margin-top:6px;background:var(--gold);color:var(--ink);border:none;border-radius:var(--r);padding:7px;font-family:var(--font-m);font-size:.65rem;cursor:pointer;">+ Adicionar Anotação</button>
+
+      <textarea
+        id="nota-nova-txt"
+        placeholder="Nova anotação…"
+        style="
+          width:100%;
+          min-height:80px;
+        "
+      ></textarea>
+
+      <button
+        onclick="adicionarNota()"
+        style="
+          width:100%;
+          margin-top:6px;
+        "
+      >
+        + Adicionar Anotação
+      </button>
+
     </div>
-    <div id="notas-lista" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
-      ${notas.length === 0 ? '<div style="color:#4a4030;text-align:center;padding:20px;">Nenhuma anotação ainda.</div>' : notas.map(nota => renderNotaItem(nota)).join('')}
+
+    <div
+      id="notas-lista"
+      style="
+        margin-top:14px;
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+      "
+    >
+
+      ${
+        notas.length === 0
+          ? '<div>Nenhuma anotação ainda.</div>'
+          : notas.map(n =>
+              renderNotaItem(n)
+            ).join('')
+      }
+
     </div>
   `;
 }
 
 function renderNotaItem(nota) {
-  const isYt = nota.tipo === 'youtube';
-  const isUrl = nota.tipo === 'link';
-  const ts = nota.criadoEm ? new Date(nota.criadoEm).toLocaleString('pt-BR') : '';
-  const editado = nota.editadoEm ? ' · editado' : '';
+
+  const isYt =
+    nota.tipo === 'youtube';
+
+  const isUrl =
+    nota.tipo === 'link';
+
+  const ts =
+    nota.criadoEm
+      ? new Date(nota.criadoEm)
+          .toLocaleString('pt-BR')
+      : '';
 
   let corpo = '';
+
   if (isYt && nota.embedUrl) {
-    corpo = `<div style="position:relative;padding-bottom:56.25%;margin-top:6px;"><iframe src="${nota.embedUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen></iframe></div>`;
+
+    corpo = `
+      <div style="
+        position:relative;
+        padding-bottom:56.25%;
+      ">
+        <iframe
+          src="${nota.embedUrl}"
+          style="
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            border:none;
+          "
+          allowfullscreen
+        ></iframe>
+      </div>
+    `;
+
   } else if (isUrl) {
-    const domain = (() => { try { return new URL(nota.texto).hostname; } catch { return nota.texto; } })();
-    corpo = `<a href="${nota.texto}" target="_blank" style="display:block;margin-top:4px;padding:6px;background:#1e1810;border:1px solid #3d3020;border-radius:3px;text-decoration:none;color:#9a8060;font-size:.7rem;">🔗 ${domain}</a>`;
+
+    corpo = `
+      <a
+        href="${nota.texto}"
+        target="_blank"
+      >
+        🔗 ${nota.texto}
+      </a>
+    `;
+
   } else {
-    const textoLink = nota.texto.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#9a8060;">$1</a>');
-    corpo = `<div style="margin-top:4px;color:#bfb090;line-height:1.6;">${textoLink}</div>`;
+
+    corpo = `
+      <div>
+        ${esc(nota.texto)}
+      </div>
+    `;
   }
 
-  return `<div class="nota-item" id="nota-${nota.id}" style="background:#252018;border:1px solid #3d3020;border-radius:5px;padding:10px;">
-    ${corpo}
-    <div style="display:flex;align-items:center;gap:6px;margin-top:7px;border-top:1px solid #3d3020;padding-top:6px;">
-      <span style="font-size:.55rem;color:#4a4030;flex:1;">${ts}${editado}</span>
-      <button onclick="editarNota('${nota.id}')" style="background:transparent;border:1px solid #3d3020;border-radius:3px;color:#5a4d3a;font-size:.6rem;padding:2px 7px;cursor:pointer;">✏ Editar</button>
-      <button onclick="excluirNota('${nota.id}')" style="background:transparent;border:1px solid #3d3020;border-radius:3px;color:#5a4d3a;font-size:.6rem;padding:2px 7px;cursor:pointer;">🗑 Excluir</button>
-    </div>
-    <div class="nota-edit-form" id="nota-edit-${nota.id}" style="display:none;margin-top:8px;border-top:1px solid #3d3020;padding-top:8px;">
-      <textarea style="width:100%;min-height:64px;background:#1e1810;border:1px solid #4a3d2a;border-radius:3px;padding:7px;color:#bfb090;">${nota.texto}</textarea>
-      <div style="display:flex;gap:6px;margin-top:6px;">
-        <button onclick="salvarEdicaoNota('${nota.id}')" style="flex:1;background:var(--sage);color:white;border:none;border-radius:3px;padding:5px;">✓ Salvar</button>
-        <button onclick="cancelarEdicaoNota('${nota.id}')" style="flex:1;background:transparent;border:1px solid #4a3d2a;color:#7a6a50;border-radius:3px;padding:5px;">✕ Cancelar</button>
+  return `
+
+    <div
+      class="nota-item"
+      style="
+        background:#252018;
+        border:1px solid #3d3020;
+        border-radius:5px;
+        padding:10px;
+      "
+    >
+
+      ${corpo}
+
+      <div style="
+        display:flex;
+        gap:6px;
+        margin-top:8px;
+      ">
+
+        <button
+          onclick="editarNota('${nota.id}')"
+        >
+          ✏ Editar
+        </button>
+
+        <button
+          onclick="excluirNota('${nota.id}')"
+        >
+          🗑 Excluir
+        </button>
+
       </div>
+
+      <div
+        id="nota-edit-${nota.id}"
+        style="
+          display:none;
+          margin-top:10px;
+        "
+      >
+
+        <textarea style="
+          width:100%;
+          min-height:60px;
+        ">${nota.texto}</textarea>
+
+        <div style="
+          display:flex;
+          gap:6px;
+          margin-top:6px;
+        ">
+
+          <button
+            onclick="salvarEdicaoNota('${nota.id}')"
+          >
+            ✓ Salvar
+          </button>
+
+          <button
+            onclick="cancelarEdicaoNota('${nota.id}')"
+          >
+            ✕ Cancelar
+          </button>
+
+        </div>
+
+      </div>
+
+      <div style="
+        margin-top:8px;
+        font-size:.55rem;
+        color:#777;
+      ">
+        ${ts}
+      </div>
+
     </div>
-  </div>`;
+  `;
 }
 
 // ============================================================
 // EXPORTAR MARKDOWN
 // ============================================================
 function exportarMarkdown() {
+
   blocos = coletarBlocos();
+
   const lines = [];
-  if (postData) lines.push(`> **Post original:** ${postData.conteudo}\n`);
+
+  if (postData) {
+
+    lines.push(
+      `> **Post original:** ${postData.conteudo}\n`
+    );
+  }
+
   lines.push('---\n');
+
   blocos.forEach(b => {
-    const txt = b.conteudo.replace(/<[^>]+>/g, '').trim();
+
+    const txt =
+      (b.conteudo || '')
+      .replace(/<[^>]+>/g, '')
+      .trim();
+
     switch (b.tipo) {
-      case 'h1': lines.push(`# ${txt}`); break;
-      case 'h2': lines.push(`## ${txt}`); break;
-      case 'h3': lines.push(`### ${txt}`); break;
-      case 'bullet': lines.push(`- ${txt}`); break;
-      case 'num': lines.push(`1. ${txt}`); break;
-      case 'quote': lines.push(`> ${txt}`); break;
-      case 'callout': lines.push(`> 💡 ${txt}`); break;
-      case 'code': lines.push('```\n' + txt + '\n```'); break;
-      case 'divider': lines.push('---'); break;
-      case 'youtube': lines.push(`[▶ Vídeo](${b.conteudo})`); break;
-      case 'link': lines.push(`[🔗 Link](${b.conteudo})`); break;
-      default: if (txt) lines.push(txt);
+
+      case 'h1':
+        lines.push(`# ${txt}`);
+        break;
+
+      case 'h2':
+        lines.push(`## ${txt}`);
+        break;
+
+      case 'h3':
+        lines.push(`### ${txt}`);
+        break;
+
+      case 'bullet':
+        lines.push(`- ${txt}`);
+        break;
+
+      case 'num':
+        lines.push(`1. ${txt}`);
+        break;
+
+      case 'quote':
+        lines.push(`> ${txt}`);
+        break;
+
+      case 'callout':
+        lines.push(`> 💡 ${txt}`);
+        break;
+
+      case 'code':
+        lines.push(
+          '```\n' + txt + '\n```'
+        );
+        break;
+
+      case 'divider':
+        lines.push('---');
+        break;
+
+      case 'youtube':
+        lines.push(
+          `[▶ Vídeo](${b.conteudo})`
+        );
+        break;
+
+      case 'link':
+        lines.push(
+          `[🔗 Link](${b.conteudo})`
+        );
+        break;
+
+      default:
+
+        if (txt) {
+          lines.push(txt);
+        }
     }
+
     lines.push('');
   });
-  const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `aprofundamento-${postId}.md`;
+
+  const blob =
+    new Blob(
+      [lines.join('\n')],
+      { type: 'text/markdown' }
+    );
+
+  const a =
+    document.createElement('a');
+
+  a.href =
+    URL.createObjectURL(blob);
+
+  a.download =
+    `aprofundamento-${postId}.md`;
+
   a.click();
 }
 
-// Inicializar textarea listener
-document.addEventListener('DOMContentLoaded', () => {
-  const ta = document.getElementById('nota-nova-txt');
-  if (ta) {
-    ta.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+// ============================================================
+// CTRL + ENTER NAS NOTAS
+// ============================================================
+document.addEventListener(
+  'keydown',
+  e => {
+
+    if (
+      (e.ctrlKey || e.metaKey) &&
+      e.key === 'Enter'
+    ) {
+
+      const el =
+        document.activeElement;
+
+      if (
+        el &&
+        el.id === 'nota-nova-txt'
+      ) {
+
         e.preventDefault();
+
         adicionarNota();
       }
-    });
+    }
   }
-});
+);
 </script>
+
+
 </body>
 </html>
