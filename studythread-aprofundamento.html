@@ -99,7 +99,7 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .origem-tags{display:flex;gap:6px;flex-wrap:wrap;}
 .origem-tag{font-family:var(--font-m);font-size:.58rem;padding:1px 7px;border-radius:10px;background:rgba(196,149,42,.1);color:var(--gold);border:1px solid rgba(196,149,42,.2);}
 
-/* Thread do post - conteúdo da sidebar agora no painel direito */
+/* Thread do post - apenas Minhas Notas */
 .thread-header{
   font-family:var(--font-d);
   font-size:.9rem;
@@ -114,48 +114,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   overflow-y:auto;
   padding:14px;
 }
-.sidebar-tabs{
-  display:flex;
-  gap:0;
-  margin:0 18px;
-  border-bottom:1px solid var(--margin);
-  flex-shrink:0;
-}
-.stab{
-  flex:1;
-  background:transparent;
-  border:none;
-  border-bottom:2px solid transparent;
-  margin-bottom:-1px;
-  padding:10px 8px;
-  font-family:var(--font-m);
-  font-size:.6rem;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:#5a4d3a;
-  cursor:pointer;
-  transition:all .15s;
-}
-.stab:hover{color:var(--gold);}
-.stab.active{color:var(--gold);border-bottom-color:var(--gold);}
-
-/* Comentários no painel direito */
-.sc-node{margin-bottom:10px;}
-.sc-node.nested{margin-left:14px;border-left:2px solid #3d3020;padding-left:10px;}
-.sc-bubble{background:#252018;border:1px solid #3d3020;border-radius:5px;overflow:hidden;}
-.sc-head{display:flex;align-items:center;gap:6px;padding:6px 10px;background:#1e1810;border-bottom:1px solid #3d3020;flex-wrap:wrap;}
-.sc-autor{font-family:var(--font-m);font-size:.65rem;flex:1;}
-.sc-tipo{font-family:var(--font-m);font-size:.55rem;padding:1px 5px;border-radius:2px;text-transform:uppercase;}
-.ct-resposta{background:#1e2d3d;color:#6a9abf;}
-.ct-aula{background:#2d1e3d;color:#9a6abf;}
-.ct-explicacao{background:#1e3d2d;color:#6abf9a;}
-.ct-exercicio{background:#3d2d1e;color:#bf9a6a;}
-.ct-correcao{background:#3d1e1e;color:#bf6a6a;}
-.ct-sintese{background:#2d3d1e;color:#9abf6a;}
-.sc-body{padding:8px 10px;font-size:.84rem;color:#bfb090;line-height:1.6;font-family:var(--font-b);}
-.sc-body a{color:#9a8060;text-decoration:underline;}
-.sc-ts{font-family:var(--font-m);font-size:.55rem;color:#4a4030;padding:4px 10px;border-top:1px solid #3d3020;}
-.sc-empty{color:#4a4030;font-family:var(--font-d);font-style:italic;font-size:.82rem;padding:20px 0;text-align:center;}
 
 /* Anotações no painel direito */
 .nota-item{
@@ -520,15 +478,11 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
       </div>
     </div>
 
-    <!-- Painel direito: Thread do post -->
+    <!-- Painel direito: Minhas Notas -->
     <div id="thread-panel">
-      <div class="thread-header">✦ Thread do post</div>
-      <div class="sidebar-tabs">
-        <button class="stab active" id="stab-comentarios" onclick="mudarStab('comentarios')">Comentários</button>
-        <button class="stab" id="stab-anotacoes" onclick="mudarStab('anotacoes')">Minhas Notas</button>
-      </div>
+      <div class="thread-header">✦ Minhas Notas</div>
       <div class="thread-content" id="sidebar-body">
-        <div class="sc-empty">Carregando…</div>
+        <div class="sc-empty">Carregando anotações…</div>
       </div>
     </div>
   </div>
@@ -600,7 +554,6 @@ const db = firebase.firestore();
 let postId   = null;
 let postData = null;
 let blocos   = [];
-let stab     = 'comentarios';
 let comentarios = [];
 let autoSaveTimer = null;
 let draggingId = null;
@@ -618,9 +571,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   await carregarPost();
   await carregarBlocos();
-  await carregarComentarios();
   renderEditor();
-  await renderSidebar();
+  await renderAnotacoes();
 });
 
 async function carregarPost() {
@@ -663,13 +615,6 @@ async function carregarBlocos() {
       ];
     }
   } catch(e) { blocos = [{ id:uid(), tipo:'h1', conteudo:'Meu Aprofundamento' },{ id:uid(), tipo:'p', conteudo:'' }]; }
-}
-
-async function carregarComentarios() {
-  try {
-    const snap = await db.collection('comments').where('postId','==',postId).orderBy('timestamp','asc').get();
-    comentarios = snap.docs.map(d => d.data());
-  } catch(e) { comentarios = []; }
 }
 
 /* ════════════════════════════════════════
@@ -1129,56 +1074,6 @@ function excluirBlocoSelecionado() {
 }
 
 /* ════════════════════════════════════════
-   SIDEBAR (agora no painel direito)
-════════════════════════════════════════ */
-async function mudarStab(aba) {
-  stab = aba;
-  ['comentarios','anotacoes'].forEach(t => {
-    document.getElementById(`stab-${t}`)?.classList.toggle('active', t===aba);
-  });
-  await renderSidebar();
-}
-
-async function renderSidebar() {
-  const body = document.getElementById('sidebar-body');
-  if (stab === 'comentarios') {
-    renderComentariosSidebar(body);
-  } else {
-    await renderAnotacoesSidebar(body);
-  }
-}
-
-function renderComentariosSidebar(container) {
-  const raiz = comentarios.filter(c => !c.parentId);
-  if (!raiz.length) {
-    container.innerHTML = `<div class="sc-empty">Nenhum comentário neste post ainda.</div>`;
-    return;
-  }
-  container.innerHTML = raiz.map(c => renderScNode(c, comentarios)).join('');
-}
-
-function renderScNode(c, all, depth=0) {
-  const replies = all.filter(x=>x.parentId===c.id);
-  const nc = depth>0?'nested':'';
-  const emoji = c.autorEmoji||'👤';
-  const cor   = c.autorCor  ||'#c4952a';
-  const nome  = c.autor     ||'Usuário';
-  const corpo = esc(c.conteudo||'').replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank">$1</a>');
-  return `<div class="sc-node ${nc}">
-    <div class="sc-bubble">
-      <div class="sc-head">
-        <span style="font-size:.75rem;">${emoji}</span>
-        <span class="sc-autor" style="color:${cor};">${esc(nome)}</span>
-        <span class="sc-tipo ct-${c.tipo||'resposta'}">${c.tipo||'resposta'}</span>
-      </div>
-      <div class="sc-body">${corpo}</div>
-      <div class="sc-ts">${tsF(c.timestamp)}</div>
-    </div>
-    ${replies.map(r=>renderScNode(r,all,depth+1)).join('')}
-  </div>`;
-}
-
-/* ════════════════════════════════════════
    ANOTAÇÕES — FIRESTORE
 ════════════════════════════════════════ */
 
@@ -1253,7 +1148,7 @@ async function adicionarNota() {
 
   await salvarNotaStorage(nota);
   ta.value = '';
-  await renderSidebar();
+  await renderAnotacoes();
   toast('Anotação salva!', 'success');
 }
 
@@ -1289,18 +1184,19 @@ async function salvarEdicaoNota(notaId, btn) {
     embedUrl: embedUrl
   });
   
-  await renderSidebar();
+  await renderAnotacoes();
   toast('Anotação atualizada!', 'success');
 }
 
 async function excluirNota(notaId) {
   if (!confirm('Excluir esta anotação?')) return;
   await excluirNotaFirestore(notaId);
-  await renderSidebar();
+  await renderAnotacoes();
   toast('Anotação excluída!', 'success');
 }
 
-async function renderAnotacoesSidebar(container) {
+async function renderAnotacoes() {
+  const container = document.getElementById('sidebar-body');
   const notas = await carregarNotas();
   
   container.innerHTML = `
