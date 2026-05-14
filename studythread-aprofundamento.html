@@ -6,9 +6,7 @@
 <title>StudyThread — Aprofundamento</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
 
-
 <style>
-
 :root {
   --ink:#1a1410;--paper:#f9f6f0;--aged:#f0ebe0;--sepia:#c8b89a;--rust:#8b3a2a;--gold:#c4952a;--sage:#4a6741;--slate:#3d4f5c;--ghost:#7a7060;--margin:#d4c9b0;
   --font-d:'Playfair Display',Georgia,serif;
@@ -20,7 +18,6 @@
 html,body{height:100%;overflow:hidden;}
 body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);background:var(--paper);}
 
-/* ── LAYOUT MODIFICADO ── */
 #layout{
   display:grid;
   grid-template-columns:1fr;
@@ -28,7 +25,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   height:100vh;
 }
 
-/* NOVO: Container para os dois painéis superiores */
 #top-panels{
   grid-row:2;
   display:grid;
@@ -39,14 +35,12 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   overflow:hidden;
 }
 
-/* Painel esquerdo: Post de origem */
 #post-origem-panel{
   background:var(--aged);
   overflow-y:auto;
   border-right:1px solid var(--margin);
 }
 
-/* Painel direito: Thread do post */
 #thread-panel{
   background:var(--paper);
   overflow-y:auto;
@@ -54,7 +48,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   flex-direction:column;
 }
 
-/* ── TOPBAR ── */
 #topbar{
   grid-column:1/-1;
   background:var(--ink);border-bottom:2px solid var(--gold);
@@ -77,7 +70,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--sepia);}.btn-ghost:hover{background:rgba(255,255,255,.08);color:var(--paper);}
 .btn-sage{background:var(--sage);color:var(--paper);}.btn-sage:hover{background:#3d5835;}
 
-/* ── MAIN EDITOR ── */
 #editor-col{
   grid-row:3;
   overflow-y:auto;
@@ -85,13 +77,11 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   background-image:repeating-linear-gradient(transparent,transparent 31px,rgba(196,149,42,.05) 31px,rgba(196,149,42,.05) 32px);
 }
 
-/* Post origin card (dentro do painel esquerdo) */
 #post-origem{
   padding:28px 32px;
   position:relative;
 }
 .origem-label{font-family:var(--font-m);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ghost);margin-bottom:10px;}
-.origem-tipo{font-family:var(--font-m);font-size:.6rem;padding:2px 8px;border-radius:2px;margin-right:8px;}
 .origem-conteudo{font-family:var(--font-d);font-size:1.35rem;line-height:1.6;color:var(--ink);font-style:italic;margin-bottom:12px;}
 .origem-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
 .origem-autor{display:flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:.7rem;color:var(--ghost);}
@@ -99,7 +89,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .origem-tags{display:flex;gap:6px;flex-wrap:wrap;}
 .origem-tag{font-family:var(--font-m);font-size:.58rem;padding:1px 7px;border-radius:10px;background:rgba(196,149,42,.1);color:var(--gold);border:1px solid rgba(196,149,42,.2);}
 
-/* Thread do post - apenas Minhas Notas */
 .thread-header{
   font-family:var(--font-d);
   font-size:.9rem;
@@ -115,48 +104,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   padding:14px;
 }
 
-/* Anotações no painel direito */
-.nota-item{
-  background:#252018;
-  border:1px solid #3d3020;
-  border-radius:5px;
-  padding:10px 11px;
-  position:relative;
-  transition:border-color .15s;
-  margin-bottom:8px;
-}
-.nota-item:hover{border-color:#5a4a30;}
-.nota-edit-form textarea{
-  width:100%;
-  min-height:64px;
-  background:#1e1810;
-  border:1px solid #4a3d2a;
-  border-radius:3px;
-  padding:7px 9px;
-  font-family:var(--font-b);
-  font-size:.85rem;
-  color:#bfb090;
-  resize:vertical;
-  outline:none;
-}
-#nota-composer textarea{
-  width:100%;
-  min-height:80px;
-  background:#252018;
-  border:1px solid #3d3020;
-  border-radius:var(--r);
-  padding:9px 10px;
-  font-family:var(--font-b);
-  font-size:.86rem;
-  color:#bfb090;
-  resize:vertical;
-  outline:none;
-  line-height:1.6;
-  transition:border-color .2s;
-}
-#nota-composer textarea:focus{border-color:#c4952a;}
-
-/* Notion-like editor area */
 #notion-editor{
   max-width:900px;
   margin:0 auto;
@@ -164,7 +111,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   min-height:100%;
 }
 
-/* Toolbar flutuante */
 #toolbar{
   display:flex;gap:4px;align-items:center;
   background:var(--ink);
@@ -188,7 +134,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .tb-btn:hover{background:rgba(255,255,255,.1);color:var(--gold);}
 .tb-sep{width:1px;height:16px;background:rgba(255,255,255,.15);margin:0 2px;}
 
-/* Blocos */
 .notion-block{
   position:relative;
   margin:2px 0;
@@ -218,7 +163,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 
 .block-content{flex:1;min-width:0;outline:none;}
 
-/* Tipos de bloco */
 .block-p{font-family:var(--font-b);font-size:1rem;line-height:1.75;color:var(--ink);padding:2px 0;}
 .block-p:empty::before{content:attr(data-ph);color:var(--margin);pointer-events:none;}
 
@@ -264,7 +208,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 }
 .block-code:empty::before{content:'// Código…';color:#5a4a30;}
 
-/* Embed YouTube */
 .block-youtube{margin:12px 0;}
 .youtube-input-wrap{display:flex;gap:8px;align-items:center;}
 .youtube-input-wrap input{
@@ -278,7 +221,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .youtube-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:6px;}
 .youtube-label{font-family:var(--font-m);font-size:.62rem;color:var(--ghost);margin-bottom:6px;letter-spacing:.1em;text-transform:uppercase;}
 
-/* Embed link */
 .block-link{
   border:1px solid var(--margin);border-radius:6px;
   padding:12px 16px;margin:8px 0;
@@ -292,12 +234,10 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .link-url{font-family:var(--font-m);font-size:.7rem;color:var(--ghost);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .link-title{font-family:var(--font-b);font-size:.95rem;color:var(--ink);margin-bottom:2px;}
 
-/* Bloco imagem */
 .block-image{margin:12px 0;text-align:center;}
 .block-image img{max-width:100%;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.1);}
 .image-caption{font-family:var(--font-m);font-size:.65rem;color:var(--ghost);margin-top:6px;font-style:italic;}
 
-/* Menu de inserção "/" */
 #slash-menu{
   position:fixed;z-index:200;
   background:var(--paper);
@@ -321,10 +261,8 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .slash-label{flex:1;}
 .slash-hint{font-family:var(--font-m);font-size:.62rem;color:var(--ghost);}
 
-/* Bloco selecionado */
 .notion-block.selected{background:rgba(196,149,42,.1);}
 
-/* Status bar - CORRIGIDA */
 #status-bar{
   position:fixed;
   bottom:0;
@@ -346,12 +284,10 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .status-dot.saving{background:var(--gold);animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 
-/* Scrollbars */
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:#4a3d2a;border-radius:3px;}
 
-/* Tipo badges */
 .tipo-filosofia{background:#ede8f5;color:#4a2d7a;}
 .tipo-fisica{background:#e8f4ff;color:#1a3a6a;}
 .tipo-matematica{background:#e8f0f5;color:#1a4a7a;}
@@ -362,100 +298,473 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .tipo-literatura{background:#f0ede8;color:#5a3a1a;}
 .tipo-outro{background:#e8e8e8;color:#4a4a4a;}
 
-/* Link block em modo input */
 .link-block-input{display:flex;gap:8px;align-items:center;}
 .link-block-input input{flex:1;background:var(--aged);border:1px solid var(--margin);border-radius:var(--r);padding:8px 12px;font-family:var(--font-m);font-size:.78rem;color:var(--ink);outline:none;}
 .link-block-input input:focus{border-color:var(--gold);}
 
-/* Drag */
 .notion-block.dragging{opacity:.4;}
 .notion-block.drag-over{border-top:2px solid var(--gold);}
 
-/* ─────────────────────────────
-   MOBILE
-───────────────────────────── */
-@media (max-width: 900px){
+/* ─────────────────────────────────────────
+   SISTEMA DE NOTAS HIERÁRQUICAS
+───────────────────────────────────────── */
 
+.hierarchical-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.hierarchical-note {
+  position: relative;
+  margin-bottom: 0px;
+}
+
+.note-tree-wrapper {
+  position: relative;
+}
+
+.note-tree-wrapper::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, 
+    transparent 0%,
+    var(--margin) 8px,
+    var(--margin) calc(100% - 8px),
+    transparent 100%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.note-level-0 { margin-left: 0px; }
+.note-level-1 { margin-left: 24px; position: relative; }
+.note-level-2 { margin-left: 40px; position: relative; }
+.note-level-3 { margin-left: 52px; position: relative; }
+.note-level-4 { margin-left: 60px; position: relative; }
+.note-level-5 { margin-left: 64px; position: relative; }
+.note-level-6,
+.note-level-7,
+.note-level-8,
+.note-level-9,
+.note-level-10 { margin-left: 68px; }
+
+.note-level-1 .note-tree-wrapper::before,
+.note-level-2 .note-tree-wrapper::before,
+.note-level-3 .note-tree-wrapper::before,
+.note-level-4 .note-tree-wrapper::before,
+.note-level-5 .note-tree-wrapper::before,
+.note-level-6 .note-tree-wrapper::before,
+.note-level-7 .note-tree-wrapper::before,
+.note-level-8 .note-tree-wrapper::before,
+.note-level-9 .note-tree-wrapper::before,
+.note-level-10 .note-tree-wrapper::before {
+  opacity: 0.4;
+}
+
+.note-tree-wrapper::after {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 24px;
+  width: 16px;
+  height: 2px;
+  background: var(--margin);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.note-level-1 .note-tree-wrapper::after,
+.note-level-2 .note-tree-wrapper::after,
+.note-level-3 .note-tree-wrapper::after,
+.note-level-4 .note-tree-wrapper::after,
+.note-level-5 .note-tree-wrapper::after,
+.note-level-6 .note-tree-wrapper::after,
+.note-level-7 .note-tree-wrapper::after,
+.note-level-8 .note-tree-wrapper::after,
+.note-level-9 .note-tree-wrapper::after,
+.note-level-10 .note-tree-wrapper::after {
+  opacity: 0.3;
+}
+
+.note-card {
+  background: #252018;
+  border: 1px solid #3d3020;
+  border-radius: 6px;
+  padding: 12px 14px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.note-card:hover {
+  border-color: #5a4a30;
+  background: #2a2218;
+  transform: translateX(2px);
+}
+
+.note-card.selected {
+  background: rgba(196, 149, 42, 0.08);
+  border-left: 3px solid var(--gold);
+  border-left-width: 3px;
+  padding-left: 12px;
+}
+
+.note-content {
+  font-family: var(--font-b);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #bfb090;
+  word-break: break-word;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.note-content a {
+  color: #c4952a;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(196, 149, 42, 0.3);
+}
+
+.note-content a:hover {
+  border-bottom-color: var(--gold);
+}
+
+.note-embed {
+  margin: 8px 0 4px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.note-embed iframe {
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+}
+
+.note-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #3d3020;
+  font-family: var(--font-m);
+  font-size: 0.6rem;
+  color: #4a4030;
+  flex-wrap: wrap;
+}
+
+.note-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.note-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.note-btn {
+  background: transparent;
+  border: 1px solid #3d3020;
+  border-radius: 4px;
+  color: #5a4d3a;
+  font-family: var(--font-m);
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.note-btn:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.note-btn.delete:hover {
+  color: #bf6a6a;
+  border-color: #bf6a6a;
+}
+
+.note-btn.collapse {
+  font-family: monospace;
+  font-size: 0.7rem;
+}
+
+.note-reply-count {
+  background: rgba(196, 149, 42, 0.1);
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-size: 0.55rem;
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.reply-form {
+  margin-top: 8px;
+  margin-left: 0px;
+  animation: slideDown 0.2s ease;
+}
+
+.reply-form textarea {
+  width: 100%;
+  min-height: 70px;
+  background: #1e1810;
+  border: 1px solid #3d3020;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-family: var(--font-b);
+  font-size: 0.85rem;
+  color: #bfb090;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.reply-form textarea:focus {
+  border-color: var(--gold);
+}
+
+.reply-form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.reply-form-actions button {
+  padding: 5px 12px;
+  font-family: var(--font-m);
+  font-size: 0.65rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.reply-submit {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+}
+
+.reply-submit:hover {
+  background: #b5882a;
+}
+
+.reply-cancel {
+  background: transparent;
+  border: 1px solid #3d3020;
+  color: #7a6a50;
+}
+
+.reply-cancel:hover {
+  border-color: #5a4a30;
+  color: #bfb090;
+}
+
+.edit-form {
+  margin-top: 8px;
+  animation: slideDown 0.2s ease;
+}
+
+.edit-form textarea {
+  width: 100%;
+  min-height: 70px;
+  background: #1e1810;
+  border: 1px solid #3d3020;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-family: var(--font-b);
+  font-size: 0.85rem;
+  color: #bfb090;
+  resize: vertical;
+  outline: none;
+}
+
+.edit-form textarea:focus {
+  border-color: var(--gold);
+}
+
+.edit-form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.edit-submit {
+  background: var(--sage);
+  color: var(--paper);
+  border: none;
+}
+
+.edit-cancel {
+  background: transparent;
+  border: 1px solid #3d3020;
+  color: #7a6a50;
+}
+
+.replies-region {
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.replies-region.collapsed {
+  display: none;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notes-loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--ghost);
+  font-family: var(--font-m);
+  font-size: 0.75rem;
+}
+
+.notes-empty {
+  text-align: center;
+  padding: 30px 20px;
+  color: #4a4030;
+  font-family: var(--font-d);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px){
   html,body{
     overflow:auto;
     height:auto;
   }
-
   #layout{
     display:flex;
     flex-direction:column;
     height:auto;
     min-height:100vh;
   }
-
   #topbar{
     position:sticky;
     top:0;
     z-index:50;
   }
-
   #top-panels{
     display:flex;
     flex-direction:column;
     min-height:auto;
     overflow:visible;
   }
-
   #post-origem-panel{
     border-right:none;
     border-bottom:1px solid var(--margin);
     max-height:none;
   }
-
   #thread-panel{
     max-height:none;
   }
-
   #editor-col{
     overflow:visible;
   }
-
   #notion-editor{
     padding:24px 18px 120px;
   }
-
   #status-bar{
     right:0;
     padding:6px 14px;
     font-size:.58rem;
   }
-
   .topbar-title{
     font-size:.9rem;
   }
-
   .topbar-actions{
     display:none;
   }
-
   .origem-conteudo{
     font-size:1.05rem;
   }
-
-  .thread-content{
-    max-height:420px;
-  }
-
   #toolbar{
     max-width:95vw;
   }
+  
+  /* Mobile: Redução gradual da indentação */
+  .note-level-1 { margin-left: 12px; }
+  .note-level-2 { margin-left: 20px; }
+  .note-level-3 { margin-left: 24px; }
+  .note-level-4 { margin-left: 28px; }
+  .note-level-5 { margin-left: 30px; }
+  .note-level-6,
+  .note-level-7,
+  .note-level-8,
+  .note-level-9,
+  .note-level-10 { margin-left: 32px; }
+  
+  .note-level-1 .note-tree-wrapper::before,
+  .note-level-2 .note-tree-wrapper::before,
+  .note-level-3 .note-tree-wrapper::before,
+  .note-level-4 .note-tree-wrapper::before,
+  .note-level-5 .note-tree-wrapper::before,
+  .note-level-6 .note-tree-wrapper::before,
+  .note-level-7 .note-tree-wrapper::before,
+  .note-level-8 .note-tree-wrapper::before,
+  .note-level-9 .note-tree-wrapper::before,
+  .note-level-10 .note-tree-wrapper::before {
+    left: -10px;
+    opacity: 0.25;
+  }
+  
+  .note-level-1 .note-tree-wrapper::after,
+  .note-level-2 .note-tree-wrapper::after,
+  .note-level-3 .note-tree-wrapper::after,
+  .note-level-4 .note-tree-wrapper::after,
+  .note-level-5 .note-tree-wrapper::after,
+  .note-level-6 .note-tree-wrapper::after,
+  .note-level-7 .note-tree-wrapper::after,
+  .note-level-8 .note-tree-wrapper::after,
+  .note-level-9 .note-tree-wrapper::after,
+  .note-level-10 .note-tree-wrapper::after {
+    left: -14px;
+    width: 10px;
+    opacity: 0.2;
+  }
+  
+  .note-actions {
+    gap: 4px;
+  }
+  
+  .note-btn {
+    padding: 2px 6px;
+    font-size: 0.55rem;
+  }
+  
+  .note-card {
+    padding: 10px 12px;
+  }
+  
+  .note-content {
+    font-size: 0.85rem;
+  }
 }
-
 </style>
-
-
 </head>
 <body>
 <div id="layout">
 
-  <!-- TOPBAR -->
   <header id="topbar">
-    <button class="topbar-back" onclick="window.location.href='studythread.html'"></button>
+    <button class="topbar-back" onclick="window.location.href='studythread.html'">← Voltar</button>
     <div class="topbar-title">Study<span>Thread</span> · Aprofundamento</div>
     <span class="topbar-badge" id="topbar-tipo">—</span>
     <div class="topbar-actions">
@@ -464,9 +773,7 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
     </div>
   </header>
 
-  <!-- PAINÉIS SUPERIORES: 50% cada -->
   <div id="top-panels">
-    <!-- Painel esquerdo: Post de origem -->
     <div id="post-origem-panel">
       <div id="post-origem">
         <div class="origem-label">✦ Post de origem</div>
@@ -478,25 +785,19 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
       </div>
     </div>
 
-    <!-- Painel direito: Minhas Notas -->
     <div id="thread-panel">
       <div class="thread-header">✦ Minhas Notas</div>
       <div class="thread-content" id="sidebar-body">
-        <div class="sc-empty">Carregando anotações…</div>
+        <div class="notes-loading">Carregando anotações…</div>
       </div>
     </div>
   </div>
 
-  <!-- EDITOR PRINCIPAL -->
   <div id="editor-col">
-    <!-- Editor Notion -->
-    <div id="notion-editor">
-      <!-- blocos renderizados aqui -->
-    </div>
+    <div id="notion-editor"></div>
   </div>
 </div>
 
-<!-- Menu "/" -->
 <div id="slash-menu">
   <div class="slash-item" onclick="inserirBloco('h1')"><span class="slash-icon">H1</span><span class="slash-label">Título grande</span><span class="slash-hint">Título</span></div>
   <div class="slash-item" onclick="inserirBloco('h2')"><span class="slash-icon">H2</span><span class="slash-label">Título médio</span><span class="slash-hint">Subtítulo</span></div>
@@ -511,7 +812,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   <div class="slash-item" onclick="inserirBloco('link')"><span class="slash-icon">🔗</span><span class="slash-label">Link externo</span></div>
 </div>
 
-<!-- Toolbar de formatação -->
 <div id="toolbar">
   <button class="tb-btn" onclick="fmt('bold')"><b>B</b></button>
   <button class="tb-btn" onclick="fmt('italic')"><i>I</i></button>
@@ -528,7 +828,6 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   <button class="tb-btn" onclick="excluirBlocoSelecionado()">🗑</button>
 </div>
 
-<!-- Status Bar -->
 <div id="status-bar">
   <div id="status-dot" class="status-dot"></div>
   <span id="status-txt">Pronto</span>
@@ -549,14 +848,19 @@ firebase.initializeApp({
 const db = firebase.firestore();
 
 /* ════════════════════════════════════════
-   ESTADO
+   ESTADO GLOBAL
 ════════════════════════════════════════ */
 let postId   = null;
 let postData = null;
 let blocos   = [];
-let comentarios = [];
 let autoSaveTimer = null;
 let draggingId = null;
+
+// Estado para notas hierárquicas
+let todasNotas = [];
+let selectedNoteId = null;
+let replyingToId = null;
+let editingNoteId = null;
 
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
@@ -572,7 +876,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   await carregarPost();
   await carregarBlocos();
   renderEditor();
-  await renderAnotacoes();
+  await renderArvoreNotas();
 });
 
 async function carregarPost() {
@@ -618,7 +922,7 @@ async function carregarBlocos() {
 }
 
 /* ════════════════════════════════════════
-   SALVAR
+   EDITOR NOTION
 ════════════════════════════════════════ */
 function coletarBlocos() {
   const editor = document.getElementById('notion-editor');
@@ -673,9 +977,6 @@ function atualizarStatusBlocos() {
   if (el) el.textContent = `${blocos.length} bloco${blocos.length!==1?'s':''}`;
 }
 
-/* ════════════════════════════════════════
-   RENDER EDITOR (com requestAnimationFrame)
-════════════════════════════════════════ */
 function renderEditor() {
   requestAnimationFrame(() => {
     const editor = document.getElementById('notion-editor');
@@ -697,13 +998,12 @@ function criarBlocoEl(bloco) {
   handle.textContent = '⠿';
   handle.title = 'Arrastar';
 
-  let inner = '';
-
   if (bloco.tipo === 'divider') {
     wrapper.innerHTML = `<hr class="block-divider" style="flex:1;"/>`;
     return wrapper;
   }
 
+  let inner = '';
   if (bloco.tipo === 'youtube') {
     inner = renderBlocoYoutube(bloco);
   } else if (bloco.tipo === 'link') {
@@ -833,6 +1133,14 @@ function removerLink(blocoId) {
   if (b) { b.conteudo = ''; renderEditor(); agendarAutoSave(); }
 }
 
+function youtubeEmbedUrl(url) {
+  let id = null;
+  if (url && url.includes('youtube.com/watch?v=')) { try { id = new URLSearchParams(url.split('?')[1]).get('v'); } catch {} }
+  else if (url && url.includes('youtu.be/'))       id = url.split('youtu.be/')[1]?.split('?')[0];
+  else if (url && url.includes('youtube.com/embed/')) id = url.split('/embed/')[1]?.split('?')[0];
+  return id ? `https://www.youtube.com/embed/${id}?rel=0` : null;
+}
+
 function detectarEConverterYoutube(blockEl, blocoId, texto) {
   let youtubeId = null;
   const patterns = [
@@ -899,7 +1207,6 @@ function toast(msg, tipo = 'info') {
 function onKeyDown(e, blockEl) {
   const blocoId = blockEl.dataset.id;
   const ce      = blockEl.querySelector('.block-content');
-  const tipo    = blockEl.dataset.tipo;
   
   if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
     setTimeout(() => {
@@ -977,9 +1284,6 @@ function placeCaretAtEnd(el) {
   sel.addRange(range);
 }
 
-/* ════════════════════════════════════════
-   SLASH MENU
-════════════════════════════════════════ */
 let slashBlocoId = null;
 
 function abrirSlashMenu(blockEl, blocoId) {
@@ -1022,9 +1326,6 @@ document.addEventListener('click', e => {
   if (!e.target.closest('#slash-menu') && !e.target.closest('.block-content')) fecharSlashMenu();
 });
 
-/* ════════════════════════════════════════
-   TOOLBAR DE FORMATAÇÃO
-════════════════════════════════════════ */
 function mostrarToolbarSeSelecionado() {
   const sel = window.getSelection();
   if (!sel || sel.isCollapsed || sel.toString().trim() === '') {
@@ -1074,193 +1375,403 @@ function excluirBlocoSelecionado() {
 }
 
 /* ════════════════════════════════════════
-   ANOTAÇÕES — FIRESTORE
+   SISTEMA DE NOTAS HIERÁRQUICAS
 ════════════════════════════════════════ */
 
 async function carregarNotas() {
   try {
     const snap = await db.collection('anotacoes')
       .where('postId', '==', postId)
-      .orderBy('criadoEm', 'desc')
       .get();
-    return snap.docs.map(doc => ({
+    
+    todasNotas = snap.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
-  } catch(e) {
-    console.error('Erro ao carregar anotações:', e);
+    
+    ordenarNotasPorPath();
+    return todasNotas;
+  } catch (e) {
+    console.error('Erro ao carregar notas:', e);
     return [];
   }
 }
 
-async function salvarNotaStorage(nota) {
+function ordenarNotasPorPath() {
+  todasNotas.sort((a, b) => {
+    const pathA = a.path || [];
+    const pathB = b.path || [];
+    
+    for (let i = 0; i < Math.min(pathA.length, pathB.length); i++) {
+      if (pathA[i] !== pathB[i]) {
+        return (pathA[i] || '').localeCompare(pathB[i] || '');
+      }
+    }
+    
+    if (pathA.length !== pathB.length) {
+      return pathA.length - pathB.length;
+    }
+    
+    return (a.ordem || 0) - (b.ordem || 0);
+  });
+}
+
+function construirArvore(notas, parentId = null) {
+  const filhos = notas.filter(nota => nota.parentId === parentId);
+  
+  filhos.sort((a, b) => {
+    if (parentId === null) {
+      return new Date(b.criadoEm) - new Date(a.criadoEm);
+    }
+    return new Date(a.criadoEm) - new Date(b.criadoEm);
+  });
+  
+  return filhos.map(filho => ({
+    ...filho,
+    children: construirArvore(notas, filho.id)
+  }));
+}
+
+async function salvarNota(notaData) {
   try {
-    if (nota.id) {
-      await db.collection('anotacoes').doc(nota.id).update({
-        texto: nota.texto,
-        tipo: nota.tipo,
-        embedUrl: nota.embedUrl || null,
-        editadoEm: new Date().toISOString()
+    const now = new Date().toISOString();
+    
+    if (notaData.id) {
+      await db.collection('anotacoes').doc(notaData.id).update({
+        texto: notaData.texto,
+        tipo: notaData.tipo,
+        embedUrl: notaData.embedUrl || null,
+        editadoEm: now
       });
+      
+      const index = todasNotas.findIndex(n => n.id === notaData.id);
+      if (index !== -1) {
+        todasNotas[index] = { ...todasNotas[index], ...notaData, editadoEm: now };
+      }
     } else {
+      const parent = notaData.parentId ? todasNotas.find(n => n.id === notaData.parentId) : null;
+      const depth = parent ? (parent.depth || 0) + 1 : 0;
+      const path = parent ? [...(parent.path || []), parent.id] : [];
+      const ordem = Date.now();
+      
       const novaNota = {
         postId: postId,
-        texto: nota.texto,
-        tipo: nota.tipo,
-        embedUrl: nota.embedUrl || null,
-        criadoEm: new Date().toISOString(),
-        editadoEm: null
+        parentId: notaData.parentId || null,
+        texto: notaData.texto,
+        tipo: notaData.tipo,
+        embedUrl: notaData.embedUrl || null,
+        depth: depth,
+        ordem: ordem,
+        path: path,
+        collapsed: false,
+        criadoEm: now,
+        editadoEm: null,
+        respostaCount: 0
       };
-      await db.collection('anotacoes').add(novaNota);
+      
+      const docRef = await db.collection('anotacoes').add(novaNota);
+      novaNota.id = docRef.id;
+      
+      todasNotas.push(novaNota);
+      
+      if (parent) {
+        await db.collection('anotacoes').doc(parent.id).update({
+          respostaCount: (parent.respostaCount || 0) + 1
+        });
+        parent.respostaCount = (parent.respostaCount || 0) + 1;
+      }
     }
-    return true;
-  } catch(e) {
-    console.error('Erro ao salvar anotação:', e);
-    toast('Erro ao salvar anotação', 'error');
-    return false;
+    
+    await renderArvoreNotas();
+    toast(notaData.id ? 'Nota atualizada!' : 'Nota adicionada!', 'success');
+    
+  } catch (e) {
+    console.error('Erro ao salvar nota:', e);
+    toast('Erro ao salvar nota', 'error');
   }
 }
 
-async function excluirNotaFirestore(notaId) {
-  try {
-    await db.collection('anotacoes').doc(notaId).delete();
-    return true;
-  } catch(e) {
-    console.error('Erro ao excluir anotação:', e);
-    toast('Erro ao excluir anotação', 'error');
-    return false;
-  }
-}
-
-async function adicionarNota() {
-  const ta = document.getElementById('nota-nova-txt');
-  const txt = ta.value.trim();
-  if (!txt) return;
-
-  const nota = { texto: txt, tipo: 'texto' };
-  const ytEmbed = youtubeEmbedUrl(txt);
-  if (ytEmbed) { 
-    nota.tipo = 'youtube'; 
-    nota.embedUrl = ytEmbed; 
-  } else if (/^https?:\/\//.test(txt)) { 
-    nota.tipo = 'link'; 
-  }
-
-  await salvarNotaStorage(nota);
-  ta.value = '';
-  await renderAnotacoes();
-  toast('Anotação salva!', 'success');
-}
-
-async function editarNota(notaId) {
-  const editForm = document.getElementById(`nota-edit-${notaId}`);
-  if (editForm) editForm.style.display = 'block';
-}
-
-async function cancelarEdicaoNota(notaId) {
-  const editForm = document.getElementById(`nota-edit-${notaId}`);
-  if (editForm) editForm.style.display = 'none';
-}
-
-async function salvarEdicaoNota(notaId, btn) {
-  const form = document.getElementById(`nota-edit-${notaId}`);
-  const novoTxt = form.querySelector('textarea').value.trim();
-  if (!novoTxt) return;
+async function excluirNotaRecursivo(notaId) {
+  const nota = todasNotas.find(n => n.id === notaId);
+  if (!nota) return;
   
-  const ytEmbed = youtubeEmbedUrl(novoTxt);
-  let tipo = 'texto';
-  let embedUrl = null;
-  if (ytEmbed) { 
-    tipo = 'youtube'; 
-    embedUrl = ytEmbed; 
-  } else if (/^https?:\/\//.test(novoTxt)) { 
-    tipo = 'link'; 
+  const respostas = todasNotas.filter(n => n.path && n.path.includes(notaId));
+  const idsParaExcluir = [notaId, ...respostas.map(r => r.id)];
+  
+  const batch = db.batch();
+  idsParaExcluir.forEach(id => {
+    const ref = db.collection('anotacoes').doc(id);
+    batch.delete(ref);
+  });
+  
+  await batch.commit();
+  
+  todasNotas = todasNotas.filter(n => !idsParaExcluir.includes(n.id));
+  
+  if (nota.parentId) {
+    const parent = todasNotas.find(n => n.id === nota.parentId);
+    if (parent) {
+      parent.respostaCount = Math.max(0, (parent.respostaCount || 0) - 1);
+      await db.collection('anotacoes').doc(parent.id).update({
+        respostaCount: parent.respostaCount
+      });
+    }
   }
   
-  await salvarNotaStorage({
-    id: notaId,
-    texto: novoTxt,
+  await renderArvoreNotas();
+  toast('Nota e respostas excluídas!', 'success');
+}
+
+async function toggleCollapse(notaId) {
+  const nota = todasNotas.find(n => n.id === notaId);
+  if (nota) {
+    nota.collapsed = !nota.collapsed;
+    await db.collection('anotacoes').doc(notaId).update({
+      collapsed: nota.collapsed
+    });
+    await renderArvoreNotas();
+  }
+}
+
+function detectarTipoNota(texto) {
+  const ytEmbed = youtubeEmbedUrl(texto);
+  if (ytEmbed) {
+    return { tipo: 'youtube', embedUrl: ytEmbed };
+  }
+  if (/^https?:\/\//.test(texto)) {
+    return { tipo: 'link', embedUrl: null };
+  }
+  return { tipo: 'texto', embedUrl: null };
+}
+
+function renderizarFormularioResposta(parentId) {
+  return `
+    <div class="reply-form" id="reply-form-${parentId}">
+      <textarea id="reply-text-${parentId}" placeholder="Escreva sua resposta… Cole um link ou URL do YouTube para embed automático."></textarea>
+      <div class="reply-form-actions">
+        <button class="reply-submit" onclick="enviarResposta('${parentId}')">Responder</button>
+        <button class="reply-cancel" onclick="cancelarResposta('${parentId}')">Cancelar</button>
+      </div>
+    </div>
+  `;
+}
+
+async function enviarResposta(parentId) {
+  const textarea = document.getElementById(`reply-text-${parentId}`);
+  const texto = textarea.value.trim();
+  if (!texto) return;
+  
+  const { tipo, embedUrl } = detectarTipoNota(texto);
+  
+  await salvarNota({
+    parentId: parentId,
+    texto: texto,
     tipo: tipo,
     embedUrl: embedUrl
   });
   
-  await renderAnotacoes();
-  toast('Anotação atualizada!', 'success');
+  cancelarResposta(parentId);
 }
 
-async function excluirNota(notaId) {
-  if (!confirm('Excluir esta anotação?')) return;
-  await excluirNotaFirestore(notaId);
-  await renderAnotacoes();
-  toast('Anotação excluída!', 'success');
+function cancelarResposta(parentId) {
+  const form = document.getElementById(`reply-form-${parentId}`);
+  if (form) form.remove();
+  replyingToId = null;
 }
 
-async function renderAnotacoes() {
-  const container = document.getElementById('sidebar-body');
-  const notas = await carregarNotas();
+function iniciarEdicao(notaId) {
+  const nota = todasNotas.find(n => n.id === notaId);
+  if (!nota) return;
   
-  container.innerHTML = `
-    <div style="margin-bottom:14px;">
-      <div id="nota-composer">
-        <textarea id="nota-nova-txt" placeholder="Nova anotação… Cole um link, escreva um pensamento ou cole uma URL do YouTube para embed automático."></textarea>
-        <button onclick="adicionarNota()" style="width:100%;margin-top:6px;background:var(--gold);color:var(--ink);border:none;border-radius:var(--r);padding:7px;font-family:var(--font-m);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#b5882a'" onmouseout="this.style.background='var(--gold)'">+ Adicionar Anotação</button>
-      </div>
+  editingNoteId = notaId;
+  const noteCard = document.querySelector(`.note-card[data-id="${notaId}"]`);
+  const contentDiv = noteCard.querySelector('.note-content');
+  
+  const editForm = document.createElement('div');
+  editForm.className = 'edit-form';
+  editForm.innerHTML = `
+    <textarea id="edit-text-${notaId}">${nota.texto.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+    <div class="edit-form-actions">
+      <button class="edit-submit" onclick="salvarEdicao('${notaId}')">Salvar</button>
+      <button class="edit-cancel" onclick="cancelarEdicao('${notaId}')">Cancelar</button>
     </div>
-
-    <div id="notas-lista" style="display:flex;flex-direction:column;gap:8px;">
-      ${notas.length === 0
-        ? `<div style="color:#4a4030;font-family:var(--font-d);font-style:italic;font-size:.82rem;padding:16px 0;text-align:center;">Nenhuma anotação ainda.</div>`
-        : notas.map(nota => renderNotaItemFirestore(nota)).join('')
-      }
-    </div>`;
+  `;
+  
+  contentDiv.style.display = 'none';
+  contentDiv.parentElement?.appendChild(editForm);
+  document.getElementById(`edit-text-${notaId}`).focus();
 }
 
-function renderNotaItemFirestore(nota) {
-  const isYt  = nota.tipo === 'youtube';
-  const isUrl = nota.tipo === 'link';
-  const ts    = nota.criadoEm ? new Date(nota.criadoEm).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
-  const editado = nota.editadoEm ? ' · editado' : '';
+async function salvarEdicao(notaId) {
+  const textarea = document.getElementById(`edit-text-${notaId}`);
+  const novoTexto = textarea.value.trim();
+  if (!novoTexto) return;
+  
+  const { tipo, embedUrl } = detectarTipoNota(novoTexto);
+  
+  await salvarNota({
+    id: notaId,
+    texto: novoTexto,
+    tipo: tipo,
+    embedUrl: embedUrl
+  });
+  
+  cancelarEdicao(notaId);
+}
 
-  let corpo = '';
-  if (isYt && nota.embedUrl) {
-    corpo = `<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:4px;margin-top:6px;background:#1a1410;">
-      <iframe src="${nota.embedUrl}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>
-    </div>`;
-  } else if (isUrl) {
-    const domain = (() => { try { return new URL(nota.texto).hostname; } catch { return nota.texto; } })();
-    corpo = `<a href="${nota.texto}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;margin-top:4px;padding:6px 8px;background:#1e1810;border:1px solid #3d3020;border-radius:3px;text-decoration:none;color:#9a8060;font-family:var(--font-m);font-size:.65rem;word-break:break-all;" onmouseover="this.style.borderColor='#c4952a'" onmouseout="this.style.borderColor='#3d3020'">🔗 ${domain}</a>`;
-  } else {
-    const htmlTexto = escHtml(nota.texto).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#9a8060;text-decoration:underline;">$1</a>');
-    corpo = `<div style="font-family:var(--font-b);font-size:.88rem;color:#bfb090;line-height:1.6;margin-top:4px;word-break:break-word;">${htmlTexto}</div>`;
+function cancelarEdicao(notaId) {
+  const noteCard = document.querySelector(`.note-card[data-id="${notaId}"]`);
+  const editForm = noteCard.querySelector('.edit-form');
+  const contentDiv = noteCard.querySelector('.note-content');
+  
+  if (editForm) editForm.remove();
+  if (contentDiv) contentDiv.style.display = 'block';
+  editingNoteId = null;
+}
+
+function selecionarNota(notaId) {
+  document.querySelectorAll('.note-card.selected').forEach(card => {
+    card.classList.remove('selected');
+  });
+  
+  const noteCard = document.querySelector(`.note-card[data-id="${notaId}"]`);
+  if (noteCard) {
+    noteCard.classList.add('selected');
+    selectedNoteId = notaId;
+    noteCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
-
-  return `<div class="nota-item" id="nota-${nota.id}">
-    ${corpo}
-    <div style="display:flex;align-items:center;gap:6px;margin-top:7px;border-top:1px solid #3d3020;padding-top:6px;">
-      <span style="font-family:var(--font-m);font-size:.55rem;color:#4a4030;flex:1;">${ts}${editado}</span>
-      <button onclick="editarNota('${nota.id}')" style="background:transparent;border:1px solid #3d3020;border-radius:3px;color:#5a4d3a;font-size:.6rem;padding:2px 7px;cursor:pointer;font-family:var(--font-m);" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='#5a4d3a';this.style.borderColor='#3d3020'">✏ Editar</button>
-      <button onclick="excluirNota('${nota.id}')" style="background:transparent;border:1px solid #3d3020;border-radius:3px;color:#5a4d3a;font-size:.6rem;padding:2px 7px;cursor:pointer;font-family:var(--font-m);" onmouseover="this.style.color='#bf6a6a';this.style.borderColor='#bf6a6a'" onmouseout="this.style.color='#5a4d3a';this.style.borderColor='#3d3020'">🗑 Excluir</button>
-    </div>
-    <div class="nota-edit-form" id="nota-edit-${nota.id}" style="display:none;margin-top:8px;border-top:1px solid #3d3020;padding-top:8px;">
-      <textarea>${nota.texto}</textarea>
-      <div style="display:flex;gap:6px;margin-top:6px;">
-        <button onclick="salvarEdicaoNota('${nota.id}', this)" style="flex:1;background:var(--sage);color:var(--paper);border:none;border-radius:3px;padding:5px;font-family:var(--font-m);font-size:.62rem;cursor:pointer;">✓ Salvar</button>
-        <button onclick="cancelarEdicaoNota('${nota.id}')" style="flex:1;background:transparent;border:1px solid #4a3d2a;color:#7a6a50;border-radius:3px;padding:5px;font-family:var(--font-m);font-size:.62rem;cursor:pointer;">✕ Cancelar</button>
-      </div>
-    </div>
-  </div>`;
 }
 
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 
-function youtubeEmbedUrl(url) {
-  let id = null;
-  if (url.includes('youtube.com/watch?v=')) { try { id = new URLSearchParams(url.split('?')[1]).get('v'); } catch {} }
-  else if (url.includes('youtu.be/'))       id = url.split('youtu.be/')[1]?.split('?')[0];
-  else if (url.includes('youtube.com/embed/')) id = url.split('/embed/')[1]?.split('?')[0];
-  return id ? `https://www.youtube.com/embed/${id}?rel=0` : null;
+function renderizarConteudoNota(nota) {
+  if (nota.tipo === 'youtube' && nota.embedUrl) {
+    return `
+      <div class="note-embed">
+        <iframe src="${nota.embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" style="width:100%;height:180px;"></iframe>
+      </div>
+    `;
+  } else if (nota.tipo === 'link') {
+    const domain = (() => { 
+      try { return new URL(nota.texto).hostname; 
+      } catch { return nota.texto; }
+    })();
+    return `
+      <a href="${nota.texto}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;color:#9a8060;text-decoration:none;border-bottom:1px dotted rgba(196,149,42,0.3);">
+        🔗 ${domain}
+      </a>
+      <div style="font-size:0.7rem;color:#4a4030;margin-top:2px;word-break:break-all;">${nota.texto}</div>
+    `;
+  } else {
+    const htmlTexto = escHtml(nota.texto).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#9a8060;text-decoration:underline;">$1</a>');
+    return `<div>${htmlTexto}</div>`;
+  }
+}
+
+function renderizarNota(nota, level = 0) {
+  const hasChildren = nota.children && nota.children.length > 0;
+  const isCollapsed = nota.collapsed;
+  const dataCriacao = new Date(nota.criadoEm).toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  const foiEditado = nota.editadoEm ? ' · editado' : '';
+  
+  const replyingForm = replyingToId === nota.id ? renderizarFormularioResposta(nota.id) : '';
+  
+  return `
+    <div class="hierarchical-note note-level-${Math.min(level, 10)}">
+      <div class="note-tree-wrapper">
+        <div class="note-card ${selectedNoteId === nota.id ? 'selected' : ''}" data-id="${nota.id}">
+          <div class="note-content" onclick="selecionarNota('${nota.id}')">
+            ${renderizarConteudoNota(nota)}
+          </div>
+          <div class="note-meta">
+            <span class="note-date">📅 ${dataCriacao}${foiEditado}</span>
+            ${hasChildren ? `
+              <button class="note-btn collapse" onclick="event.stopPropagation(); toggleCollapse('${nota.id}')">
+                ${isCollapsed ? '▶' : '▼'} ${nota.children.length} ${nota.children.length === 1 ? 'resposta' : 'respostas'}
+              </button>
+            ` : ''}
+            <div class="note-actions">
+              <button class="note-btn" onclick="event.stopPropagation(); iniciarEdicao('${nota.id}')">✏ Editar</button>
+              <button class="note-btn" onclick="event.stopPropagation(); replyingToId = '${nota.id}'; renderArvoreNotas();">↩ Responder</button>
+              <button class="note-btn delete" onclick="event.stopPropagation(); if(confirm('Excluir nota e todas as respostas?')) excluirNotaRecursivo('${nota.id}')">🗑 Excluir</button>
+            </div>
+          </div>
+        </div>
+        ${replyingForm}
+      </div>
+      ${hasChildren && !isCollapsed ? `
+        <div class="replies-region">
+          ${nota.children.map(child => renderizarNota(child, level + 1)).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderizarCompositorRaiz() {
+  return `
+    <div style="margin-bottom: 20px;">
+      <div id="nota-composer">
+        <textarea id="nota-nova-txt" placeholder="Nova nota principal… Escreva um pensamento, cole um link ou URL do YouTube." style="width:100%;min-height:70px;background:#1e1810;border:1px solid #3d3020;border-radius:4px;padding:8px 10px;font-family:var(--font-b);font-size:0.85rem;color:#bfb090;resize:vertical;outline:none;"></textarea>
+        <button onclick="adicionarNotaRaiz()" style="width:100%;margin-top:6px;background:var(--gold);color:var(--ink);border:none;border-radius:var(--r);padding:7px;font-family:var(--font-m);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#b5882a'" onmouseout="this.style.background='var(--gold)'">
+          + Nova Nota Principal
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+async function adicionarNotaRaiz() {
+  const textarea = document.getElementById('nota-nova-txt');
+  const texto = textarea.value.trim();
+  if (!texto) return;
+  
+  const { tipo, embedUrl } = detectarTipoNota(texto);
+  
+  await salvarNota({
+    parentId: null,
+    texto: texto,
+    tipo: tipo,
+    embedUrl: embedUrl
+  });
+  
+  textarea.value = '';
+}
+
+async function renderArvoreNotas() {
+  const container = document.getElementById('sidebar-body');
+  if (!container) return;
+  
+  container.innerHTML = '<div class="notes-loading">Carregando notas…</div>';
+  
+  await carregarNotas();
+  
+  if (todasNotas.length === 0) {
+    container.innerHTML = `
+      ${renderizarCompositorRaiz()}
+      <div class="notes-empty">
+        ✦ Nenhuma nota ainda ✦<br>
+        <span style="font-size:0.7rem;">Crie sua primeira nota principal acima</span>
+      </div>
+    `;
+    return;
+  }
+  
+  const arvore = construirArvore(todasNotas);
+  
+  container.innerHTML = `
+    ${renderizarCompositorRaiz()}
+    <div class="hierarchical-notes">
+      ${arvore.map(nota => renderizarNota(nota, 0)).join('')}
+    </div>
+  `;
 }
 
 /* ════════════════════════════════════════
@@ -1299,19 +1810,12 @@ function exportarMarkdown() {
   a.click();
 }
 
-// Delegation dinâmica para o textarea de anotações
 document.addEventListener('keydown', (e) => {
-  if (
-    e.target &&
-    e.target.id === 'nota-nova-txt' &&
-    e.key === 'Enter' &&
-    (e.ctrlKey || e.metaKey)
-  ) {
+  if (e.target && e.target.id === 'nota-nova-txt' && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
     e.preventDefault();
-    adicionarNota();
+    adicionarNotaRaiz();
   }
 });
 </script>
-
 </body>
 </html>
