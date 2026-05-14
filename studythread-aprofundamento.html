@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 <title>StudyThread — Aprofundamento</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
 
@@ -14,23 +14,23 @@
   --font-d:'Playfair Display',Georgia,serif;
   --font-b:'Crimson Pro','Times New Roman',serif;
   --font-m:'DM Mono','Courier New',monospace;
-  --r:4px; --sidebar:320px;
+  --r:4px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);background:var(--paper);}
 
-/* ── LAYOUT MODIFICADO: 50/50 na horizontal ── */
+/* ── LAYOUT MODIFICADO ── */
 #layout{
   display:grid;
-  grid-template-columns:1fr var(--sidebar);
-  grid-template-rows:56px 1fr;
+  grid-template-columns:1fr;
+  grid-template-rows:56px 340px 1fr;
   height:100vh;
 }
 
 /* NOVO: Container para os dois painéis superiores */
 #top-panels{
-  grid-column:1/-1;
+  grid-row:2;
   display:grid;
   grid-template-columns:1fr 1fr;
   border-bottom:2px solid var(--gold);
@@ -79,6 +79,7 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 
 /* ── MAIN EDITOR ── */
 #editor-col{
+  grid-row:3;
   overflow-y:auto;
   background:var(--paper);
   background-image:repeating-linear-gradient(transparent,transparent 31px,rgba(196,149,42,.05) 31px,rgba(196,149,42,.05) 32px);
@@ -202,7 +203,7 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
   max-width:900px;
   margin:0 auto;
   padding:40px 48px 120px;
-  min-height:calc(100vh - 280px);
+  min-height:100%;
 }
 
 /* Toolbar flutuante */
@@ -365,12 +366,12 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 /* Bloco selecionado */
 .notion-block.selected{background:rgba(196,149,42,.1);}
 
-/* Status bar */
+/* Status bar - CORRIGIDA */
 #status-bar{
   position:fixed;
   bottom:0;
   left:0;
-  right:var(--sidebar);
+  right:0;
   background:var(--aged);
   border-top:1px solid var(--margin);
   padding:6px 48px;
@@ -412,6 +413,80 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 .notion-block.dragging{opacity:.4;}
 .notion-block.drag-over{border-top:2px solid var(--gold);}
 
+/* ─────────────────────────────
+   MOBILE
+───────────────────────────── */
+@media (max-width: 900px){
+
+  html,body{
+    overflow:auto;
+    height:auto;
+  }
+
+  #layout{
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    min-height:100vh;
+  }
+
+  #topbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+
+  #top-panels{
+    display:flex;
+    flex-direction:column;
+    min-height:auto;
+    overflow:visible;
+  }
+
+  #post-origem-panel{
+    border-right:none;
+    border-bottom:1px solid var(--margin);
+    max-height:none;
+  }
+
+  #thread-panel{
+    max-height:none;
+  }
+
+  #editor-col{
+    overflow:visible;
+  }
+
+  #notion-editor{
+    padding:24px 18px 120px;
+  }
+
+  #status-bar{
+    right:0;
+    padding:6px 14px;
+    font-size:.58rem;
+  }
+
+  .topbar-title{
+    font-size:.9rem;
+  }
+
+  .topbar-actions{
+    display:none;
+  }
+
+  .origem-conteudo{
+    font-size:1.05rem;
+  }
+
+  .thread-content{
+    max-height:420px;
+  }
+
+  #toolbar{
+    max-width:95vw;
+  }
+}
 
 </style>
 
@@ -422,7 +497,7 @@ body{font-family:var(--font-b);font-size:17px;line-height:1.7;color:var(--ink);b
 
   <!-- TOPBAR -->
   <header id="topbar">
-    <button class="topbar-back" onclick="window.close()">← Voltar</button>
+    <button class="topbar-back" onclick="history.back()">← Voltar</button>
     <div class="topbar-title">Study<span>Thread</span> · Aprofundamento</div>
     <span class="topbar-badge" id="topbar-tipo">—</span>
     <div class="topbar-actions">
@@ -654,13 +729,15 @@ function atualizarStatusBlocos() {
 }
 
 /* ════════════════════════════════════════
-   RENDER EDITOR
+   RENDER EDITOR (com requestAnimationFrame)
 ════════════════════════════════════════ */
 function renderEditor() {
-  const editor = document.getElementById('notion-editor');
-  editor.innerHTML = '';
-  blocos.forEach(b => editor.appendChild(criarBlocoEl(b)));
-  atualizarStatusBlocos();
+  requestAnimationFrame(() => {
+    const editor = document.getElementById('notion-editor');
+    editor.innerHTML = '';
+    blocos.forEach(b => editor.appendChild(criarBlocoEl(b)));
+    atualizarStatusBlocos();
+  });
 }
 
 function criarBlocoEl(bloco) {
@@ -1326,16 +1403,16 @@ function exportarMarkdown() {
   a.click();
 }
 
-// Adiciona listener de tecla Enter no textarea de anotações
-document.addEventListener('DOMContentLoaded', () => {
-  const taNota = document.getElementById('nota-nova-txt');
-  if (taNota) {
-    taNota.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault();
-        adicionarNota();
-      }
-    });
+// Delegation dinâmica para o textarea de anotações
+document.addEventListener('keydown', (e) => {
+  if (
+    e.target &&
+    e.target.id === 'nota-nova-txt' &&
+    e.key === 'Enter' &&
+    (e.ctrlKey || e.metaKey)
+  ) {
+    e.preventDefault();
+    adicionarNota();
   }
 });
 </script>
