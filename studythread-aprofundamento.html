@@ -946,6 +946,9 @@ body{font-family:var(--font-b);font-size:18px;line-height:1.75;color:var(--ink);
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
+// =============================================
+// FIREBASE SETUP
+// =============================================
 firebase.initializeApp({
   apiKey:"AIzaSyDDGUikGRoJoVu3g0tSenKtZHffflApUWQ",
   authDomain:"agenda-diaria-6c1ac.firebaseapp.com",
@@ -956,6 +959,9 @@ firebase.initializeApp({
 });
 const db = firebase.firestore();
 
+// =============================================
+// GLOBALS
+// =============================================
 let postId = null;
 let postData = null;
 let blocos = [];
@@ -968,29 +974,12 @@ let byParentMap = new Map();
 let unsubscribeNotes = null;
 let selectedNoteId = null;
 let collapsedNotes = new Set();
-let currentRepliesMap = new Map();
-
+let currentRepliesMap = new Map(); // stores Set with 'active' for each noteId
 let notesContainer = null;
 
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const escHtml = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const tsF = (iso) => { const d = new Date(iso); return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); };
-
-function youtubeEmbedUrl(url) {
-  if (!url) return null;
-  let id = null;
-  if (url.includes('youtube.com/watch?v=')) { try { id = new URLSearchParams(url.split('?')[1]).get('v'); } catch {} }
-  else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1]?.split('?')[0];
-  else if (url.includes('youtube.com/embed/')) id = url.split('/embed/')[1]?.split('?')[0];
-  return id ? `https://www.youtube.com/embed/${id}?rel=0` : null;
-}
-
-function detectarTipoNota(texto) {
-  const ytEmbed = youtubeEmbedUrl(texto);
-  if (ytEmbed) return { tipo: 'youtube', embedUrl: ytEmbed };
-  if (/^https?:\/\//.test(texto)) return { tipo: 'link', embedUrl: null };
-  return { tipo: 'texto', embedUrl: null };
-}
 
 function toast(msg, tipo = 'info') {
   let toastContainer = document.getElementById('toast-container-aprofundamento');
@@ -1008,29 +997,28 @@ function toast(msg, tipo = 'info') {
   setTimeout(() => { toastEl.style.transform = 'translateX(120%)'; setTimeout(() => toastEl.remove(), 300); }, 3000);
 }
 
-
-
-function rebuildIndex() {
-  byParentMap.clear();
-  notasArray = Array.from(todasNotas.values());
-  // ... código antigo
+function youtubeEmbedUrl(url) {
+  if (!url) return null;
+  let id = null;
+  if (url.includes('youtube.com/watch?v=')) { try { id = new URLSearchParams(url.split('?')[1]).get('v'); } catch {} }
+  else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1]?.split('?')[0];
+  else if (url.includes('youtube.com/embed/')) id = url.split('/embed/')[1]?.split('?')[0];
+  return id ? `https://www.youtube.com/embed/${id}?rel=0` : null;
 }
 
-// NOVA - COLE ESTA
+function detectarTipoNota(texto) {
+  const ytEmbed = youtubeEmbedUrl(texto);
+  if (ytEmbed) return { tipo: 'youtube', embedUrl: ytEmbed };
+  if (/^https?:\/\//.test(texto)) return { tipo: 'link', embedUrl: null };
+  return { tipo: 'texto', embedUrl: null };
+}
+
+// =============================================
+// HIERARCHICAL NOTES HELPERS
+// =============================================
 function rebuildIndex() {
   byParentMap.clear();
   notasArray = Array.from(todasNotas.values());
-  
-  notasArray.sort((a, b) => {
-    const pathA = a.path || [];
-    const pathB = b.path || [];
-    for (let i = 0; i < Math.min(pathA.length, pathB.length); i++) {
-      if (pathA[i] !== pathB[i]) return (pathA[i] || '').localeCompare(pathB[i] || '');
-    }
-    if (pathA.length !== pathB.length) return pathA.length - pathB.length;
-    return (a.ordem || 0) - (b.ordem || 0);
-  });
-  
   notasArray.forEach(nota => {
     const parentKey = nota.parentId || 'root';
     if (!byParentMap.has(parentKey)) byParentMap.set(parentKey, []);
@@ -1038,34 +1026,20 @@ function rebuildIndex() {
   });
 }
 
-
-
 function getChildrenIds(parentId = null) {
   const key = parentId || 'root';
   return byParentMap.get(key) || [];
 }
 
-
-
-
-// ANTIGA - REMOVA
-function buildTree(parentId = null, level = 0) {
-  // ... código antigo
-}
-
-// NOVA - COLE ESTA
 function buildTree(parentId = null, level = 0) {
   const childrenIds = getChildrenIds(parentId);
   const sortedChildren = [...childrenIds].sort((a, b) => {
     const notaA = todasNotas.get(a);
     const notaB = todasNotas.get(b);
     if (!notaA || !notaB) return 0;
-    if (parentId === null) {
-      return new Date(notaB.criadoEm) - new Date(notaA.criadoEm);
-    }
+    if (parentId === null) return new Date(notaB.criadoEm) - new Date(notaA.criadoEm);
     return new Date(notaA.criadoEm) - new Date(notaB.criadoEm);
   });
-  
   return sortedChildren.map(id => {
     const nota = todasNotas.get(id);
     if (!nota) return null;
@@ -1075,10 +1049,6 @@ function buildTree(parentId = null, level = 0) {
     };
   }).filter(n => n !== null);
 }
-
-
-
-
 
 function renderizarConteudoNotaStatic(nota) {
   if (nota.tipo === 'youtube' && nota.embedUrl) {
@@ -1105,9 +1075,7 @@ function createNoteElement(nota, level = 0) {
   const hasChildren = nota.children && nota.children.length > 0;
   const isCollapsed = collapsedNotes.has(nota.id);
   const isSelected = selectedNoteId === nota.id;
-  const dataCriacao = new Date(nota.criadoEm).toLocaleString('pt-BR', {
-    day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
-  });
+  const dataCriacao = new Date(nota.criadoEm).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
   const foiEditado = nota.editadoEm ? ' · editado' : '';
   
   const wrapper = document.createElement('div');
@@ -1123,11 +1091,7 @@ function createNoteElement(nota, level = 0) {
         </div>
         <div class="note-meta">
           <span class="note-date">📅 ${dataCriacao}${foiEditado}</span>
-          ${hasChildren ? `
-            <button class="note-btn collapse" data-action="toggleCollapse" data-id="${nota.id}">
-              ${isCollapsed ? '▶' : '▼'} ${nota.children.length} ${nota.children.length === 1 ? 'resposta' : 'respostas'}
-            </button>
-          ` : ''}
+          ${hasChildren ? `<button class="note-btn collapse" data-action="toggleCollapse" data-id="${nota.id}">${isCollapsed ? '▶' : '▼'} ${nota.children.length} ${nota.children.length === 1 ? 'resposta' : 'respostas'}</button>` : ''}
           <div class="note-actions">
             <button class="note-btn" data-action="edit" data-id="${nota.id}">✏ Editar</button>
             <button class="note-btn" data-action="reply" data-id="${nota.id}">↩ Responder</button>
@@ -1155,9 +1119,7 @@ function createNoteElement(nota, level = 0) {
   if (hasChildren && !isCollapsed) {
     const repliesRegion = document.createElement('div');
     repliesRegion.className = 'replies-region expanded';
-    nota.children.forEach(child => {
-      repliesRegion.appendChild(createNoteElement(child, level + 1));
-    });
+    nota.children.forEach(child => { repliesRegion.appendChild(createNoteElement(child, level + 1)); });
     wrapper.appendChild(repliesRegion);
   } else if (hasChildren && isCollapsed) {
     const repliesRegion = document.createElement('div');
@@ -1168,249 +1130,13 @@ function createNoteElement(nota, level = 0) {
   return wrapper;
 }
 
-async function addRootNote() {
-  const textarea = document.getElementById('nota-nova-txt');
-  if (!textarea) {
-    console.error('Textarea not found');
+function renderFullTree() {
+  if (!notesContainer) {
+    console.warn("renderFullTree: notesContainer não encontrado");
     return;
   }
-  const texto = textarea.value.trim();
-  if (!texto) return;
-  
-  const { tipo, embedUrl } = detectarTipoNota(texto);
-  const now = new Date().toISOString();
-  
-  const novaNota = {
-    postId: postId,
-    parentId: null,
-    texto: texto,
-    tipo: tipo,
-    embedUrl: embedUrl,
-    depth: 0,
-    ordem: Date.now(),
-    path: [],
-    criadoEm: now,
-    editadoEm: null,
-    respostaCount: 0
-  };
-  
-  try {
-    const docRef = await db.collection('anotacoes').add(novaNota);
-    toast('Nota adicionada!', 'success');
-    textarea.value = '';
-  } catch (e) {
-    console.error(e);
-    toast('Erro ao adicionar nota', 'error');
-  }
-}
-
-async function addReply(parentId) {
-  const textarea = document.querySelector(`textarea[data-reply-text="${parentId}"]`);
-  const texto = textarea?.value.trim();
-  if (!texto) return;
-  
-  const { tipo, embedUrl } = detectarTipoNota(texto);
-  const parent = todasNotas.get(parentId);
-  const now = new Date().toISOString();
-  const depth = parent ? (parent.depth || 0) + 1 : 0;
-  const path = parent ? [...(parent.path || []), parent.id] : [];
-  
-  const novaNota = {
-    postId: postId,
-    parentId: parentId,
-    texto: texto,
-    tipo: tipo,
-    embedUrl: embedUrl,
-    depth: depth,
-    ordem: Date.now(),
-    path: path,
-    criadoEm: now,
-    editadoEm: null,
-    respostaCount: 0
-  };
-  
-  try {
-    const docRef = await db.collection('anotacoes').add(novaNota);
-    
-    if (parent) {
-      await db.collection('anotacoes').doc(parentId).update({
-        respostaCount: (parent.respostaCount || 0) + 1
-      });
-    }
-    
-    currentRepliesMap.delete(parentId);
-    toast('Resposta adicionada!', 'success');
-  } catch (e) {
-    console.error(e);
-    toast('Erro ao adicionar resposta', 'error');
-  }
-}
-
-async function updateNote(noteId, newText) {
-  const { tipo, embedUrl } = detectarTipoNota(newText);
-  
-  try {
-    await db.collection('anotacoes').doc(noteId).update({
-      texto: newText,
-      tipo: tipo,
-      embedUrl: embedUrl,
-      editadoEm: new Date().toISOString()
-    });
-    toast('Nota atualizada!', 'success');
-  } catch (e) {
-    console.error(e);
-    toast('Erro ao atualizar nota', 'error');
-  }
-}
-
-async function deleteNoteRecursive(noteId) {
-  if (!confirm('Excluir nota e todas as respostas?')) return;
-  
-  const toDelete = [noteId];
-  const findChildren = (id) => {
-    const children = getChildrenIds(id);
-    children.forEach(childId => {
-      toDelete.push(childId);
-      findChildren(childId);
-    });
-  };
-  findChildren(noteId);
-  
-  const batch = db.batch();
-  toDelete.forEach(id => {
-    const ref = db.collection('anotacoes').doc(id);
-    batch.delete(ref);
-  });
-  
-  try {
-    await batch.commit();
-    toast('Nota e respostas excluídas!', 'success');
-  } catch (e) {
-    console.error(e);
-    toast('Erro ao excluir', 'error');
-  }
-}
-
-function toggleCollapse(noteId) {
-  if (collapsedNotes.has(noteId)) {
-    collapsedNotes.delete(noteId);
-  } else {
-    collapsedNotes.add(noteId);
-  }
-  renderFullTree();
-}
-
-function selectNote(noteId) {
-  selectedNoteId = noteId;
-  renderFullTree();
-  
-  setTimeout(() => {
-    const selectedEl = document.querySelector(`.note-card[data-id="${noteId}"]`);
-    if (selectedEl) selectedEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 100);
-}
-
-function showReplyForm(noteId) {
-  currentRepliesMap.set(noteId, new Set(['active']));
-  renderFullTree();
-  
-  setTimeout(() => {
-    const textarea = document.querySelector(`textarea[data-reply-text="${noteId}"]`);
-    if (textarea) textarea.focus();
-  }, 100);
-}
-
-function cancelReply(noteId) {
-  currentRepliesMap.delete(noteId);
-  renderFullTree();
-}
-
-function showEditForm(noteId) {
-  const nota = todasNotas.get(noteId);
-  if (!nota) return;
-  
-  const noteCard = document.querySelector(`.note-card[data-id="${noteId}"]`);
-  const contentDiv = noteCard.querySelector('.note-content');
-  
-  const editForm = document.createElement('div');
-  editForm.className = 'edit-form';
-  editForm.innerHTML = `
-    <textarea data-edit-text="${noteId}">${escHtml(nota.texto)}</textarea>
-    <div class="edit-form-actions">
-      <button class="edit-submit" data-action="saveEdit" data-id="${noteId}">Salvar</button>
-      <button class="edit-cancel" data-action="cancelEdit" data-id="${noteId}">Cancelar</button>
-    </div>
-  `;
-  
-  contentDiv.style.display = 'none';
-  contentDiv.parentElement?.appendChild(editForm);
-  
-  const textarea = editForm.querySelector('textarea');
-  textarea.focus();
-  textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-}
-
-function cancelEdit(noteId) {
-  const noteCard = document.querySelector(`.note-card[data-id="${noteId}"]`);
-  const editForm = noteCard.querySelector('.edit-form');
-  const contentDiv = noteCard.querySelector('.note-content');
-  if (editForm) editForm.remove();
-  if (contentDiv) contentDiv.style.display = 'block';
-}
-
-async function saveEdit(noteId) {
-  const textarea = document.querySelector(`textarea[data-edit-text="${noteId}"]`);
-  const newText = textarea?.value.trim();
-  if (!newText) return;
-  
-  await updateNote(noteId, newText);
-  cancelEdit(noteId);
-}
-
-function setupEventDelegation() {
-  if (!notesContainer) return;
-  
-  notesContainer.addEventListener('click', async (e) => {
-    const target = e.target;
-    const action = target.dataset.action;
-    const id = target.dataset.id;
-    
-    if (action === 'select' && id) {
-      selectNote(id);
-    } else if (action === 'toggleCollapse' && id) {
-      toggleCollapse(id);
-    } else if (action === 'reply' && id) {
-      showReplyForm(id);
-    } else if (action === 'edit' && id) {
-      showEditForm(id);
-    } else if (action === 'delete' && id) {
-      await deleteNoteRecursive(id);
-    } else if (action === 'submitReply' && id) {
-      await addReply(id);
-    } else if (action === 'cancelReply' && id) {
-      cancelReply(id);
-    } else if (action === 'saveEdit' && id) {
-      await saveEdit(id);
-    } else if (action === 'cancelEdit' && id) {
-      cancelEdit(id);
-    }
-  });
-}
-
-
-
-// ANTIGA - REMOVA
-function renderFullTree() {
-  // ... código antigo
-}
-
-// NOVA - COLE ESTA
-function renderFullTree() {
-  if (!notesContainer) return;
-  
   rebuildIndex();
   const tree = buildTree();
-  
   notesContainer.innerHTML = '';
   
   // Compositor sempre visível
@@ -1432,13 +1158,11 @@ function renderFullTree() {
   } else {
     const notesDiv = document.createElement('div');
     notesDiv.className = 'hierarchical-notes';
-    tree.forEach(nota => {
-      notesDiv.appendChild(createNoteElement(nota, 0));
-    });
+    tree.forEach(nota => { notesDiv.appendChild(createNoteElement(nota, 0)); });
     notesContainer.appendChild(notesDiv);
   }
   
-  // Vincula eventos do compositor
+  // Vincular eventos do compositor
   const addButton = document.getElementById('btn-add-root-note');
   if (addButton) {
     const newButton = addButton.cloneNode(true);
@@ -1449,7 +1173,6 @@ function renderFullTree() {
       await addRootNote();
     });
   }
-  
   const textarea = document.getElementById('nota-nova-txt');
   if (textarea) {
     const newTextarea = textarea.cloneNode(true);
@@ -1457,108 +1180,170 @@ function renderFullTree() {
     newTextarea.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
-        e.stopPropagation();
         addRootNote();
       }
     });
   }
 }
 
-
-
-
-
-// ANTIGA - REMOVA
-function setupRealtimeNotes() {
-  // ... código antigo
+// CRUD Notes functions
+async function addRootNote() {
+  const textarea = document.getElementById('nota-nova-txt');
+  if (!textarea) return;
+  const texto = textarea.value.trim();
+  if (!texto) return;
+  const { tipo, embedUrl } = detectarTipoNota(texto);
+  const now = new Date().toISOString();
+  const novaNota = { postId, parentId: null, texto, tipo, embedUrl, depth: 0, ordem: Date.now(), path: [], criadoEm: now, editadoEm: null, respostaCount: 0 };
+  try {
+    await db.collection('anotacoes').add(novaNota);
+    toast('Nota adicionada!', 'success');
+    textarea.value = '';
+  } catch (e) { toast('Erro ao adicionar nota', 'error'); console.error(e); }
 }
 
-// NOVA - COLE ESTA
+async function addReply(parentId) {
+  const textarea = document.querySelector(`textarea[data-reply-text="${parentId}"]`);
+  const texto = textarea?.value.trim();
+  if (!texto) return;
+  const { tipo, embedUrl } = detectarTipoNota(texto);
+  const parent = todasNotas.get(parentId);
+  const now = new Date().toISOString();
+  const depth = parent ? (parent.depth || 0) + 1 : 0;
+  const path = parent ? [...(parent.path || []), parent.id] : [];
+  const novaNota = { postId, parentId, texto, tipo, embedUrl, depth, ordem: Date.now(), path, criadoEm: now, editadoEm: null, respostaCount: 0 };
+  try {
+    await db.collection('anotacoes').add(novaNota);
+    if (parent) await db.collection('anotacoes').doc(parentId).update({ respostaCount: (parent.respostaCount || 0) + 1 });
+    currentRepliesMap.delete(parentId);
+    toast('Resposta adicionada!', 'success');
+  } catch (e) { toast('Erro ao adicionar resposta', 'error'); console.error(e); }
+}
+
+async function updateNote(noteId, newText) {
+  const { tipo, embedUrl } = detectarTipoNota(newText);
+  try {
+    await db.collection('anotacoes').doc(noteId).update({ texto: newText, tipo, embedUrl, editadoEm: new Date().toISOString() });
+    toast('Nota atualizada!', 'success');
+  } catch (e) { toast('Erro ao atualizar nota', 'error'); console.error(e); }
+}
+
+async function deleteNoteRecursive(noteId) {
+  if (!confirm('Excluir nota e todas as respostas?')) return;
+  const toDelete = [noteId];
+  const findChildren = (id) => { getChildrenIds(id).forEach(childId => { toDelete.push(childId); findChildren(childId); }); };
+  findChildren(noteId);
+  const batch = db.batch();
+  toDelete.forEach(id => { batch.delete(db.collection('anotacoes').doc(id)); });
+  try { await batch.commit(); toast('Nota e respostas excluídas!', 'success'); } 
+  catch (e) { toast('Erro ao excluir', 'error'); console.error(e); }
+}
+
+function toggleCollapse(noteId) {
+  collapsedNotes.has(noteId) ? collapsedNotes.delete(noteId) : collapsedNotes.add(noteId);
+  renderFullTree();
+}
+
+function selectNote(noteId) {
+  selectedNoteId = noteId;
+  renderFullTree();
+  setTimeout(() => { const selectedEl = document.querySelector(`.note-card[data-id="${noteId}"]`); if (selectedEl) selectedEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+}
+
+function showReplyForm(noteId) { currentRepliesMap.set(noteId, new Set(['active'])); renderFullTree(); setTimeout(() => { const textarea = document.querySelector(`textarea[data-reply-text="${noteId}"]`); if (textarea) textarea.focus(); }, 100); }
+function cancelReply(noteId) { currentRepliesMap.delete(noteId); renderFullTree(); }
+function showEditForm(noteId) {
+  const nota = todasNotas.get(noteId);
+  if (!nota) return;
+  const noteCard = document.querySelector(`.note-card[data-id="${noteId}"]`);
+  const contentDiv = noteCard.querySelector('.note-content');
+  const editForm = document.createElement('div');
+  editForm.className = 'edit-form';
+  editForm.innerHTML = `<textarea data-edit-text="${noteId}">${escHtml(nota.texto)}</textarea><div class="edit-form-actions"><button class="edit-submit" data-action="saveEdit" data-id="${noteId}">Salvar</button><button class="edit-cancel" data-action="cancelEdit" data-id="${noteId}">Cancelar</button></div>`;
+  contentDiv.style.display = 'none';
+  contentDiv.parentElement?.appendChild(editForm);
+  const textarea = editForm.querySelector('textarea');
+  textarea.focus();
+  textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+}
+function cancelEdit(noteId) {
+  const noteCard = document.querySelector(`.note-card[data-id="${noteId}"]`);
+  const editForm = noteCard.querySelector('.edit-form');
+  const contentDiv = noteCard.querySelector('.note-content');
+  if (editForm) editForm.remove();
+  if (contentDiv) contentDiv.style.display = 'block';
+}
+async function saveEdit(noteId) {
+  const textarea = document.querySelector(`textarea[data-edit-text="${noteId}"]`);
+  const newText = textarea?.value.trim();
+  if (!newText) return;
+  await updateNote(noteId, newText);
+  cancelEdit(noteId);
+}
+
+function setupEventDelegation() {
+  if (!notesContainer) return;
+  notesContainer.removeEventListener('click', handleNoteClick);
+  notesContainer.addEventListener('click', handleNoteClick);
+}
+async function handleNoteClick(e) {
+  const target = e.target;
+  const action = target.dataset.action;
+  const id = target.dataset.id;
+  if (action === 'select' && id) selectNote(id);
+  else if (action === 'toggleCollapse' && id) toggleCollapse(id);
+  else if (action === 'reply' && id) showReplyForm(id);
+  else if (action === 'edit' && id) showEditForm(id);
+  else if (action === 'delete' && id) await deleteNoteRecursive(id);
+  else if (action === 'submitReply' && id) await addReply(id);
+  else if (action === 'cancelReply' && id) cancelReply(id);
+  else if (action === 'saveEdit' && id) await saveEdit(id);
+  else if (action === 'cancelEdit' && id) cancelEdit(id);
+}
+
 function setupRealtimeNotes() {
   if (unsubscribeNotes) unsubscribeNotes();
-  
-  unsubscribeNotes = db.collection('anotacoes')
-    .where('postId', '==', postId)
+  unsubscribeNotes = db.collection('anotacoes').where('postId', '==', postId)
     .onSnapshot((snapshot) => {
       let hasChanges = false;
-      
       snapshot.docChanges().forEach(change => {
         const data = change.doc.data();
         const noteId = change.doc.id;
-        
-        if (change.type === 'added') {
-          const newNote = { id: noteId, ...data };
-          todasNotas.set(noteId, newNote);
-          hasChanges = true;
-        } else if (change.type === 'modified') {
-          const updatedNote = { id: noteId, ...data };
-          todasNotas.set(noteId, updatedNote);
-          hasChanges = true;
-        } else if (change.type === 'removed') {
-          todasNotas.delete(noteId);
-          collapsedNotes.delete(noteId);
-          currentRepliesMap.delete(noteId);
-          if (selectedNoteId === noteId) selectedNoteId = null;
-          hasChanges = true;
-        }
+        if (change.type === 'added') { todasNotas.set(noteId, { id: noteId, ...data }); hasChanges = true; }
+        else if (change.type === 'modified') { todasNotas.set(noteId, { id: noteId, ...data }); hasChanges = true; }
+        else if (change.type === 'removed') { todasNotas.delete(noteId); collapsedNotes.delete(noteId); currentRepliesMap.delete(noteId); if (selectedNoteId === noteId) selectedNoteId = null; hasChanges = true; }
       });
-      
-      if (hasChanges) {
-        renderFullTree();
-      }
-    }, (error) => {
-      console.error('Erro no onSnapshot:', error);
-      toast('Erro de conexão em tempo real', 'error');
-    });
+      if (hasChanges) renderFullTree();
+    }, (error) => { console.error('Erro no onSnapshot:', error); toast('Erro de conexão em tempo real', 'error'); });
 }
 
-
-
-
-
+// =============================================
+// POST & EDITOR FUNCTIONS (original)
+// =============================================
 async function carregarPost() {
   try {
     const snap = await db.collection('posts').doc(postId).get();
     if (!snap.exists) return;
     postData = snap.data();
-
     document.getElementById('origem-conteudo').textContent = postData.conteudo;
     document.getElementById('topbar-tipo').textContent = postData.tipo || 'post';
     document.getElementById('topbar-tipo').className = `topbar-badge tipo-${postData.tipo}`;
-
     const autorEl = document.getElementById('origem-autor');
     if (postData.autorEmoji || postData.autorNome) {
-      autorEl.innerHTML = `
-        <span class="origem-dot" style="background:${postData.autorCor || '#c4952a'}22;border:1px solid ${postData.autorCor || '#c4952a'}44;">${postData.autorEmoji || '🧑'}</span>
-        <span style="color:${postData.autorCor || '#c4952a'}">${postData.autorNome || 'Usuário'}</span>
-        <span>· ${tsF(postData.timestamp)}</span>`;
+      autorEl.innerHTML = `<span class="origem-dot" style="background:${postData.autorCor || '#c4952a'}22;border:1px solid ${postData.autorCor || '#c4952a'}44;">${postData.autorEmoji || '🧑'}</span><span style="color:${postData.autorCor || '#c4952a'}">${postData.autorNome || 'Usuário'}</span><span>· ${tsF(postData.timestamp)}</span>`;
     }
-
     const tagsEl = document.getElementById('origem-tags');
     tagsEl.innerHTML = '';
-    (postData.tags || []).forEach(t => {
-      const s = document.createElement('span');
-      s.className = 'origem-tag';
-      s.textContent = '#' + t;
-      tagsEl.appendChild(s);
-    });
+    (postData.tags || []).forEach(t => { const s = document.createElement('span'); s.className = 'origem-tag'; s.textContent = '#' + t; tagsEl.appendChild(s); });
   } catch (e) { console.error(e); }
 }
 
 async function carregarBlocos() {
   try {
     const snap = await db.collection('aprofundamentos').doc(postId).get();
-    if (snap.exists && snap.data().blocos) {
-      blocos = snap.data().blocos;
-    } else {
-      blocos = [
-        { id: uid(), tipo: 'h1', conteudo: 'Meu Aprofundamento' },
-        { id: uid(), tipo: 'p', conteudo: '' }
-      ];
-    }
-  } catch (e) {
-    blocos = [{ id: uid(), tipo: 'h1', conteudo: 'Meu Aprofundamento' }, { id: uid(), tipo: 'p', conteudo: '' }];
-  }
+    if (snap.exists && snap.data().blocos) blocos = snap.data().blocos;
+    else blocos = [{ id: uid(), tipo: 'h1', conteudo: 'Meu Aprofundamento' }, { id: uid(), tipo: 'p', conteudo: '' }];
+  } catch (e) { blocos = [{ id: uid(), tipo: 'h1', conteudo: 'Meu Aprofundamento' }, { id: uid(), tipo: 'p', conteudo: '' }]; }
 }
 
 function coletarBlocos() {
@@ -1568,16 +1353,10 @@ function coletarBlocos() {
     const id = blockEl.dataset.id;
     const tipo = blockEl.dataset.tipo;
     const bloco = blocos.find(b => b.id === id) || {};
-    if (tipo === 'divider') {
-      resultado.push({ id, tipo, conteudo: '' });
-    } else if (tipo === 'youtube') {
-      resultado.push({ id, tipo, conteudo: bloco.conteudo || '' });
-    } else if (tipo === 'link') {
-      resultado.push({ id, tipo, conteudo: bloco.conteudo || '' });
-    } else {
-      const contentEl = blockEl.querySelector('.block-content');
-      resultado.push({ id, tipo, conteudo: contentEl ? contentEl.innerHTML : '' });
-    }
+    if (tipo === 'divider') resultado.push({ id, tipo, conteudo: '' });
+    else if (tipo === 'youtube') resultado.push({ id, tipo, conteudo: bloco.conteudo || '' });
+    else if (tipo === 'link') resultado.push({ id, tipo, conteudo: bloco.conteudo || '' });
+    else { const contentEl = blockEl.querySelector('.block-content'); resultado.push({ id, tipo, conteudo: contentEl ? contentEl.innerHTML : '' }); }
   });
   return resultado;
 }
@@ -1589,24 +1368,12 @@ async function salvar(silencioso = false) {
     await db.collection('aprofundamentos').doc(postId).set({ blocos, atualizadoEm: new Date().toISOString() }, { merge: true });
     setStatus('ok', silencioso ? 'Salvo automaticamente' : 'Salvo!');
     atualizarStatusBlocos();
-  } catch (e) {
-    setStatus('ok', 'Erro ao salvar');
-    console.error(e);
-  }
+  } catch (e) { setStatus('ok', 'Erro ao salvar'); console.error(e); }
 }
-
 function salvarManual() { salvar(false); }
 function agendarAutoSave() { clearTimeout(autoSaveTimer); autoSaveTimer = setTimeout(() => salvar(true), 2500); }
-function setStatus(tipo, msg) {
-  const dot = document.getElementById('status-dot');
-  const txt = document.getElementById('status-txt');
-  if (dot) dot.className = 'status-dot' + (tipo === 'saving' ? ' saving' : '');
-  if (txt) txt.textContent = msg;
-}
-function atualizarStatusBlocos() {
-  const el = document.getElementById('status-blocos');
-  if (el) el.textContent = `${blocos.length} bloco${blocos.length !== 1 ? 's' : ''}`;
-}
+function setStatus(tipo, msg) { const dot = document.getElementById('status-dot'); const txt = document.getElementById('status-txt'); if (dot) dot.className = 'status-dot' + (tipo === 'saving' ? ' saving' : ''); if (txt) txt.textContent = msg; }
+function atualizarStatusBlocos() { const el = document.getElementById('status-blocos'); if (el) el.textContent = `${blocos.length} bloco${blocos.length !== 1 ? 's' : ''}`; }
 
 function renderEditor() {
   requestAnimationFrame(() => {
@@ -1623,56 +1390,28 @@ function criarBlocoEl(bloco) {
   wrapper.dataset.id = bloco.id;
   wrapper.dataset.tipo = bloco.tipo;
   wrapper.draggable = true;
-
   const handle = document.createElement('div');
   handle.className = 'block-handle';
   handle.textContent = '⠿';
   handle.title = 'Arrastar';
-
-  if (bloco.tipo === 'divider') {
-    wrapper.innerHTML = `<hr class="block-divider" style="flex:1;"/>`;
-    return wrapper;
-  }
-
+  if (bloco.tipo === 'divider') { wrapper.innerHTML = `<hr class="block-divider" style="flex:1;"/>`; return wrapper; }
   let inner = '';
-  if (bloco.tipo === 'youtube') {
-    inner = renderBlocoYoutube(bloco);
-  } else if (bloco.tipo === 'link') {
-    inner = renderBlocoLink(bloco);
-  } else {
-    const ph = tipoPlaceholder(bloco.tipo);
-    inner = `<div class="block-content ${tipoToClass(bloco.tipo)}" contenteditable="true" data-ph="${ph}">${bloco.conteudo || ''}</div>`;
-  }
-
+  if (bloco.tipo === 'youtube') inner = renderBlocoYoutube(bloco);
+  else if (bloco.tipo === 'link') inner = renderBlocoLink(bloco);
+  else { const ph = tipoPlaceholder(bloco.tipo); inner = `<div class="block-content ${tipoToClass(bloco.tipo)}" contenteditable="true" data-ph="${ph}">${bloco.conteudo || ''}</div>`; }
   wrapper.innerHTML = '';
   wrapper.appendChild(handle);
-  const innerDiv = document.createElement('div');
-  innerDiv.style.flex = '1';
-  innerDiv.style.minWidth = '0';
-  innerDiv.innerHTML = inner;
+  const innerDiv = document.createElement('div'); innerDiv.style.flex = '1'; innerDiv.style.minWidth = '0'; innerDiv.innerHTML = inner;
   wrapper.appendChild(innerDiv);
-
   if (bloco.tipo !== 'youtube' && bloco.tipo !== 'link') {
     const ce = wrapper.querySelector('.block-content');
-    if (ce) {
-      ce.addEventListener('keydown', e => onKeyDown(e, wrapper));
-      ce.addEventListener('input', () => { agendarAutoSave(); mostrarToolbarSeSelecionado(); });
-      ce.addEventListener('mouseup', mostrarToolbarSeSelecionado);
-      ce.addEventListener('keyup', mostrarToolbarSeSelecionado);
-      adicionarInputListener(wrapper, bloco.id);
-      ce.addEventListener('click', e => {
-        const link = e.target.closest('a');
-        if (link) { e.preventDefault(); window.open(link.href, '_blank', 'noopener'); }
-      });
-    }
+    if (ce) { ce.addEventListener('keydown', e => onKeyDown(e, wrapper)); ce.addEventListener('input', () => { agendarAutoSave(); mostrarToolbarSeSelecionado(); }); ce.addEventListener('mouseup', mostrarToolbarSeSelecionado); ce.addEventListener('keyup', mostrarToolbarSeSelecionado); adicionarInputListener(wrapper, bloco.id); ce.addEventListener('click', e => { const link = e.target.closest('a'); if (link) { e.preventDefault(); window.open(link.href, '_blank', 'noopener'); } }); }
   }
-
   wrapper.addEventListener('dragstart', e => { draggingId = bloco.id; wrapper.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
   wrapper.addEventListener('dragend', () => { wrapper.classList.remove('dragging'); document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over')); });
   wrapper.addEventListener('dragover', e => { e.preventDefault(); wrapper.classList.add('drag-over'); });
   wrapper.addEventListener('dragleave', () => wrapper.classList.remove('drag-over'));
   wrapper.addEventListener('drop', e => { e.preventDefault(); wrapper.classList.remove('drag-over'); moverBloco(draggingId, bloco.id); });
-
   return wrapper;
 }
 
@@ -1686,255 +1425,46 @@ function moverBloco(fromId, toId) {
   renderEditor();
   agendarAutoSave();
 }
-
-function renderBlocoYoutube(bloco) {
-  if (bloco.conteudo) {
-    const embedUrl = youtubeEmbedUrl(bloco.conteudo) || bloco.conteudo;
-    return `<div class="block-youtube"><div class="youtube-label">▶ Vídeo YouTube <button onclick="removerYoutube('${bloco.id}')" style="background:transparent;border:none;color:var(--ghost);cursor:pointer;font-size:.7rem;margin-left:8px;">✕ Remover</button></div><div class="youtube-embed"><iframe src="${embedUrl}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>`;
-  }
-  return `<div class="block-youtube"><div class="youtube-label">▶ Embed YouTube</div><div class="youtube-input-wrap"><input type="text" placeholder="Cole o link do YouTube (youtu.be/… ou youtube.com/watch?v=…)" onkeydown="if(event.key==='Enter'){embedYoutube('${bloco.id}',this.value);}" /><button class="btn btn-gold" style="font-size:.65rem;padding:6px 10px;" onclick="embedYoutube('${bloco.id}',this.previousElementSibling.value)">Embed</button></div></div>`;
-}
-
-function renderBlocoLink(bloco) {
-  if (bloco.conteudo) {
-    const url = bloco.conteudo;
-    const domain = (() => { try { return new URL(url).hostname; } catch { return url; } })();
-    return `<a class="block-link" href="${url}" target="_blank" rel="noopener"><span class="link-icon">🔗</span><div class="link-info"><div class="link-title">${domain}</div><div class="link-url">${url}</div></div><button onclick="event.preventDefault();removerLink('${bloco.id}')" style="background:transparent;border:none;color:var(--ghost);cursor:pointer;font-size:.75rem;padding:4px;">✕</button></a>`;
-  }
-  return `<div class="block-youtube"><div class="youtube-label">🔗 Link externo</div><div class="link-block-input"><input type="text" placeholder="Cole a URL aqui…" onkeydown="if(event.key==='Enter'){embedLink('${bloco.id}',this.value);}" /><button class="btn btn-gold" style="font-size:.65rem;padding:6px 10px;" onclick="embedLink('${bloco.id}',this.previousElementSibling.value)">Adicionar</button></div></div>`;
-}
-
+function renderBlocoYoutube(bloco) { if (bloco.conteudo) { const embedUrl = youtubeEmbedUrl(bloco.conteudo) || bloco.conteudo; return `<div class="block-youtube"><div class="youtube-label">▶ Vídeo YouTube <button onclick="removerYoutube('${bloco.id}')" style="background:transparent;border:none;color:var(--ghost);cursor:pointer;font-size:.7rem;margin-left:8px;">✕ Remover</button></div><div class="youtube-embed"><iframe src="${embedUrl}" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>`; } return `<div class="block-youtube"><div class="youtube-label">▶ Embed YouTube</div><div class="youtube-input-wrap"><input type="text" placeholder="Cole o link do YouTube (youtu.be/… ou youtube.com/watch?v=…)" onkeydown="if(event.key==='Enter'){embedYoutube('${bloco.id}',this.value);}" /><button class="btn btn-gold" style="font-size:.65rem;padding:6px 10px;" onclick="embedYoutube('${bloco.id}',this.previousElementSibling.value)">Embed</button></div></div>`; }
+function renderBlocoLink(bloco) { if (bloco.conteudo) { const url = bloco.conteudo; const domain = (() => { try { return new URL(url).hostname; } catch { return url; } })(); return `<a class="block-link" href="${url}" target="_blank" rel="noopener"><span class="link-icon">🔗</span><div class="link-info"><div class="link-title">${domain}</div><div class="link-url">${url}</div></div><button onclick="event.preventDefault();removerLink('${bloco.id}')" style="background:transparent;border:none;color:var(--ghost);cursor:pointer;font-size:.75rem;padding:4px;">✕</button></a>`; } return `<div class="block-youtube"><div class="youtube-label">🔗 Link externo</div><div class="link-block-input"><input type="text" placeholder="Cole a URL aqui…" onkeydown="if(event.key==='Enter'){embedLink('${bloco.id}',this.value);}" /><button class="btn btn-gold" style="font-size:.65rem;padding:6px 10px;" onclick="embedLink('${bloco.id}',this.previousElementSibling.value)">Adicionar</button></div></div>`; }
 function tipoToClass(tipo) { return `block-${tipo}`; }
 function tipoPlaceholder(tipo) { const m = { h1: 'Título', h2: 'Subtítulo', h3: 'Seção', p: "Escreva algo, ou pressione '/' para inserir um bloco…", bullet: 'Item da lista', num: 'Item numerado', quote: 'Citação ou destaque…', callout: '💡 Nota importante…', code: '// Código…' }; return m[tipo] || ''; }
-
-function embedYoutube(blocoId, url) {
-  const trimmed = (url || '').trim();
-  let id = null;
-  if (trimmed.includes('youtube.com/watch?v=')) { try { id = new URLSearchParams(trimmed.split('?')[1]).get('v'); } catch { } }
-  else if (trimmed.includes('youtu.be/')) id = trimmed.split('youtu.be/')[1]?.split('?')[0];
-  else if (trimmed.includes('youtube.com/embed/')) id = trimmed.split('/embed/')[1]?.split('?')[0];
-  if (!id) { alert('Link do YouTube inválido.'); return; }
-  const b = blocos.find(x => x.id === blocoId);
-  if (b) { b.conteudo = trimmed; renderEditor(); agendarAutoSave(); }
-}
-
-function removerYoutube(blocoId) {
-  const b = blocos.find(x => x.id === blocoId);
-  if (b) { b.conteudo = ''; renderEditor(); agendarAutoSave(); }
-}
-
-function embedLink(blocoId, url) {
-  const b = blocos.find(x => x.id === blocoId);
-  if (b) { b.conteudo = (url || '').trim(); renderEditor(); agendarAutoSave(); }
-}
-
-function removerLink(blocoId) {
-  const b = blocos.find(x => x.id === blocoId);
-  if (b) { b.conteudo = ''; renderEditor(); agendarAutoSave(); }
-}
-
-function onKeyDown(e, blockEl) {
-  const blocoId = blockEl.dataset.id;
-  const ce = blockEl.querySelector('.block-content');
-
-  if (e.key === '/' && ce.textContent.trim() === '') {
-    e.preventDefault();
-    abrirSlashMenu(blockEl, blocoId);
-    return;
-  }
-
-  fecharSlashMenu();
-
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    const novoBloco = { id: uid(), tipo: 'p', conteudo: '' };
-    const idx = blocos.findIndex(b => b.id === blocoId);
-    blocos = coletarBlocos();
-    blocos.splice(idx + 1, 0, novoBloco);
-    renderEditor();
-    focarBloco(novoBloco.id);
-    agendarAutoSave();
-    return;
-  }
-
-  if (e.key === 'Backspace' && ce.textContent === '' && blocos.length > 1) {
-    e.preventDefault();
-    const idx = blocos.findIndex(b => b.id === blocoId);
-    blocos = coletarBlocos();
-    blocos.splice(idx, 1);
-    renderEditor();
-    focarBloco(blocos[Math.max(0, idx - 1)]?.id);
-    agendarAutoSave();
-    return;
-  }
-}
-
-function adicionarInputListener(blockEl, blocoId) {
-  const ce = blockEl.querySelector('.block-content');
-  if (!ce) return;
-  let timeoutId = null;
-  ce.addEventListener('input', () => {
-    if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => agendarAutoSave(), 500);
-  });
-}
-
-function focarBloco(id) {
-  if (!id) return;
-  const el = document.querySelector(`[data-id="${id}"] .block-content`);
-  if (el) { el.focus(); placeCaretAtEnd(el); }
-}
-
-function placeCaretAtEnd(el) {
-  const range = document.createRange();
-  const sel = window.getSelection();
-  range.selectNodeContents(el);
-  range.collapse(false);
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
-
+function embedYoutube(blocoId, url) { const trimmed = (url || '').trim(); let id = null; if (trimmed.includes('youtube.com/watch?v=')) { try { id = new URLSearchParams(trimmed.split('?')[1]).get('v'); } catch { } } else if (trimmed.includes('youtu.be/')) id = trimmed.split('youtu.be/')[1]?.split('?')[0]; else if (trimmed.includes('youtube.com/embed/')) id = trimmed.split('/embed/')[1]?.split('?')[0]; if (!id) { alert('Link do YouTube inválido.'); return; } const b = blocos.find(x => x.id === blocoId); if (b) { b.conteudo = trimmed; renderEditor(); agendarAutoSave(); } }
+function removerYoutube(blocoId) { const b = blocos.find(x => x.id === blocoId); if (b) { b.conteudo = ''; renderEditor(); agendarAutoSave(); } }
+function embedLink(blocoId, url) { const b = blocos.find(x => x.id === blocoId); if (b) { b.conteudo = (url || '').trim(); renderEditor(); agendarAutoSave(); } }
+function removerLink(blocoId) { const b = blocos.find(x => x.id === blocoId); if (b) { b.conteudo = ''; renderEditor(); agendarAutoSave(); } }
+function onKeyDown(e, blockEl) { const blocoId = blockEl.dataset.id; const ce = blockEl.querySelector('.block-content'); if (e.key === '/' && ce.textContent.trim() === '') { e.preventDefault(); abrirSlashMenu(blockEl, blocoId); return; } fecharSlashMenu(); if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const novoBloco = { id: uid(), tipo: 'p', conteudo: '' }; const idx = blocos.findIndex(b => b.id === blocoId); blocos = coletarBlocos(); blocos.splice(idx + 1, 0, novoBloco); renderEditor(); focarBloco(novoBloco.id); agendarAutoSave(); return; } if (e.key === 'Backspace' && ce.textContent === '' && blocos.length > 1) { e.preventDefault(); const idx = blocos.findIndex(b => b.id === blocoId); blocos = coletarBlocos(); blocos.splice(idx, 1); renderEditor(); focarBloco(blocos[Math.max(0, idx - 1)]?.id); agendarAutoSave(); return; } }
+function adicionarInputListener(blockEl, blocoId) { const ce = blockEl.querySelector('.block-content'); if (!ce) return; let timeoutId = null; ce.addEventListener('input', () => { if (timeoutId) clearTimeout(timeoutId); timeoutId = setTimeout(() => agendarAutoSave(), 500); }); }
+function focarBloco(id) { if (!id) return; const el = document.querySelector(`[data-id="${id}"] .block-content`); if (el) { el.focus(); const range = document.createRange(); const sel = window.getSelection(); range.selectNodeContents(el); range.collapse(false); sel.removeAllRanges(); sel.addRange(range); } }
 let slashBlocoId = null;
-function abrirSlashMenu(blockEl, blocoId) {
-  slashBlocoId = blocoId;
-  const rect = blockEl.getBoundingClientRect();
-  const menu = document.getElementById('slash-menu');
-  menu.style.top = (rect.bottom + 4) + 'px';
-  menu.style.left = rect.left + 'px';
-  menu.classList.add('open');
-}
+function abrirSlashMenu(blockEl, blocoId) { slashBlocoId = blocoId; const rect = blockEl.getBoundingClientRect(); const menu = document.getElementById('slash-menu'); menu.style.top = (rect.bottom + 4) + 'px'; menu.style.left = rect.left + 'px'; menu.classList.add('open'); }
 function fecharSlashMenu() { document.getElementById('slash-menu').classList.remove('open'); slashBlocoId = null; }
-
-function inserirBloco(tipo) {
-  fecharSlashMenu();
-  const novoBloco = { id: uid(), tipo, conteudo: '' };
-  if (slashBlocoId === null) {
-    blocos = coletarBlocos();
-    blocos.push(novoBloco);
-  } else {
-    const idx = blocos.findIndex(b => b.id === slashBlocoId);
-    blocos = coletarBlocos();
-    if (idx >= 0 && blocos[idx]?.conteudo?.replace(/<[^>]+>/g, '').trim() === '') {
-      blocos.splice(idx, 1, novoBloco);
-    } else {
-      blocos.splice(idx + 1, 0, novoBloco);
-    }
-  }
-  renderEditor();
-  if (tipo !== 'divider' && tipo !== 'youtube' && tipo !== 'link') focarBloco(novoBloco.id);
-  agendarAutoSave();
-}
-
-document.addEventListener('click', e => {
-  if (!e.target.closest('#slash-menu') && !e.target.closest('.block-content')) fecharSlashMenu();
-});
-
-function mostrarToolbarSeSelecionado() {
-  const sel = window.getSelection();
-  if (!sel || sel.isCollapsed || sel.toString().trim() === '') {
-    document.getElementById('toolbar').classList.remove('visible');
-    return;
-  }
-  const range = sel.getRangeAt(0);
-  const rect = range.getBoundingClientRect();
-  const tb = document.getElementById('toolbar');
-  tb.style.top = (rect.top - 48 + window.scrollY) + 'px';
-  tb.style.left = (rect.left + rect.width / 2 - 130) + 'px';
-  tb.classList.add('visible');
-}
-
-document.addEventListener('mousedown', e => {
-  if (!e.target.closest('#toolbar')) document.getElementById('toolbar').classList.remove('visible');
-});
-
+function inserirBloco(tipo) { fecharSlashMenu(); const novoBloco = { id: uid(), tipo, conteudo: '' }; if (slashBlocoId === null) { blocos = coletarBlocos(); blocos.push(novoBloco); } else { const idx = blocos.findIndex(b => b.id === slashBlocoId); blocos = coletarBlocos(); if (idx >= 0 && blocos[idx]?.conteudo?.replace(/<[^>]+>/g, '').trim() === '') { blocos.splice(idx, 1, novoBloco); } else { blocos.splice(idx + 1, 0, novoBloco); } } renderEditor(); if (tipo !== 'divider' && tipo !== 'youtube' && tipo !== 'link') focarBloco(novoBloco.id); agendarAutoSave(); }
+document.addEventListener('click', e => { if (!e.target.closest('#slash-menu') && !e.target.closest('.block-content')) fecharSlashMenu(); });
+function mostrarToolbarSeSelecionado() { const sel = window.getSelection(); if (!sel || sel.isCollapsed || sel.toString().trim() === '') { document.getElementById('toolbar').classList.remove('visible'); return; } const range = sel.getRangeAt(0); const rect = range.getBoundingClientRect(); const tb = document.getElementById('toolbar'); tb.style.top = (rect.top - 48 + window.scrollY) + 'px'; tb.style.left = (rect.left + rect.width / 2 - 130) + 'px'; tb.classList.add('visible'); }
+document.addEventListener('mousedown', e => { if (!e.target.closest('#toolbar')) document.getElementById('toolbar').classList.remove('visible'); });
 function fmt(cmd) { document.execCommand(cmd, false, null); }
+function converterBloco(novoTipo) { const sel = window.getSelection(); if (!sel) return; const anchorNode = sel.anchorNode; const blockEl = anchorNode?.closest?.('.notion-block') || anchorNode?.parentElement?.closest?.('.notion-block'); if (!blockEl) return; const id = blockEl.dataset.id; blocos = coletarBlocos(); const b = blocos.find(x => x.id === id); if (b) { b.tipo = novoTipo; renderEditor(); focarBloco(id); agendarAutoSave(); } document.getElementById('toolbar').classList.remove('visible'); }
+function excluirBlocoSelecionado() { const sel = window.getSelection(); const anchorNode = sel?.anchorNode; const blockEl = anchorNode?.closest?.('.notion-block') || anchorNode?.parentElement?.closest?.('.notion-block'); if (!blockEl || blocos.length <= 1) return; const id = blockEl.dataset.id; blocos = coletarBlocos(); const idx = blocos.findIndex(b => b.id === id); blocos.splice(idx, 1); renderEditor(); focarBloco(blocos[Math.max(0, idx - 1)]?.id); agendarAutoSave(); document.getElementById('toolbar').classList.remove('visible'); }
+function exportarMarkdown() { blocos = coletarBlocos(); const lines = []; if (postData) lines.push(`> **Post original:** ${postData.conteudo}\n`); lines.push('---\n'); blocos.forEach(b => { const txt = b.conteudo.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim(); switch (b.tipo) { case 'h1': lines.push(`# ${txt}`); break; case 'h2': lines.push(`## ${txt}`); break; case 'h3': lines.push(`### ${txt}`); break; case 'bullet': lines.push(`- ${txt}`); break; case 'num': lines.push(`1. ${txt}`); break; case 'quote': lines.push(`> ${txt}`); break; case 'callout': lines.push(`> 💡 ${txt}`); break; case 'code': lines.push('```\n' + txt + '\n```'); break; case 'divider': lines.push('---'); break; case 'youtube': lines.push(`[▶ Vídeo YouTube](${b.conteudo})`); break; case 'link': lines.push(`[🔗 Link](${b.conteudo})`); break; default: if (txt) lines.push(txt); } lines.push(''); }); const md = lines.join('\n'); const blob = new Blob([md], { type: 'text/markdown' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `aprofundamento-${postId}.md`; a.click(); }
 
-function converterBloco(novoTipo) {
-  const sel = window.getSelection();
-  if (!sel) return;
-  const anchorNode = sel.anchorNode;
-  const blockEl = anchorNode?.closest?.('.notion-block') || anchorNode?.parentElement?.closest?.('.notion-block');
-  if (!blockEl) return;
-  const id = blockEl.dataset.id;
-  blocos = coletarBlocos();
-  const b = blocos.find(x => x.id === id);
-  if (b) { b.tipo = novoTipo; renderEditor(); focarBloco(id); agendarAutoSave(); }
-  document.getElementById('toolbar').classList.remove('visible');
-}
-
-function excluirBlocoSelecionado() {
-  const sel = window.getSelection();
-  const anchorNode = sel?.anchorNode;
-  const blockEl = anchorNode?.closest?.('.notion-block') || anchorNode?.parentElement?.closest?.('.notion-block');
-  if (!blockEl || blocos.length <= 1) return;
-  const id = blockEl.dataset.id;
-  blocos = coletarBlocos();
-  const idx = blocos.findIndex(b => b.id === id);
-  blocos.splice(idx, 1);
-  renderEditor();
-  focarBloco(blocos[Math.max(0, idx - 1)]?.id);
-  agendarAutoSave();
-  document.getElementById('toolbar').classList.remove('visible');
-}
-
-function exportarMarkdown() {
-  blocos = coletarBlocos();
-  const lines = [];
-  if (postData) lines.push(`> **Post original:** ${postData.conteudo}\n`);
-  lines.push('---\n');
-  blocos.forEach(b => {
-    const txt = b.conteudo.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
-    switch (b.tipo) {
-      case 'h1': lines.push(`# ${txt}`); break;
-      case 'h2': lines.push(`## ${txt}`); break;
-      case 'h3': lines.push(`### ${txt}`); break;
-      case 'bullet': lines.push(`- ${txt}`); break;
-      case 'num': lines.push(`1. ${txt}`); break;
-      case 'quote': lines.push(`> ${txt}`); break;
-      case 'callout': lines.push(`> 💡 ${txt}`); break;
-      case 'code': lines.push('```\n' + txt + '\n```'); break;
-      case 'divider': lines.push('---'); break;
-      case 'youtube': lines.push(`[▶ Vídeo YouTube](${b.conteudo})`); break;
-      case 'link': lines.push(`[🔗 Link](${b.conteudo})`); break;
-      default: if (txt) lines.push(txt);
-    }
-    lines.push('');
-  });
-  const md = lines.join('\n');
-  const blob = new Blob([md], { type: 'text/markdown' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `aprofundamento-${postId}.md`;
-  a.click();
-}
-
+// =============================================
+// INITIALIZATION
+// =============================================
 window.addEventListener('DOMContentLoaded', async () => {
   postId = localStorage.getItem('st-aprofundamento-postId');
-  if (!postId) {
-    document.getElementById('origem-conteudo').textContent = 'Post não encontrado.';
-    return;
-  }
-  
+  if (!postId) { document.getElementById('origem-conteudo').textContent = 'Post não encontrado.'; return; }
   notesContainer = document.getElementById('sidebar-body');
-  
   await carregarPost();
   await carregarBlocos();
   renderEditor();
-  
   setupRealtimeNotes();
   setupEventDelegation();
-  
-  document.querySelectorAll('.tb-btn[data-cmd]').forEach(btn => {
-    btn.addEventListener('click', () => fmt(btn.dataset.cmd));
-  });
-  document.querySelectorAll('.tb-btn[data-converter]').forEach(btn => {
-    btn.addEventListener('click', () => converterBloco(btn.dataset.converter));
-  });
+  renderFullTree();
+  document.querySelectorAll('.tb-btn[data-cmd]').forEach(btn => btn.addEventListener('click', () => fmt(btn.dataset.cmd)));
+  document.querySelectorAll('.tb-btn[data-converter]').forEach(btn => btn.addEventListener('click', () => converterBloco(btn.dataset.converter)));
   document.getElementById('btn-excluir-bloco')?.addEventListener('click', excluirBlocoSelecionado);
-  
-  document.querySelectorAll('.slash-item[data-tipo]').forEach(item => {
-    item.addEventListener('click', () => inserirBloco(item.dataset.tipo));
-  });
+  document.querySelectorAll('.slash-item[data-tipo]').forEach(item => item.addEventListener('click', () => inserirBloco(item.dataset.tipo)));
 });
 </script>
 </body>
