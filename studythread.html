@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <title>StudyThread — Feed de Estudos com Vídeos</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;width:100%;overflow:hidden;}
@@ -169,6 +171,7 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 .add-assunto-row input:focus{border-color:var(--gold);}
 .lote-ta{width:100%;background:#1a1410;border:1px solid #3d3020;border-radius:var(--r);padding:10px;font-family:var(--mono);font-size:.72rem;color:#9a8a60;resize:vertical;min-height:120px;outline:none;line-height:1.8;}
 .lote-ta:focus{border-color:var(--gold);}
+
 .assunto-tag-sidebar{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-radius:var(--r);cursor:pointer;font-size:.82rem;color:var(--sepia);transition:background .15s;gap:8px;}
 .assunto-tag-sidebar:hover{background:#2e2518;}
 .assunto-tag-sidebar.active{background:#3d2f1a;color:var(--gold);}
@@ -198,78 +201,14 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
   #bar-actions{gap:4px;}
   .btn-sm{padding:3px 6px;font-size:.55rem;}
 }
-/* ─────────────────────────────
-   MOBILE
-───────────────────────────── */
-@media (max-width: 900px){
-
-  /* layout vertical */
-  #layout{
-    display:flex;
-    flex-direction:column;
-    height:auto;
-    min-height:100vh;
-  }
-
-  /* sidebar ocupa largura total */
-  #sidebar-col{
-    width:100%;
-    border-left:none;
-    border-top:1px solid #3d3020;
-    min-height:400px;
-  }
-
-  /* libera scroll natural */
-  html,body{
-    overflow:auto;
-    height:auto;
-  }
-
-  /* remove barra fixa no celular */
-  #status-bar{
-    position:relative;
-    right:auto;
-    bottom:auto;
-    margin-top:auto;
-  }
-
-  /* evita conteúdo escondido */
-  .sidebar-body{
-    padding-bottom:80px;
-  }
-
-  /* editor mais compacto */
-  #notion-editor{
-    padding:24px 18px 100px;
-  }
-
-  #post-origem{
-    padding:22px 18px;
-  }
-
-  /* topbar adaptável */
-  #topbar{
-    flex-wrap:wrap;
-    height:auto;
-    padding:10px 14px;
-  }
-
-  .topbar-actions{
-    width:100%;
-  }
-
-  .topbar-actions .btn{
-    flex:1;
-  }
-
-  /* toolbar não sair da tela */
-  #toolbar{
-    max-width:95vw;
-    left:10px !important;
-  }
-}
-
 </style>
+
+
+
+
+
+
+
 </head>
 <body>
 
@@ -425,6 +364,15 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
       </div>
       <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ghost);display:block;margin-bottom:6px;">Conteúdo</label>
       <textarea id="edit-conteudo" style="width:100%;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:10px 12px;font-family:'Crimson Pro',serif;font-size:.95rem;color:var(--ink);resize:vertical;min-height:120px;outline:none;line-height:1.55;"></textarea>
+      <div id="edit-video-row" style="display:none;margin-top:12px;">
+        <label style="font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ghost);display:block;margin-bottom:6px;">📹 Vídeo do YouTube (opcional)</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="edit-video-url" placeholder="https://youtu.be/..." style="flex:1;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:8px 11px;font-family:var(--mono);font-size:.75rem;outline:none;" />
+          <button class="btn btn-ghost btn-sm" onclick="previsualizarVideoEdicao()">👁 Prévia</button>
+          <button class="btn btn-ghost btn-sm" onclick="limparVideoEdicao()">✕</button>
+        </div>
+        <div class="video-preview" id="video-preview-edicao"></div>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-gold" onclick="salvarEdicao()">✓ Salvar</button>
@@ -868,9 +816,21 @@ function abrirModalPostagem() {
   document.getElementById('np-texto').value='';
   document.getElementById('np-tags').value='';
   document.getElementById('video-url').value='';
-  document.getElementById('video-preview-modal').style.display='none';
+  const prev=document.getElementById('video-preview-modal');
+  prev.innerHTML='';
+  prev.style.display='none';
   abrirModal('modal-postagem');
 }
+
+function previsualizarVideoEdicao() {
+  const url=document.getElementById('edit-video-url').value.trim();
+  const id=extrairIdYouTube(url);
+  const c=document.getElementById('video-preview-edicao');
+  if(id){ c.innerHTML=gerarEmbedYouTube(id); c.style.display='block'; toast('Prévia carregada!','success'); }
+  else if(url) toast('URL inválida.','warning');
+  else { toast('Cole uma URL do YouTube primeiro.','warning'); c.style.display='none'; }
+}
+function limparVideoEdicao() { document.getElementById('edit-video-url').value=''; const c=document.getElementById('video-preview-edicao'); c.innerHTML=''; c.style.display='none'; }
 
 async function criarPostModal() {
   const texto=document.getElementById('np-texto').value.trim();
@@ -958,6 +918,12 @@ function abrirEditarPost(postId) {
   document.getElementById('edit-tipo').value=p.tipo;
   document.getElementById('edit-tags-row').style.display='block';
   document.getElementById('edit-tags').value=(p.tags||[]).map(t=>'#'+t).join(' ');
+  // Campo de vídeo
+  document.getElementById('edit-video-row').style.display='block';
+  document.getElementById('edit-video-url').value=p.video?.url||'';
+  const prev=document.getElementById('video-preview-edicao');
+  if(p.video?.embed){ prev.innerHTML=p.video.embed; prev.style.display='block'; }
+  else { prev.innerHTML=''; prev.style.display='none'; }
   abrirModal('modal-editar');
 }
 function abrirEditarComentario(id) {
@@ -967,19 +933,30 @@ function abrirEditarComentario(id) {
   document.getElementById('edit-conteudo').value=c.conteudo;
   document.getElementById('edit-tipo-row').style.display='none';
   document.getElementById('edit-tags-row').style.display='none';
+  document.getElementById('edit-video-row').style.display='none';
+  document.getElementById('edit-video-url').value='';
+  document.getElementById('video-preview-edicao').innerHTML='';
+  document.getElementById('video-preview-edicao').style.display='none';
   abrirModal('modal-editar');
 }
 async function salvarEdicao() {
   if(!_editando)return;
   const conteudo=document.getElementById('edit-conteudo').value.trim();
-  if(!conteudo){toast('Conteúdo não pode ser vazio.','warning');return;}
+  if(!conteudo && _editando.tipo==='comentario'){toast('Conteúdo não pode ser vazio.','warning');return;}
   if(_editando.tipo==='post'){
     const tipo=document.getElementById('edit-tipo').value;
     const tags=[...new Set([...parseTags(document.getElementById('edit-tags').value),...(conteudo.match(/#[\wáàãâéêíóôõúüçñ-]+/gi)||[]).map(t=>t.slice(1).toLowerCase())])].slice(0,10);
-    await db.collection('posts').doc(_editando.id).update({conteudo,tipo,tags,editadoEm:ts()});
-    const p=DB.posts.find(x=>x.id===_editando.id); if(p){p.conteudo=conteudo;p.tipo=tipo;p.tags=tags;p.editadoEm=ts();}
+    const videoUrl=document.getElementById('edit-video-url').value.trim();
+    const videoId=extrairIdYouTube(videoUrl);
+    if(!conteudo && !videoId){toast('Escreva algo ou adicione um vídeo.','warning');return;}
+    const upd={conteudo:conteudo||(videoId?'📹 Vídeo':''),tipo,tags,editadoEm:ts()};
+    if(videoId) upd.video={url:videoUrl,videoId,embed:gerarEmbedYouTube(videoId)};
+    else upd.video=null;
+    await db.collection('posts').doc(_editando.id).update(upd);
+    const p=DB.posts.find(x=>x.id===_editando.id); if(p){Object.assign(p,upd);}
     toast('Post atualizado!','success');
   } else {
+    if(!conteudo){toast('Conteúdo não pode ser vazio.','warning');return;}
     await db.collection('comments').doc(_editando.id).update({conteudo,editadoEm:ts()});
     const c=DB.comments.find(x=>x.id===_editando.id); if(c){c.conteudo=conteudo;c.editadoEm=ts();}
     toast('Comentário atualizado!','success');
@@ -1049,7 +1026,7 @@ function renderFeed() {
         <button class="btn-edit" onclick="event.stopPropagation();abrirEditarPost('${p.id}')">✏️</button>
       </div>
       ${videoHtml}
-      ${p.conteudo?`<div class="post-body" onclick="abrirThread('${p.id}')">${linkify(p.conteudo)}</div>`:''}
+      ${p.conteudo?`<div class="post-body" onclick="abrirThread('${p.id}')">${linkify(p.conteudo)}</div>`:(!p.video?'':`<div class="post-body" onclick="abrirThread('${p.id}')" style="font-style:italic;color:var(--ghost);font-size:.85rem;">📹 Clique para ver comentários</div>`)}
       ${tags?`<div class="tag-chips">${tags}</div>`:''}
       <div class="post-foot">
         <button class="btn-curtir${curtido?' curtido':''}" onclick="event.stopPropagation();toggleCurtir('${p.id}')">${curtido?'❤':'🤍'} ${p.curtidas||0}</button>
