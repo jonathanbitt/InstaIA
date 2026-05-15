@@ -1142,6 +1142,8 @@ function createNoteElement(nota, level = 0) {
   return wrapper;
 }
 
+
+
 function renderFullTree() {
   if (!notesContainer) return;
   
@@ -1157,6 +1159,28 @@ function renderFullTree() {
       </div>
       <div class="notes-empty">✦ Nenhuma nota ainda ✦<br><span style="font-size:0.7rem;">Crie sua primeira nota principal acima</span></div>
     `;
+    
+    // Vincula eventos diretamente
+    const addButton = document.getElementById('btn-add-root-note');
+    if (addButton) {
+      const newButton = addButton.cloneNode(true);
+      addButton.parentNode.replaceChild(newButton, addButton);
+      newButton.addEventListener('click', async () => {
+        await addRootNote();
+      });
+    }
+    
+    const textarea = document.getElementById('nota-nova-txt');
+    if (textarea) {
+      const newTextarea = textarea.cloneNode(true);
+      textarea.parentNode.replaceChild(newTextarea, textarea);
+      newTextarea.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          addRootNote();
+        }
+      });
+    }
     return;
   }
   
@@ -1181,7 +1205,35 @@ function renderFullTree() {
   
   notesContainer.innerHTML = '';
   notesContainer.appendChild(fragment);
+  
+  // Vincula eventos do compositor quando existem notas
+  const addButton = document.getElementById('btn-add-root-note');
+  if (addButton) {
+    const newButton = addButton.cloneNode(true);
+    addButton.parentNode.replaceChild(newButton, addButton);
+    newButton.addEventListener('click', async () => {
+      await addRootNote();
+    });
+  }
+  
+  const textarea = document.getElementById('nota-nova-txt');
+  if (textarea) {
+    const newTextarea = textarea.cloneNode(true);
+    textarea.parentNode.replaceChild(newTextarea, textarea);
+    newTextarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        addRootNote();
+      }
+    });
+  }
 }
+
+
+
+
+
+
 
 async function addRootNote() {
   const textarea = document.getElementById('nota-nova-txt');
