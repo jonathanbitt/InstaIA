@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
 
 <style>
+/* ===== CSS COMPLETO (INALTERADO) ===== */
 :root {
   --ink:#1a1410;--paper:#f9f6f0;--aged:#f0ebe0;--sepia:#c8b89a;--rust:#8b3a2a;--gold:#c4952a;--sage:#4a6741;--slate:#3d4f5c;--ghost:#7a7060;--margin:#d4c9b0;
   --font-d:'Playfair Display',Georgia,serif;
@@ -974,7 +975,7 @@ let byParentMap = new Map();
 let unsubscribeNotes = null;
 let selectedNoteId = null;
 let collapsedNotes = new Set();
-let currentRepliesMap = new Map(); // stores Set with 'active' for each noteId
+let currentRepliesMap = new Map();
 let notesContainer = null;
 
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -998,19 +999,68 @@ function toast(msg, tipo = 'info') {
 }
 
 function youtubeEmbedUrl(url) {
-  if (!url) return null;
+  if (!url || typeof url !== 'string') return null;
+  
+  const trimmedUrl = url.trim();
   let id = null;
-  if (url.includes('youtube.com/watch?v=')) { try { id = new URLSearchParams(url.split('?')[1]).get('v'); } catch {} }
-  else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1]?.split('?')[0];
-  else if (url.includes('youtube.com/embed/')) id = url.split('/embed/')[1]?.split('?')[0];
-  return id ? `https://www.youtube.com/embed/${id}?rel=0` : null;
+  
+  if (trimmedUrl.includes('youtube.com/watch?v=')) {
+    try {
+      const urlObj = new URL(trimmedUrl);
+      id = urlObj.searchParams.get('v');
+    } catch(e) {
+      const match = trimmedUrl.match(/[?&]v=([^&]+)/);
+      if (match) id = match[1];
+    }
+  }
+  else if (trimmedUrl.includes('youtu.be/')) {
+    const parts = trimmedUrl.split('youtu.be/');
+    if (parts[1]) id = parts[1].split('?')[0];
+  }
+  else if (trimmedUrl.includes('youtube.com/embed/')) {
+    const parts = trimmedUrl.split('/embed/');
+    if (parts[1]) id = parts[1].split('?')[0];
+  }
+  
+  if (id && /^[a-zA-Z0-9_-]{11}$/.test(id)) {
+    return `https://www.youtube.com/embed/${id}?rel=0`;
+  }
+  
+  return null;
 }
 
-function detectarTipoNota(texto) {
-  const ytEmbed = youtubeEmbedUrl(texto);
-  if (ytEmbed) return { tipo: 'youtube', embedUrl: ytEmbed };
-  if (/^https?:\/\//.test(texto)) return { tipo: 'link', embedUrl: null };
-  return { tipo: 'texto', embedUrl: null };
+function detectarTipoNota(texto, permitirEmbedYoutube = true) {
+  if (!texto || texto.trim() === '') {
+    return { tipo: 'texto', embedUrl: null };
+  }
+
+  const ytEmbed = permitirEmbedYoutube ? youtubeEmbedUrl(texto) : null;
+  
+  if (ytEmbed) {
+    return {
+      tipo: 'youtube',
+      embedUrl: ytEmbed
+    };
+  }
+
+  const urlsValidas = texto.match(/https?:\/\/[^\s]+/g) || [];
+  const possuiUrl = urlsValidas.length > 0;
+  
+  const textoSemUrls = texto
+    .replace(/https?:\/\/[^\s]+/g, '')
+    .trim();
+
+  if (possuiUrl && !textoSemUrls) {
+    return {
+      tipo: 'link',
+      embedUrl: null
+    };
+  }
+
+  return {
+    tipo: 'texto',
+    embedUrl: null
+  };
 }
 
 // =============================================
@@ -1053,10 +1103,15 @@ function buildTree(parentId = null, level = 0) {
 function renderizarConteudoNotaStatic(nota) {
   if (nota.tipo === 'youtube' && nota.embedUrl) {
     return `<div class="note-embed"><iframe src="${nota.embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy" style="width:100%;height:180px;border-radius:6px;"></iframe></div>`;
-  } else if (nota.tipo === 'link') {
-    const domain = (() => { try { return new URL(nota.texto).hostname; } catch { return nota.texto; } })();
+  } 
+  else if (nota.tipo === 'link') {
+    const domain = (() => { 
+      try { return new URL(nota.texto).hostname; } 
+      catch { return nota.texto; } 
+    })();
     return `<a href="${nota.texto}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:#c4952a;text-decoration:none;border-bottom:1px dotted rgba(196,149,42,0.3);">🔗 ${domain}</a><div style="font-size:0.75rem;color:#4a4030;margin-top:6px;word-break:break-all;line-height:1.5;">${escHtml(nota.texto)}</div>`;
-  } else {
+  } 
+  else {
     const textoProcessado = escHtml(nota.texto)
       .split(/\n\n+/)
       .map(paragrafo => {
@@ -1107,7 +1162,18 @@ function createNoteElement(nota, level = 0) {
     const formDiv = document.createElement('div');
     formDiv.className = 'reply-form';
     formDiv.innerHTML = `
-      <textarea data-reply-text="${nota.id}" placeholder="Escreva sua resposta… Cole um link ou URL do YouTube para embed automático."></textarea>
+      <textarea
+        data-reply-text="${nota.id}"
+        placeholder="Escreva sua resposta… Cole um link ou URL do YouTube para embed automático."
+        style="font-family:var(--font-b);font-size:0.85rem;color:#bfb090;background:#1e1810;min-height:70px;">
+      </textarea>
+
+      <textarea
+        data-reply-links="${nota.id}"
+        placeholder="Links rápidos… URLs aqui nunca geram embed."
+        style="margin-top:8px;min-height:46px;font-family:var(--font-m);font-size:0.78rem;color:#c4952a;background:#18140f;border:1px solid #3d3020;border-radius:4px;padding:8px 10px;resize:vertical;outline:none;">
+      </textarea>
+
       <div class="reply-form-actions">
         <button class="reply-submit" data-action="submitReply" data-id="${nota.id}">Responder</button>
         <button class="reply-cancel" data-action="cancelReply" data-id="${nota.id}">Cancelar</button>
@@ -1139,7 +1205,6 @@ function renderFullTree() {
   const tree = buildTree();
   notesContainer.innerHTML = '';
   
-  // Compositor sempre visível
   const composerDiv = document.createElement('div');
   composerDiv.style.marginBottom = '20px';
   composerDiv.innerHTML = `
@@ -1162,7 +1227,6 @@ function renderFullTree() {
     notesContainer.appendChild(notesDiv);
   }
   
-  // Vincular eventos do compositor
   const addButton = document.getElementById('btn-add-root-note');
   if (addButton) {
     const newButton = addButton.cloneNode(true);
@@ -1192,7 +1256,7 @@ async function addRootNote() {
   if (!textarea) return;
   const texto = textarea.value.trim();
   if (!texto) return;
-  const { tipo, embedUrl } = detectarTipoNota(texto);
+  const { tipo, embedUrl } = detectarTipoNota(texto, true);
   const now = new Date().toISOString();
   const novaNota = { postId, parentId: null, texto, tipo, embedUrl, depth: 0, ordem: Date.now(), path: [], criadoEm: now, editadoEm: null, respostaCount: 0 };
   try {
@@ -1204,24 +1268,58 @@ async function addRootNote() {
 
 async function addReply(parentId) {
   const textarea = document.querySelector(`textarea[data-reply-text="${parentId}"]`);
-  const texto = textarea?.value.trim();
-  if (!texto) return;
-  const { tipo, embedUrl } = detectarTipoNota(texto);
+  const linksTextarea = document.querySelector(`textarea[data-reply-links="${parentId}"]`);
+  
+  const texto = textarea?.value.trim() || '';
+  const linksTexto = linksTextarea?.value.trim() || '';
+  
+  if (!texto && !linksTexto) return;
+  
+  const textoFinal = texto && linksTexto
+    ? texto + '\n\n' + linksTexto
+    : texto || linksTexto;
+  
+  const textoParaDeteccao = texto || linksTexto;
+  const permitirEmbedYoutube = !!texto;
+  
+  const { tipo, embedUrl } = detectarTipoNota(textoParaDeteccao, permitirEmbedYoutube);
+  
   const parent = todasNotas.get(parentId);
   const now = new Date().toISOString();
   const depth = parent ? (parent.depth || 0) + 1 : 0;
   const path = parent ? [...(parent.path || []), parent.id] : [];
-  const novaNota = { postId, parentId, texto, tipo, embedUrl, depth, ordem: Date.now(), path, criadoEm: now, editadoEm: null, respostaCount: 0 };
+  
+  const novaNota = { 
+    postId, 
+    parentId, 
+    texto: textoFinal, 
+    tipo, 
+    embedUrl, 
+    depth, 
+    ordem: Date.now(), 
+    path, 
+    criadoEm: now, 
+    editadoEm: null, 
+    respostaCount: 0 
+  };
+  
   try {
     await db.collection('anotacoes').add(novaNota);
     if (parent) await db.collection('anotacoes').doc(parentId).update({ respostaCount: (parent.respostaCount || 0) + 1 });
+    
+    if (textarea) textarea.value = '';
+    if (linksTextarea) linksTextarea.value = '';
+    
     currentRepliesMap.delete(parentId);
     toast('Resposta adicionada!', 'success');
-  } catch (e) { toast('Erro ao adicionar resposta', 'error'); console.error(e); }
+  } catch (e) { 
+    toast('Erro ao adicionar resposta', 'error'); 
+    console.error(e); 
+  }
 }
 
 async function updateNote(noteId, newText) {
-  const { tipo, embedUrl } = detectarTipoNota(newText);
+  const { tipo, embedUrl } = detectarTipoNota(newText, true);
   try {
     await db.collection('anotacoes').doc(noteId).update({ texto: newText, tipo, embedUrl, editadoEm: new Date().toISOString() });
     toast('Nota atualizada!', 'success');
