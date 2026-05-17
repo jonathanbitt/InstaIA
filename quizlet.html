@@ -523,10 +523,7 @@ body {
 <script>
 
 /* ─── VOCABULÁRIO COMPLETO ─────────────────────────────────────────── */
-/* 63 palavras extraídas do texto — agrupadas por dificuldade           */
-
 const VOCAB = [
-    // DIA 1 — saudações e apresentação
     { it: "ciao",       pt: "olá / tchau",              frase: "Ciao, come stai?",                        dif: 1 },
     { it: "come",       pt: "como",                     frase: "Come stai?",                              dif: 1 },
     { it: "stai",       pt: "você está (estar)",        frase: "Come stai oggi?",                         dif: 1 },
@@ -536,8 +533,6 @@ const VOCAB = [
     { it: "piccola",    pt: "pequena",                  frase: "Una piccola storia.",                     dif: 1 },
     { it: "storia",     pt: "história",                 frase: "Una piccola storia in italiano.",         dif: 1 },
     { it: "così",       pt: "assim / para que",         frase: "Così puoi imparare.",                     dif: 2 },
-
-    // DIA 2 — aprendizado e prática
     { it: "puoi",       pt: "você pode",                frase: "Puoi imparare delle parole nuove.",       dif: 2 },
     { it: "imparare",   pt: "aprender",                 frase: "Puoi imparare l'italiano.",               dif: 2 },
     { it: "parole",     pt: "palavras",                 frase: "Parole nuove e interessanti.",            dif: 2 },
@@ -547,8 +542,6 @@ const VOCAB = [
     { it: "ascolto",    pt: "escuta / audição",         frase: "Fare pratica con l'ascolto.",             dif: 2 },
     { it: "allora",     pt: "então / bem",              frase: "Allora, sto per uscire.",                 dif: 2 },
     { it: "sto",        pt: "estou (estar)",            frase: "Sto per uscire.",                         dif: 2 },
-
-    // DIA 3 — saída e planos
     { it: "uscire",     pt: "sair",                     frase: "Sto per uscire.",                         dif: 2 },
     { it: "infatti",    pt: "na verdade / de fato",     frase: "Infatti stasera andrò in pizzeria.",      dif: 3 },
     { it: "stasera",    pt: "esta noite / hoje à noite",frase: "Stasera andrò in pizzeria.",              dif: 2 },
@@ -558,8 +551,6 @@ const VOCAB = [
     { it: "mangiare",   pt: "comer",                    frase: "Per mangiare la pizza.",                  dif: 1 },
     { it: "problema",   pt: "problema",                 frase: "Ho un problema.",                         dif: 1 },
     { it: "perché",     pt: "porque / por quê",         frase: "Perché è buona e semplice.",              dif: 2 },
-
-    // DIA 4 — hábitos
     { it: "tutte",      pt: "todas",                    frase: "Tutte le volte che vado.",                dif: 2 },
     { it: "volte",      pt: "vezes",                    frase: "Tutte le volte.",                         dif: 2 },
     { it: "vado",       pt: "vou (ir)",                 frase: "Vado in pizzeria.",                       dif: 2 },
@@ -569,8 +560,6 @@ const VOCAB = [
     { it: "ordino",     pt: "peço / ordeno",            frase: "Ordino sempre la stessa pizza.",          dif: 2 },
     { it: "sempre",     pt: "sempre",                   frase: "Ordino sempre la margherita.",            dif: 1 },
     { it: "stessa",     pt: "mesma",                    frase: "La stessa cosa.",                         dif: 2 },
-
-    // DIA 5 — no restaurante
     { it: "cosa",       pt: "coisa",                    frase: "Ordino sempre la stessa cosa.",           dif: 1 },
     { it: "arrivo",     pt: "chego (chegar)",           frase: "Quando arrivo in pizzeria.",              dif: 2 },
     { it: "di solito",  pt: "normalmente / geralmente", frase: "Di solito guardo il menù.",               dif: 2 },
@@ -580,8 +569,6 @@ const VOCAB = [
     { it: "pizze",      pt: "pizzas (plural)",          frase: "Leggo pizze diverse.",                    dif: 1 },
     { it: "diverse",    pt: "diferentes / diversas",    frase: "Pizze diverse.",                          dif: 2 },
     { it: "alla fine",  pt: "no final / no fim das contas", frase: "Alla fine però ordino la margherita.", dif: 2 },
-
-    // DIA 6 — razões e sentimentos
     { it: "però",       pt: "porém / mas",              frase: "Alla fine però ordino sempre la stessa.", dif: 3 },
     { it: "preferita",  pt: "preferida",                frase: "È la mia preferita.",                    dif: 2 },
     { it: "semplice",   pt: "simples",                  frase: "È semplice e buona.",                    dif: 2 },
@@ -589,22 +576,18 @@ const VOCAB = [
     { it: "quindi",     pt: "então / portanto",         frase: "Quindi ordino sempre la stessa cosa.",   dif: 3 },
     { it: "vabbè",      pt: "tudo bem (coloquial)",     frase: "Vabbè, magari stasera proverò.",          dif: 3 },
     { it: "magari",     pt: "talvez / tomara",          frase: "Magari proverò qualcosa di diverso.",     dif: 3 },
-    { it: "sarà",       pt: "será (futuro de essere)",  frase: "Sarà la volta buona.",                   dif: 3 },
+    { it: "sarà",       pt: "será (futuro di essere)",  frase: "Sarà la volta buona.",                   dif: 3 },
     { it: "volta",      pt: "vez",                      frase: "La volta buona.",                         dif: 2 },
-
-    // DIA 7 — vocabulário avançado
     { it: "proverò",    pt: "vou experimentar (futuro)",frase: "Magari proverò qualcosa di diverso.",     dif: 3 },
     { it: "qualcosa",   pt: "algo / alguma coisa",      frase: "Qualcosa di diverso.",                   dif: 3 },
     { it: "diverso",    pt: "diferente",                frase: "Qualcosa di diverso.",                   dif: 2 },
     { it: "ordinare",   pt: "pedir / encomendar",       frase: "Ordinare la pizza al ristorante.",        dif: 2 },
     { it: "italiana",   pt: "italiana",                 frase: "La cucina italiana è famosa.",            dif: 1 },
-    { it: "racconto",   pt: "história curta / conto",   frase: "Un racconto in italiano.",               dif: 3 },
     { it: "stare per",  pt: "estar prestes a",          frase: "Sto per uscire = estou prestes a sair.", dif: 3 },
-    { it: "di solito",  pt: "normalmente",              frase: "Di solito mangio la margherita.",         dif: 2 },
     { it: "la volta",   pt: "a vez",                    frase: "Questa è la volta buona!",               dif: 3 },
 ];
 
-/* Remover duplicatas por palavra italiana */
+/* Remove duplicatas */
 const vocabUnique = [];
 const seen = new Set();
 for(const v of VOCAB){
@@ -614,7 +597,6 @@ for(const v of VOCAB){
 const TOTAL = vocabUnique.length;
 const POR_DIA = Math.ceil(TOTAL / 7);
 
-// Dividir em 7 dias
 const DIAS = [];
 for(let i = 0; i < 7; i++){
     DIAS.push(vocabUnique.slice(i * POR_DIA, (i+1) * POR_DIA));
@@ -624,7 +606,6 @@ const NOMES_DIAS = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const NOMES_FULL = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
 
 /* ─── LOCALSTORAGE ─────────────────────────────────────────────────── */
-
 const LS_KEY = "quizlet_pizza_v2";
 
 function carregarEstado(){
@@ -633,10 +614,10 @@ function carregarEstado(){
         if(raw) return JSON.parse(raw);
     } catch(e){}
     return {
-        diaAtual: 0,          // 0-6
-        diasConcluidos: [],   // [0,1,2,...]
-        erros: {},            // { "palavra": contagem_erros }
-        historico: {},        // { diaIdx: { acertos, erros } }
+        diaAtual: 0,
+        diasConcluidos: [],
+        erros: {},
+        historico: {},
         iniciadoEm: Date.now()
     };
 }
@@ -645,21 +626,18 @@ function salvarEstado(st){
     try { localStorage.setItem(LS_KEY, JSON.stringify(st)); } catch(e){}
 }
 
-/* ─── LÓGICA DE SESSÃO ─────────────────────────────────────────────── */
-
 let estado = carregarEstado();
 let diaVisto = estado.diaAtual;
-let modoAtual = "flash"; // "flash" | "multipla"
+let modoAtual = "flash";
 let baralhado = [];
 let idxAtual = 0;
 let virado = false;
 let acertosSessao = 0;
 let errosSessao = 0;
-let errosDaSessao = {}; // { palavra: true }
+let errosDaSessao = {};
 
 function obterCartasDoDia(diaIdx){
     const base = [...DIAS[diaIdx]];
-    // Adicionar erros dos dias anteriores (dificuldade alta)
     const errosAnteriores = [];
     for(const [palavra, cnt] of Object.entries(estado.erros)){
         if(cnt >= 1){
@@ -669,7 +647,6 @@ function obterCartasDoDia(diaIdx){
             }
         }
     }
-    // Misturar erros com as novas palavras
     const todas = [...base, ...errosAnteriores];
     return embaralhar(todas);
 }
@@ -690,14 +667,12 @@ function gerarOpcoes(cartaCorreta, pool){
 }
 
 /* ─── RENDER ───────────────────────────────────────────────────────── */
-
 const app = document.getElementById("app");
 
 function render(){
     app.innerHTML = "";
 
     if(baralhado.length === 0 || idxAtual >= baralhado.length){
-        // Mostrar tela de início ou fim de sessão
         if(acertosSessao + errosSessao > 0){
             renderFim();
         } else {
@@ -716,7 +691,6 @@ function render(){
     }
 }
 
-/* NAV DIAS */
 function renderDiasNav(){
     const wrap = document.createElement("div");
     wrap.className = "dias-nav";
@@ -737,15 +711,11 @@ function renderDiasNav(){
     app.appendChild(wrap);
 }
 
-/* STATS */
 function renderStats(){
     const wrap = document.createElement("div");
     wrap.className = "stats-bar";
-
-    const carta = baralhado[idxAtual];
     const totalSessao = baralhado.length;
     const qtdErros = Object.values(estado.erros).filter(v => v > 0).length;
-
     wrap.innerHTML = `
         <div class="stat azul"><span class="val">${idxAtual + 1}/${totalSessao}</span><span class="lbl">carta atual</span></div>
         <div class="stat verde"><span class="val">${acertosSessao}</span><span class="lbl">acertos</span></div>
@@ -755,7 +725,6 @@ function renderStats(){
     app.appendChild(wrap);
 }
 
-/* PROGRESSO */
 function renderProgresso(){
     const pct = baralhado.length > 0 ? ((idxAtual) / baralhado.length * 100) : 0;
     const wrap = document.createElement("div");
@@ -764,14 +733,20 @@ function renderProgresso(){
     app.appendChild(wrap);
 }
 
-/* MODO */
 function renderModoSelector(){
     const wrap = document.createElement("div");
     wrap.className = "modo-selector";
     wrap.innerHTML = `
-        <button class="modo-btn ${modoAtual==='flash'?'ativo':''}" onclick="setModo('flash')">🃏 Flashcard</button>
-        <button class="modo-btn ${modoAtual==='multipla'?'ativo':''}" onclick="setModo('multipla')">🎯 Múltipla Escolha</button>
+        <button class="modo-btn ${modoAtual==='flash'?'ativo':''}" data-modo="flash">🃏 Flashcard</button>
+        <button class="modo-btn ${modoAtual==='multipla'?'ativo':''}" data-modo="multipla">🎯 Múltipla Escolha</button>
     `;
+    const btns = wrap.querySelectorAll(".modo-btn");
+    btns.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const modo = btn.getAttribute("data-modo");
+            setModo(modo);
+        });
+    });
     app.appendChild(wrap);
 }
 
@@ -781,7 +756,6 @@ function setModo(m){
     render();
 }
 
-/* CARD */
 function renderCard(){
     const carta = baralhado[idxAtual];
     const wrap = document.createElement("div");
@@ -798,7 +772,7 @@ function renderCard(){
     }
 
     wrap.innerHTML = `
-        <div class="card ${virado ? 'virado' : ''}" id="cartaEl" onclick="virarCarta()">
+        <div class="card ${virado ? 'virado' : ''}" id="cartaEl">
             <div class="card-frente">
                 ${badgeHtml}
                 <span class="card-label">Italiano</span>
@@ -815,35 +789,55 @@ function renderCard(){
             </div>
         </div>
     `;
+    
+    const cardEl = wrap.querySelector("#cartaEl");
+    cardEl.addEventListener("click", (e) => {
+        if(e.target.closest(".btn-resp")) return;
+        virado = !virado;
+        cardEl.classList.toggle("virado", virado);
+        atualizarBotoesFlash();
+    });
+    
     app.appendChild(wrap);
-
+    
     if(modoAtual === "multipla"){
         renderOpcoes(carta);
     }
 }
 
-function virarCarta(){
-    virado = !virado;
-    const el = document.getElementById("cartaEl");
-    if(el) el.classList.toggle("virado", virado);
+function atualizarBotoesFlash(){
+    const botoes = document.querySelectorAll(".btn-resp");
+    botoes.forEach(b => {
+        b.disabled = !virado;
+        b.style.opacity = virado ? "1" : "0.3";
+        b.style.cursor = virado ? "pointer" : "not-allowed";
+    });
 }
 
-/* BOTÕES FLASH */
 function renderBotoesFlash(){
     const wrap = document.createElement("div");
     wrap.className = "botoes-resp";
     wrap.innerHTML = `
-        <button class="btn-resp btn-errado" onclick="responder(false)" ${!virado ? 'disabled style="opacity:0.3"' : ''}>
-            ✗ Não sabia
-        </button>
-        <button class="btn-resp btn-certo" onclick="responder(true)" ${!virado ? 'disabled style="opacity:0.3"' : ''}>
-            ✓ Sabia!
-        </button>
+        <button class="btn-resp btn-errado" data-resposta="errado">✗ Não sabia</button>
+        <button class="btn-resp btn-certo" data-resposta="certo">✓ Sabia!</button>
     `;
+    
+    const btnErrado = wrap.querySelector('[data-resposta="errado"]');
+    const btnCerto = wrap.querySelector('[data-resposta="certo"]');
+    
+    btnErrado.addEventListener("click", () => responder(false));
+    btnCerto.addEventListener("click", () => responder(true));
+    
+    btnErrado.disabled = !virado;
+    btnCerto.disabled = !virado;
+    btnErrado.style.opacity = virado ? "1" : "0.3";
+    btnCerto.style.opacity = virado ? "1" : "0.3";
+    btnErrado.style.cursor = virado ? "pointer" : "not-allowed";
+    btnCerto.style.cursor = virado ? "pointer" : "not-allowed";
+    
     app.appendChild(wrap);
 }
 
-/* MÚLTIPLA ESCOLHA */
 function renderOpcoes(cartaCorreta){
     const opcoes = gerarOpcoes(cartaCorreta, baralhado);
     const grid = document.createElement("div");
@@ -854,7 +848,7 @@ function renderOpcoes(cartaCorreta){
         const btn = document.createElement("button");
         btn.className = "opcao-btn";
         btn.textContent = op.pt;
-        btn.onclick = () => escolherOpcao(btn, op, cartaCorreta, grid);
+        btn.addEventListener("click", () => escolherOpcao(btn, op, cartaCorreta, grid));
         grid.appendChild(btn);
     });
 
@@ -875,7 +869,6 @@ function escolherOpcao(btn, escolha, correta, grid){
         btn.classList.add("errada");
     }
 
-    // mostrar verso do card também
     virado = true;
     const el = document.getElementById("cartaEl");
     if(el) el.classList.add("virado");
@@ -883,18 +876,15 @@ function escolherOpcao(btn, escolha, correta, grid){
     setTimeout(() => responder(acertou), 900);
 }
 
-/* RESPONDER */
 function responder(acertou){
     const carta = baralhado[idxAtual];
 
     if(acertou){
         acertosSessao++;
-        // Reduzir erro se houver
         if(estado.erros[carta.it] > 0) estado.erros[carta.it]--;
     } else {
         errosSessao++;
         errosDaSessao[carta.it] = true;
-        // Incrementar erro
         estado.erros[carta.it] = (estado.erros[carta.it] || 0) + 1;
     }
 
@@ -904,37 +894,33 @@ function responder(acertou){
     virado = false;
 
     if(idxAtual >= baralhado.length){
-        // Concluir dia
         if(!estado.diasConcluidos.includes(diaVisto)){
             estado.diasConcluidos.push(diaVisto);
         }
-        // Avançar diaAtual se for o dia atual
         if(diaVisto === estado.diaAtual && estado.diaAtual < 6){
             estado.diaAtual++;
         }
         estado.historico[diaVisto] = { acertos: acertosSessao, erros: errosSessao };
         salvarEstado(estado);
-        render(); // vai para tela de fim
+        render();
         return;
     }
 
     render();
 }
 
-/* INÍCIO */
 function renderInicio(){
     const wrap = document.createElement("div");
     wrap.className = "tela-inicio";
 
     const diaHoje = estado.diaAtual;
     const cartasHoje = obterCartasDoDia(diaHoje);
-    const errosAnt = cartasHoje.length - DIAS[diaHoje].length;
+    const qtdRevisao = Object.values(estado.erros).filter(v => v > 0).length;
 
     const gradeHTML = DIAS.map((d, i) => {
-        const bloq = i > diaHoje;
+        const bloq = i > estado.diaAtual;
         const ok   = estado.diasConcluidos.includes(i);
-        const hoje = i === diaHoje;
-        const extra = i > 0 ? Object.values(estado.erros).filter(v=>v>0).length : 0;
+        const hoje = i === estado.diaAtual;
         return `
             <div class="grade-dia ${bloq?'bloq':''} ${ok?'ok':''} ${hoje?'hoje':''}">
                 <span class="gd-nome">${NOMES_DIAS[i]}</span>
@@ -943,23 +929,28 @@ function renderInicio(){
         `;
     }).join("");
 
-    const qtdRevisao = Object.values(estado.erros).filter(v => v > 0).length;
-
     wrap.innerHTML = `
-        <h2>Lição ${diaHoje + 1} — ${NOMES_FULL[diaHoje]}</h2>
+        <h2>Lição ${estado.diaAtual + 1} — ${NOMES_FULL[estado.diaAtual]}</h2>
         <p>
-            ${DIAS[diaHoje].length} palavras novas
+            ${DIAS[estado.diaAtual].length} palavras novas
             ${qtdRevisao > 0 ? `· <span style="color:var(--vermelho)">+${qtdRevisao} revisões de dias anteriores</span>` : ''}
             <br>Total de cartas hoje: <strong>${cartasHoje.length}</strong>
         </p>
         <div class="grade-dias">${gradeHTML}</div>
-        <button class="btn-primario" onclick="iniciarSessao(${diaHoje})">▶ Começar lição ${diaHoje + 1}</button>
+        <button class="btn-primario" id="btnIniciar">▶ Começar lição ${estado.diaAtual + 1}</button>
         ${estado.diasConcluidos.length > 0 ? `
             <div style="margin-top:16px">
-                <button class="reset-link" onclick="resetarProgresso()">🗑 Resetar todo o progresso</button>
+                <button class="reset-link" id="btnResetar">🗑 Resetar todo o progresso</button>
             </div>
         ` : ""}
     `;
+    
+    const btnIniciar = wrap.querySelector("#btnIniciar");
+    if(btnIniciar) btnIniciar.addEventListener("click", () => iniciarSessao(estado.diaAtual));
+    
+    const btnResetar = wrap.querySelector("#btnResetar");
+    if(btnResetar) btnResetar.addEventListener("click", () => resetarProgresso());
+    
     app.appendChild(wrap);
 }
 
@@ -974,12 +965,12 @@ function iniciarSessao(diaIdx){
     render();
 }
 
-/* FIM */
 function renderFim(){
     const wrap = document.createElement("div");
     wrap.className = "tela-fim";
 
-    const pct = Math.round(acertosSessao / (acertosSessao + errosSessao) * 100);
+    const total = acertosSessao + errosSessao;
+    const pct = total > 0 ? Math.round(acertosSessao / total * 100) : 0;
     const estrelas = pct >= 90 ? "⭐⭐⭐" : pct >= 70 ? "⭐⭐" : "⭐";
     const msg = pct >= 90 ? "Ottimo! Você dominou a lição!" : pct >= 70 ? "Bene! Continue praticando!" : "Não desista — a repetição é tudo!";
 
@@ -1011,15 +1002,18 @@ function renderFim(){
         </p>
         ${errosHTML}
         ${proximoDesbloqueado && estado.diaAtual <= 6 ? `
-            <button class="btn-primario" onclick="iniciarSessao(${estado.diaAtual})">
-                Lição ${estado.diaAtual + 1} →
-            </button>
+            <button class="btn-primario" id="btnProximo">Li��ão ${estado.diaAtual + 1} →</button>
             <br>
         ` : ""}
-        <button class="btn-primario" style="margin-top:12px;background:var(--surface2);color:var(--texto);border:1.5px solid var(--border);" onclick="voltarInicio()">
-            ← Voltar ao início
-        </button>
+        <button class="btn-primario" id="btnVoltar" style="margin-top:12px;background:var(--surface2);color:var(--texto);border:1.5px solid var(--border);">← Voltar ao início</button>
     `;
+    
+    const btnProximo = wrap.querySelector("#btnProximo");
+    if(btnProximo) btnProximo.addEventListener("click", () => iniciarSessao(estado.diaAtual));
+    
+    const btnVoltar = wrap.querySelector("#btnVoltar");
+    if(btnVoltar) btnVoltar.addEventListener("click", () => voltarInicio());
+    
     app.appendChild(wrap);
 }
 
@@ -1036,10 +1030,24 @@ function resetarProgresso(){
     if(!confirm("Tem certeza? Todo o progresso será apagado.")) return;
     localStorage.removeItem(LS_KEY);
     estado = carregarEstado();
+    diaVisto = estado.diaAtual;
     voltarInicio();
 }
 
-/* ─── INIT ─────────────────────────────────────────────────────────── */
+/* ─── EXPOR FUNÇÕES GLOBAIS (para onclick inline) ─────────────────── */
+window.setModo = setModo;
+window.responder = responder;
+window.virarCarta = () => {
+    const el = document.getElementById("cartaEl");
+    if(el){
+        virado = !virado;
+        el.classList.toggle("virado", virado);
+        atualizarBotoesFlash();
+    }
+};
+window.iniciarSessao = iniciarSessao;
+window.resetarProgresso = resetarProgresso;
+window.voltarInicio = voltarInicio;
 
 render();
 
