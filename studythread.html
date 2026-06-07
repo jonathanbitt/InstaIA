@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 <title>StudyThread — Feed de Estudos com Vídeos</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
-
-
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;width:100%;overflow:hidden;}
@@ -147,19 +145,19 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 .empty-feed{text-align:center;padding:60px 20px;color:var(--ghost);}
 .empty-icon{font-size:2.5rem;margin-bottom:10px;opacity:.4;}
 .empty-text{font-family:var(--display);font-style:italic;}
-.btn-foot-action {background: transparent;border: 1px solid var(--margin);border-radius: 20px;padding: 3px 9px;font-family: var(--mono);font-size: .62rem;color: var(--ghost);cursor: pointer;transition: all .15s;white-space: nowrap;}
-.btn-foot-action:hover { background: rgba(0,0,0,.06); color: var(--ink); border-color: #aaa; }
-.btn-aprofundar { border-color: rgba(74,103,65,.4); color: var(--sage); }
-.btn-aprofundar:hover { background: rgba(74,103,65,.1); border-color: var(--sage); color: var(--sage); }
-.share-options { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
-.share-option {display: flex;align-items: center;gap: 12px;padding: 12px 14px;background: var(--aged);border: 1px solid var(--margin);border-radius: var(--r);cursor: pointer;transition: background .15s, border-color .15s;}
-.share-option:hover { background: #ddd8c8; border-color: #b8b0a0; }
-.share-icon { font-size: 1.3rem; flex-shrink: 0; }
-.share-label { font-family: var(--mono); font-size: .72rem; color: var(--ink); }
-.share-desc  { font-size: .78rem; color: var(--ghost); margin-top: 1px; }
-.share-text-box {width: 100%;background: #1a1410;border: 1px solid #3d3020;border-radius: var(--r);padding: 10px 12px;font-family: var(--mono);font-size: .72rem;color: #9a8a60;line-height: 1.7;resize: none;min-height: 90px;outline: none;margin-top: 8px;}
-.aprofundar-preview {background: var(--aged);border: 1px solid var(--margin);border-radius: var(--r);padding: 12px 14px;font-size: .88rem;color: var(--ink);line-height: 1.6;max-height: 100px;overflow-y: auto;margin-bottom: 14px;}
-.aprofundar-json {background: #1a1410;border: 1px solid #3d3020;border-radius: var(--r);padding: 12px;font-family: var(--mono);font-size: .7rem;color: #9a8a60;line-height: 1.7;max-height: 220px;overflow-y: auto;white-space: pre-wrap;word-break: break-all;}
+.btn-foot-action{background:transparent;border:1px solid var(--margin);border-radius:20px;padding:3px 9px;font-family:var(--mono);font-size:.62rem;color:var(--ghost);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.btn-foot-action:hover{background:rgba(0,0,0,.06);color:var(--ink);border-color:#aaa;}
+.btn-aprofundar{border-color:rgba(74,103,65,.4);color:var(--sage);}
+.btn-aprofundar:hover{background:rgba(74,103,65,.1);border-color:var(--sage);color:var(--sage);}
+.share-options{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.share-option{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--aged);border:1px solid var(--margin);border-radius:var(--r);cursor:pointer;transition:background .15s,border-color .15s;}
+.share-option:hover{background:#ddd8c8;border-color:#b8b0a0;}
+.share-icon{font-size:1.3rem;flex-shrink:0;}
+.share-label{font-family:var(--mono);font-size:.72rem;color:var(--ink);}
+.share-desc{font-size:.78rem;color:var(--ghost);margin-top:1px;}
+.share-text-box{width:100%;background:#1a1410;border:1px solid #3d3020;border-radius:var(--r);padding:10px 12px;font-family:var(--mono);font-size:.72rem;color:#9a8a60;line-height:1.7;resize:none;min-height:90px;outline:none;margin-top:8px;}
+.aprofundar-preview{background:var(--aged);border:1px solid var(--margin);border-radius:var(--r);padding:12px 14px;font-size:.88rem;color:var(--ink);line-height:1.6;max-height:100px;overflow-y:auto;margin-bottom:14px;}
+.aprofundar-json{background:#1a1410;border:1px solid #3d3020;border-radius:var(--r);padding:12px;font-family:var(--mono);font-size:.7rem;color:#9a8a60;line-height:1.7;max-height:220px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;}
 .assunto-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--aged);border:1px solid var(--margin);border-radius:var(--r);margin-bottom:6px;}
 .assunto-color{width:16px;height:16px;border-radius:50%;flex-shrink:0;cursor:pointer;}
 .assunto-label{flex:1;font-family:var(--mono);font-size:.78rem;color:var(--ink);}
@@ -178,153 +176,70 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 #font-ctrl button{background:transparent;border:none;color:var(--sepia);font-family:var(--mono);font-size:.78rem;font-weight:600;cursor:pointer;padding:2px 6px;border-radius:2px;}
 #font-ctrl button:hover{background:rgba(196,149,42,.2);color:var(--gold);}
 #font-val{font-family:var(--mono);font-size:.62rem;color:var(--ghost);min-width:30px;text-align:center;}
+
+/* ============================================================
+   PLAYLISTS
+   ============================================================ */
+.playlist-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);border:1px solid var(--margin);background:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;margin-bottom:6px;}
+.playlist-item:hover{border-color:var(--gold);background:rgba(196,149,42,.07);}
+.playlist-item.saved{border-color:var(--gold);background:rgba(196,149,42,.12);}
+.playlist-item-icon{font-size:1.1rem;flex-shrink:0;}
+.playlist-item-name{flex:1;font-family:var(--display);font-size:.9rem;color:var(--ink);}
+.playlist-item-count{font-family:var(--mono);font-size:.62rem;color:var(--ghost);background:rgba(0,0,0,.07);padding:2px 7px;border-radius:8px;}
+.playlist-item-check{font-size:.9rem;color:var(--gold);flex-shrink:0;min-width:16px;text-align:center;}
+.playlist-new-row{display:flex;gap:8px;margin-top:10px;align-items:center;}
+.playlist-new-row input{flex:1;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:8px 11px;font-family:var(--mono);font-size:.78rem;color:var(--ink);outline:none;}
+.playlist-new-row input:focus{border-color:var(--gold);}
+.playlist-emoji-pick{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.playlist-emoji-btn{background:rgba(0,0,0,.05);border:1px solid var(--margin);border-radius:4px;padding:3px 8px;font-size:.9rem;cursor:pointer;transition:all .12s;}
+.playlist-emoji-btn:hover,.playlist-emoji-btn.sel{background:rgba(196,149,42,.15);border-color:var(--gold);}
+.playlist-empty{text-align:center;padding:20px;color:var(--ghost);font-family:var(--display);font-style:italic;font-size:.9rem;}
+.btn-salvar-post{border-color:rgba(196,149,42,.4);color:var(--gold);}
+.btn-salvar-post:hover{background:rgba(196,149,42,.1);border-color:var(--gold);}
+.btn-salvar-post.salvo{background:rgba(196,149,42,.18);border-color:var(--gold);color:var(--gold);}
+.playlist-section-title{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ghost);margin-bottom:8px;margin-top:4px;}
+
+/* Sidebar playlists */
+.playlist-sidebar-item{display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:var(--r);cursor:pointer;font-size:.82rem;color:var(--sepia);transition:background .15s;}
+.playlist-sidebar-item:hover{background:#2e2518;}
+.playlist-sidebar-item.active{background:#3d2f1a;color:var(--gold);}
+
+.side-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:26;pointer-events:none;transition:background .25s;}
+.side-drawer-overlay.open{background:rgba(0,0,0,.6);pointer-events:all;}
+
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.55;}}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:#4a3d2a;border-radius:3px;}
 
-/* Drawer lateral para mobile (menu) */
-.side-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:26;pointer-events:none;transition:background .25s;}
-.side-drawer-overlay.open{background:rgba(0,0,0,.6);pointer-events:all;}
-
-/* =============================================
-   RESPONSIVIDADE - Tablet e Mobile
-   ============================================= */
-
-/* Tablet (768px a 1024px) - mesmo comportamento do mobile */
-@media (max-width: 1024px) {
-  #menu-btn {
-    display: block;
-  }
-  
-  #side {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 280px;
-    z-index: 27;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    margin-top: 0;
-    padding-top: 70px;
-    background: #221b13;
-  }
-  
-  #side.open {
-    transform: translateX(0);
-  }
-  
-  #feed {
-    left: 0;
-  }
-  
-  .thread-drawer {
-    width: 100vw;
-  }
-  
-  .fab-post {
-    bottom: 16px;
-    right: 16px;
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
-  }
-  
-  #bar-title {
-    font-size: 1.2rem;
-  }
-  
-  #bar-actions {
-    gap: 4px;
-  }
-  
-  .btn-sm {
-    padding: 3px 6px;
-    font-size: .55rem;
-  }
+@media (max-width:1024px){
+  #menu-btn{display:block;}
+  #side{position:fixed;top:0;left:0;bottom:0;width:280px;z-index:27;transform:translateX(-100%);transition:transform 0.3s ease;margin-top:0;padding-top:70px;background:#221b13;}
+  #side.open{transform:translateX(0);}
+  #feed{left:0;}
+  .thread-drawer{width:100vw;}
+  .fab-post{bottom:16px;right:16px;width:48px;height:48px;font-size:24px;}
+  #bar-title{font-size:1.2rem;}
+  #bar-actions{gap:4px;}
+  .btn-sm{padding:3px 6px;font-size:.55rem;}
 }
-
-/* Mobile (até 767px) */
-@media (max-width: 767px) {
-  #menu-btn {
-    display: block;
-  }
-  
-  #side {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 280px;
-    z-index: 27;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    margin-top: 0;
-    padding-top: 70px;
-    background: #221b13;
-  }
-  
-  #side.open {
-    transform: translateX(0);
-  }
-  
-  #feed {
-    left: 0;
-  }
-  
-  .thread-drawer {
-    width: 100vw;
-  }
-  
-  .fab-post {
-    bottom: 16px;
-    right: 16px;
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
-  }
-  
-  #bar-title {
-    font-size: 1rem;
-  }
-  
-  #bar-actions {
-    gap: 4px;
-  }
-  
-  .btn-sm {
-    padding: 3px 6px;
-    font-size: .5rem;
-  }
-  
-  .post-head {
-    flex-wrap: wrap;
-  }
-  
-  .post-body {
-    font-size: .9rem;
-  }
-  
-  .feed-tab {
-    font-size: .55rem;
-    padding: 8px 6px;
-  }
-  
-  #posts-list {
-    padding: 12px 12px 40px;
-  }
+@media (max-width:767px){
+  #menu-btn{display:block;}
+  #side{position:fixed;top:0;left:0;bottom:0;width:280px;z-index:27;transform:translateX(-100%);transition:transform 0.3s ease;margin-top:0;padding-top:70px;background:#221b13;}
+  #side.open{transform:translateX(0);}
+  #feed{left:0;}
+  .thread-drawer{width:100vw;}
+  .fab-post{bottom:16px;right:16px;width:48px;height:48px;font-size:24px;}
+  #bar-title{font-size:1rem;}
+  #bar-actions{gap:4px;}
+  .btn-sm{padding:3px 6px;font-size:.5rem;}
+  .post-head{flex-wrap:wrap;}
+  .post-body{font-size:.9rem;}
+  .feed-tab{font-size:.55rem;padding:8px 6px;}
+  #posts-list{padding:12px 12px 40px;}
 }
-
 </style>
-
-
-
-
-
-
-
 </head>
 <body>
 
@@ -344,7 +259,6 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
   </div>
 </header>
 
-<!-- Overlay para fechar o menu lateral no mobile -->
 <div class="side-drawer-overlay" id="side-overlay" onclick="fecharSideMenu()"></div>
 
 <aside id="side">
@@ -370,6 +284,13 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
     <div class="sec-title"># Hashtags</div>
     <div id="tags-sidebar"></div>
   </div>
+  <div>
+    <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between;">
+      🔖 Playlists
+      <button onclick="abrirModalPlaylistsGerenciar()" title="Ver todas" style="background:transparent;border:none;color:var(--ghost);cursor:pointer;font-size:.8rem;padding:0 2px;">⚙</button>
+    </div>
+    <div id="playlists-sidebar"></div>
+  </div>
   <div style="margin-top:auto;">
     <div class="sec-title">Firebase</div>
     <div style="font-size:.66rem;color:#4a4030;font-family:var(--mono);">Modo: <span style="color:#6a8a5a;">Firestore</span></div>
@@ -381,6 +302,7 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
     <button class="feed-tab active" onclick="mudarFeedTab('recentes')">🕐 Recentes</button>
     <button class="feed-tab" onclick="mudarFeedTab('aleatorio')">🎲 Aleatório</button>
     <button class="feed-tab" onclick="mudarFeedTab('curtidos')">❤ Curtidos</button>
+    <button class="feed-tab" onclick="mudarFeedTab('salvos')">🔖 Salvos</button>
   </div>
   <div id="tag-filtro-bar">
     <span id="tag-filtro-label"></span>
@@ -433,24 +355,18 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
       <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-assuntos')">✕</button>
     </div>
     <div class="modal-body">
-
-      <!-- Adicionar um assunto -->
       <div class="sec-title" style="color:var(--ghost);border-color:var(--margin);margin-bottom:10px;">Adicionar assunto</div>
       <div class="add-assunto-row">
         <input type="color" id="novo-assunto-cor" value="#7a3a8a" title="Escolha uma cor" style="width:36px;height:34px;padding:2px;border:1px solid var(--margin);border-radius:var(--r);cursor:pointer;" />
         <input type="text" id="novo-assunto-nome" placeholder="Ex: Astronomia, Química, Psicologia…" onkeydown="if(event.key==='Enter')adicionarAssunto()" />
         <button class="btn btn-gold btn-sm" onclick="adicionarAssunto()">+ Adicionar</button>
       </div>
-
-      <!-- Adicionar em lote -->
       <div style="margin-top:18px;">
         <div class="sec-title" style="color:var(--ghost);border-color:var(--margin);margin-bottom:8px;">Adicionar em lote</div>
         <p style="font-size:.78rem;color:var(--ghost);font-family:var(--mono);margin-bottom:8px;">Um assunto por linha, ou separados por vírgula. Pode incluir cor opcional no formato <code style="background:rgba(0,0,0,.06);padding:1px 4px;border-radius:2px;">Nome #cor</code>:</p>
         <textarea class="lote-ta" id="lote-assuntos-ta" placeholder="Astronomia&#10;Química #2d7a4a&#10;Psicologia, Sociologia&#10;Direito #8a3a1a"></textarea>
         <button class="btn btn-sage" style="margin-top:8px;width:100%;" onclick="adicionarAssuntosEmLote()">⬆ Importar Lista</button>
       </div>
-
-      <!-- Lista atual -->
       <div style="margin-top:18px;">
         <div class="sec-title" style="color:var(--ghost);border-color:var(--margin);margin-bottom:8px;">Assuntos cadastrados <span id="assuntos-count" style="color:var(--gold);"></span></div>
         <div id="assuntos-lista"></div>
@@ -550,6 +466,57 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
   </div>
 </div>
 
+<!-- MODAL SALVAR EM PLAYLIST -->
+<div class="modal-overlay" id="modal-playlist">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-head">
+      <span class="modal-title">🔖 Salvar em Playlist</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-playlist')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="playlists-lista-modal">
+        <div class="playlist-empty">⏳ Carregando playlists…</div>
+      </div>
+      <div style="margin-top:16px;border-top:1px solid var(--margin);padding-top:14px;">
+        <div class="playlist-section-title">+ Criar nova playlist</div>
+        <div class="playlist-emoji-pick" id="emoji-pick">
+          <button class="playlist-emoji-btn sel" data-emoji="📚" onclick="selecionarEmojiPlaylist(this)">📚</button>
+          <button class="playlist-emoji-btn" data-emoji="📌" onclick="selecionarEmojiPlaylist(this)">📌</button>
+          <button class="playlist-emoji-btn" data-emoji="⭐" onclick="selecionarEmojiPlaylist(this)">⭐</button>
+          <button class="playlist-emoji-btn" data-emoji="🎯" onclick="selecionarEmojiPlaylist(this)">🎯</button>
+          <button class="playlist-emoji-btn" data-emoji="🧠" onclick="selecionarEmojiPlaylist(this)">🧠</button>
+          <button class="playlist-emoji-btn" data-emoji="💡" onclick="selecionarEmojiPlaylist(this)">💡</button>
+          <button class="playlist-emoji-btn" data-emoji="🔬" onclick="selecionarEmojiPlaylist(this)">🔬</button>
+          <button class="playlist-emoji-btn" data-emoji="📖" onclick="selecionarEmojiPlaylist(this)">📖</button>
+        </div>
+        <div class="playlist-new-row">
+          <input type="text" id="nova-playlist-nome" placeholder="Nome da playlist…" onkeydown="if(event.key==='Enter') criarESalvarPlaylist()" />
+          <button class="btn btn-gold btn-sm" onclick="criarESalvarPlaylist()">Criar e salvar</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="fecharModal('modal-playlist')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GERENCIAR PLAYLISTS -->
+<div class="modal-overlay" id="modal-playlists-gerenciar">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-head">
+      <span class="modal-title">🗂 Gerenciar Playlists</span>
+      <button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-playlists-gerenciar')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="playlists-gerenciar-lista"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="fecharModal('modal-playlists-gerenciar')">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <!-- DRAWER -->
 <div class="thread-overlay" id="thread-overlay" onclick="fecharDrawer()"></div>
 <div class="thread-drawer" id="thread-drawer">
@@ -584,46 +551,24 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
     </div>
     <div class="modal-body">
       <p class="help-text">Escolha como compartilhar:</p>
-
       <div class="share-options">
-        <!-- Copiar texto -->
         <div class="share-option" onclick="compartilharCopiarTexto()">
           <span class="share-icon">📋</span>
-          <div>
-            <div class="share-label">Copiar como texto</div>
-            <div class="share-desc">Copia o conteúdo formatado para a área de transferência</div>
-          </div>
+          <div><div class="share-label">Copiar como texto</div><div class="share-desc">Copia o conteúdo formatado para a área de transferência</div></div>
         </div>
-
-        <!-- Copiar link âncora -->
         <div class="share-option" onclick="compartilharCopiarLink()">
           <span class="share-icon">🔗</span>
-          <div>
-            <div class="share-label">Copiar referência do post</div>
-            <div class="share-desc">Copia o ID e conteúdo para citar em outro contexto</div>
-          </div>
+          <div><div class="share-label">Copiar referência do post</div><div class="share-desc">Copia o ID e conteúdo para citar em outro contexto</div></div>
         </div>
-
-        <!-- WhatsApp -->
         <div class="share-option" onclick="compartilharWhatsApp()">
           <span class="share-icon">💬</span>
-          <div>
-            <div class="share-label">Enviar pelo WhatsApp</div>
-            <div class="share-desc">Abre o WhatsApp com o conteúdo do post</div>
-          </div>
+          <div><div class="share-label">Enviar pelo WhatsApp</div><div class="share-desc">Abre o WhatsApp com o conteúdo do post</div></div>
         </div>
-
-        <!-- JSON para IA -->
         <div class="share-option" onclick="compartilharComoJson()">
           <span class="share-icon">🤖</span>
-          <div>
-            <div class="share-label">Exportar para IA (JSON)</div>
-            <div class="share-desc">Gera um bloco JSON para usar com qualquer IA externa</div>
-          </div>
+          <div><div class="share-label">Exportar para IA (JSON)</div><div class="share-desc">Gera um bloco JSON para usar com qualquer IA externa</div></div>
         </div>
       </div>
-
-      <!-- Preview do texto que será copiado -->
       <textarea class="share-text-box" id="share-preview" readonly></textarea>
     </div>
     <div class="modal-foot">
@@ -659,205 +604,90 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
 // ============================================================
-// FUNÇÕES DO MENU MOBILE
+// MENU MOBILE
 // ============================================================
-function toggleSideMenu() {
-  const side = document.getElementById('side');
-  const overlay = document.getElementById('side-overlay');
-  side.classList.toggle('open');
-  overlay.classList.toggle('open');
-  document.body.style.overflow = side.classList.contains('open') ? 'hidden' : '';
-}
-
-function fecharSideMenu() {
-  const side = document.getElementById('side');
-  const overlay = document.getElementById('side-overlay');
-  side.classList.remove('open');
-  overlay.classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-// Fecha o menu ao redimensionar para desktop
-window.addEventListener('resize', function() {
-  if (window.innerWidth > 640) {
-    fecharSideMenu();
-  }
-});
+function toggleSideMenu(){const s=document.getElementById('side'),o=document.getElementById('side-overlay');s.classList.toggle('open');o.classList.toggle('open');document.body.style.overflow=s.classList.contains('open')?'hidden':'';}
+function fecharSideMenu(){const s=document.getElementById('side'),o=document.getElementById('side-overlay');s.classList.remove('open');o.classList.remove('open');document.body.style.overflow='';}
+window.addEventListener('resize',function(){if(window.innerWidth>640)fecharSideMenu();});
 
 // ============================================================
-// ASSUNTOS — sistema dinâmico
+// ASSUNTOS
 // ============================================================
-
-// Assuntos padrão (sempre presentes)
-const ASSUNTOS_PADRAO = [
-  { id:'filosofia', nome:'Filosofia', cor:'#9a6abf' },
-  { id:'fisica',    nome:'Física',    cor:'#1a6abf' },
-  { id:'matematica',nome:'Matemática',cor:'#6a9abf' },
-  { id:'idioma',    nome:'Idioma',    cor:'#bf9a6a' },
-  { id:'logica',    nome:'Lógica',    cor:'#6abf9a' },
-  { id:'ciencia',   nome:'Ciência',   cor:'#bf9a6a' },
-  { id:'historia',  nome:'História',  cor:'#bf6a6a' },
-  { id:'literatura',nome:'Literatura',cor:'#9a8a6a' },
-  { id:'outro',     nome:'Outro',     cor:'#7a7a7a' },
+const ASSUNTOS_PADRAO=[
+  {id:'filosofia',nome:'Filosofia',cor:'#9a6abf'},{id:'fisica',nome:'Física',cor:'#1a6abf'},
+  {id:'matematica',nome:'Matemática',cor:'#6a9abf'},{id:'idioma',nome:'Idioma',cor:'#bf9a6a'},
+  {id:'logica',nome:'Lógica',cor:'#6abf9a'},{id:'ciencia',nome:'Ciência',cor:'#bf9a6a'},
+  {id:'historia',nome:'História',cor:'#bf6a6a'},{id:'literatura',nome:'Literatura',cor:'#9a8a6a'},
+  {id:'outro',nome:'Outro',cor:'#7a7a7a'},
 ];
-
-// Carrega assuntos customizados do localStorage
-function carregarAssuntosCustom() {
-  try { return JSON.parse(localStorage.getItem('st-assuntos') || '[]'); }
-  catch { return []; }
+function carregarAssuntosCustom(){try{return JSON.parse(localStorage.getItem('st-assuntos')||'[]');}catch{return[];}}
+function salvarAssuntosCustom(l){localStorage.setItem('st-assuntos',JSON.stringify(l));}
+function getTodosAssuntos(){return[...ASSUNTOS_PADRAO,...carregarAssuntosCustom()];}
+function injetarCSSAssuntos(){
+  const custom=carregarAssuntosCustom();let css='';
+  custom.forEach(a=>{const bg=hexParaRgba(a.cor,0.12);css+=`.tipo-${a.id}{background:${bg};color:${a.cor};}`});
+  let el=document.getElementById('css-assuntos-custom');
+  if(!el){el=document.createElement('style');el.id='css-assuntos-custom';document.head.appendChild(el);}
+  el.textContent=css;
 }
+function hexParaRgba(hex,alpha){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return`rgba(${r},${g},${b},${alpha})`;}
+function slugify(n){return n.toLowerCase().replace(/[áàãâä]/g,'a').replace(/[éèêë]/g,'e').replace(/[íìîï]/g,'i').replace(/[óòõôö]/g,'o').replace(/[úùûü]/g,'u').replace(/ç/g,'c').replace(/ñ/g,'n').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');}
 
-function salvarAssuntosCustom(lista) {
-  localStorage.setItem('st-assuntos', JSON.stringify(lista));
+function adicionarAssunto(){
+  const ni=document.getElementById('novo-assunto-nome'),ci=document.getElementById('novo-assunto-cor');
+  const nome=ni.value.trim();if(!nome){toast('Digite o nome do assunto.','warning');return;}
+  const id=slugify(nome),todos=getTodosAssuntos();
+  if(todos.find(a=>a.id===id)){toast(`"${nome}" já existe.`,'warning');return;}
+  const custom=carregarAssuntosCustom();custom.push({id,nome,cor:ci.value});salvarAssuntosCustom(custom);
+  ni.value='';injetarCSSAssuntos();renderSelectsAssunto();renderFilterTags();renderAssuntosLista();toast(`Assunto "${nome}" adicionado!`,'success');
 }
-
-// Retorna lista completa (padrão + customizados)
-function getTodosAssuntos() {
-  return [...ASSUNTOS_PADRAO, ...carregarAssuntosCustom()];
-}
-
-// Gera CSS dinâmico para assuntos customizados
-function injetarCSSAssuntos() {
-  const custom = carregarAssuntosCustom();
-  let css = '';
-  custom.forEach(a => {
-    const bg = hexParaRgba(a.cor, 0.12);
-    css += `.tipo-${a.id}{background:${bg};color:${a.cor};}`;
+function adicionarAssuntosEmLote(){
+  const ta=document.getElementById('lote-assuntos-ta'),texto=ta.value.trim();
+  if(!texto){toast('Cole a lista de assuntos primeiro.','warning');return;}
+  const linhas=texto.split('\n').flatMap(l=>l.split(','));
+  const custom=carregarAssuntosCustom(),todos=getTodosAssuntos();
+  let adicionados=0,duplicados=0;
+  const CORES=['#7a3a8a','#2d7a4a','#8a3a1a','#1a5a7a','#6a7a1a','#7a1a5a','#1a7a6a','#5a3a7a'];
+  linhas.forEach(linha=>{
+    linha=linha.trim();if(!linha)return;
+    const corMatch=linha.match(/(#[0-9a-fA-F]{6})$/);
+    let cor=corMatch?corMatch[1]:CORES[(adicionados+custom.length)%CORES.length];
+    const nome=linha.replace(/(#[0-9a-fA-F]{6})$/,'').trim();if(!nome)return;
+    const id=slugify(nome);
+    if(todos.find(a=>a.id===id)||custom.find(a=>a.id===id)){duplicados++;return;}
+    custom.push({id,nome,cor});todos.push({id,nome,cor});adicionados++;
   });
-  let el = document.getElementById('css-assuntos-custom');
-  if (!el) { el = document.createElement('style'); el.id = 'css-assuntos-custom'; document.head.appendChild(el); }
-  el.textContent = css;
+  salvarAssuntosCustom(custom);ta.value='';injetarCSSAssuntos();renderSelectsAssunto();renderFilterTags();renderAssuntosLista();
+  if(adicionados>0)toast(`${adicionados} assunto(s) adicionado(s)!`,'success');
+  if(duplicados>0)toast(`${duplicados} já existia(m) — ignorado(s).`,'warning');
 }
-
-function hexParaRgba(hex, alpha) {
-  const r = parseInt(hex.slice(1,3),16);
-  const g = parseInt(hex.slice(3,5),16);
-  const b = parseInt(hex.slice(5,7),16);
-  return `rgba(${r},${g},${b},${alpha})`;
+function removerAssunto(id){
+  if(ASSUNTOS_PADRAO.find(a=>a.id===id)){toast('Assuntos padrão não podem ser removidos.','warning');return;}
+  const custom=carregarAssuntosCustom().filter(a=>a.id!==id);salvarAssuntosCustom(custom);
+  injetarCSSAssuntos();renderSelectsAssunto();renderFilterTags();renderAssuntosLista();toast('Assunto removido.','info');
 }
-
-function slugify(nome) {
-  return nome.toLowerCase()
-    .replace(/[áàãâä]/g,'a').replace(/[éèêë]/g,'e').replace(/[íìîï]/g,'i')
-    .replace(/[óòõôö]/g,'o').replace(/[úùûü]/g,'u').replace(/ç/g,'c').replace(/ñ/g,'n')
-    .replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
-}
-
-// ── Adicionar um assunto ──
-function adicionarAssunto() {
-  const nomeInput = document.getElementById('novo-assunto-nome');
-  const corInput  = document.getElementById('novo-assunto-cor');
-  const nome = nomeInput.value.trim();
-  if (!nome) { toast('Digite o nome do assunto.','warning'); return; }
-
-  const id = slugify(nome);
-  const todos = getTodosAssuntos();
-  if (todos.find(a => a.id === id)) { toast(`"${nome}" já existe.`,'warning'); return; }
-
-  const custom = carregarAssuntosCustom();
-  custom.push({ id, nome, cor: corInput.value });
-  salvarAssuntosCustom(custom);
-
-  nomeInput.value = '';
-  injetarCSSAssuntos();
-  renderSelectsAssunto();
-  renderFilterTags();
-  renderAssuntosLista();
-  toast(`Assunto "${nome}" adicionado!`,'success');
-}
-
-// ── Adicionar em lote ──
-function adicionarAssuntosEmLote() {
-  const ta = document.getElementById('lote-assuntos-ta');
-  const texto = ta.value.trim();
-  if (!texto) { toast('Cole a lista de assuntos primeiro.','warning'); return; }
-
-  // Aceita: uma linha por assunto, separados por vírgula, com cor opcional "#hex"
-  const linhas = texto.split('\n').flatMap(l => l.split(','));
-  const custom = carregarAssuntosCustom();
-  const todos = getTodosAssuntos();
-  let adicionados = 0, duplicados = 0;
-  const CORES_AUTO = ['#7a3a8a','#2d7a4a','#8a3a1a','#1a5a7a','#6a7a1a','#7a1a5a','#1a7a6a','#5a3a7a'];
-
-  linhas.forEach(linha => {
-    linha = linha.trim();
-    if (!linha) return;
-
-    // Extrai cor opcional: "Nome #ff0000"
-    const corMatch = linha.match(/(#[0-9a-fA-F]{6})$/);
-    let cor = corMatch ? corMatch[1] : CORES_AUTO[(adicionados + custom.length) % CORES_AUTO.length];
-    const nome = linha.replace(/(#[0-9a-fA-F]{6})$/, '').trim();
-    if (!nome) return;
-
-    const id = slugify(nome);
-    if (todos.find(a => a.id === id) || custom.find(a => a.id === id)) { duplicados++; return; }
-
-    custom.push({ id, nome, cor });
-    todos.push({ id, nome, cor }); // evita duplicatas dentro do mesmo lote
-    adicionados++;
-  });
-
-  salvarAssuntosCustom(custom);
-  ta.value = '';
-  injetarCSSAssuntos();
-  renderSelectsAssunto();
-  renderFilterTags();
-  renderAssuntosLista();
-
-  if (adicionados > 0) toast(`${adicionados} assunto(s) adicionado(s)!`,'success');
-  if (duplicados > 0) toast(`${duplicados} já existia(m) — ignorado(s).`,'warning');
-}
-
-// ── Remover assunto ──
-function removerAssunto(id) {
-  if (ASSUNTOS_PADRAO.find(a => a.id === id)) { toast('Assuntos padrão não podem ser removidos.','warning'); return; }
-  const custom = carregarAssuntosCustom().filter(a => a.id !== id);
-  salvarAssuntosCustom(custom);
-  injetarCSSAssuntos();
-  renderSelectsAssunto();
-  renderFilterTags();
-  renderAssuntosLista();
-  toast('Assunto removido.','info');
-}
-
-// ── Renderiza lista no modal ──
-function renderAssuntosLista() {
-  const lista = document.getElementById('assuntos-lista');
-  const count = document.getElementById('assuntos-count');
-  const todos = getTodosAssuntos();
-  const custom = carregarAssuntosCustom();
-  const usoMap = {};
-  DB.posts.forEach(p => { if(p.tipo) usoMap[p.tipo] = (usoMap[p.tipo]||0)+1; });
-  count.textContent = `(${todos.length})`;
-
-  lista.innerHTML = todos.map(a => {
-    const isPadrao = !!ASSUNTOS_PADRAO.find(x => x.id === a.id);
-    const uso = usoMap[a.id] || 0;
-    return `<div class="assunto-item">
-      <span class="assunto-color" style="background:${a.cor};" title="${a.cor}"></span>
-      <span class="assunto-label">${a.nome} ${isPadrao ? '<small style="color:var(--ghost);font-size:.65rem;">(padrão)</small>' : ''}</span>
-      <span class="assunto-count">${uso} post${uso!==1?'s':''}</span>
-      ${!isPadrao ? `<button class="assunto-del" onclick="removerAssunto('${a.id}')" title="Remover">✕</button>` : ''}
-    </div>`;
+function renderAssuntosLista(){
+  const lista=document.getElementById('assuntos-lista'),count=document.getElementById('assuntos-count');
+  const todos=getTodosAssuntos();const usoMap={};
+  DB.posts.forEach(p=>{if(p.tipo)usoMap[p.tipo]=(usoMap[p.tipo]||0)+1;});
+  count.textContent=`(${todos.length})`;
+  lista.innerHTML=todos.map(a=>{
+    const isPadrao=!!ASSUNTOS_PADRAO.find(x=>x.id===a.id),uso=usoMap[a.id]||0;
+    return`<div class="assunto-item"><span class="assunto-color" style="background:${a.cor};" title="${a.cor}"></span><span class="assunto-label">${a.nome}${isPadrao?' <small style="color:var(--ghost);font-size:.65rem;">(padrão)</small>':''}</span><span class="assunto-count">${uso} post${uso!==1?'s':''}</span>${!isPadrao?`<button class="assunto-del" onclick="removerAssunto('${a.id}')" title="Remover">✕</button>`:''}</div>`;
   }).join('');
 }
-
-function abrirGerenciarAssuntos() {
-  renderAssuntosLista();
-  abrirModal('modal-assuntos');
-}
+function abrirGerenciarAssuntos(){renderAssuntosLista();abrirModal('modal-assuntos');}
 
 // ============================================================
 // FIREBASE
 // ============================================================
-let _fbRetries = 0;
-(function inicializarFirebase() {
-  if (typeof firebase !== 'undefined') { iniciarApp(); return; }
-  if (++_fbRetries > 50) { document.getElementById('posts-list').innerHTML='<div style="padding:40px;text-align:center;color:var(--ghost);">Firebase não carregou. Use servidor local (Live Server).</div>'; return; }
-  setTimeout(inicializarFirebase, 100);
+let _fbRetries=0;
+(function inicializarFirebase(){
+  if(typeof firebase!=='undefined'){iniciarApp();return;}
+  if(++_fbRetries>50){document.getElementById('posts-list').innerHTML='<div style="padding:40px;text-align:center;color:var(--ghost);">Firebase não carregou. Use servidor local (Live Server).</div>';return;}
+  setTimeout(inicializarFirebase,100);
 })();
-
-function iniciarApp() {
+function iniciarApp(){
   firebase.initializeApp({
     apiKey:"AIzaSyDDGUikGRoJoVu3g0tSenKtZHffflApUWQ",
     authDomain:"agenda-diaria-6c1ac.firebaseapp.com",
@@ -866,110 +696,91 @@ function iniciarApp() {
     messagingSenderId:"38282868914",
     appId:"1:38282868914:web:a8332ed3fe258a41af71ab"
   });
-  window.db = firebase.firestore();
-  if (document.readyState==='complete'||document.readyState==='interactive') onAppReady();
-  else document.addEventListener('DOMContentLoaded', onAppReady);
+  window.db=firebase.firestore();
+  if(document.readyState==='complete'||document.readyState==='interactive')onAppReady();
+  else document.addEventListener('DOMContentLoaded',onAppReady);
 }
 
 // ============================================================
 // ESTADO
 // ============================================================
 var db;
-const DB = { posts:[], comments:[] };
-let filtroAtivo='todos', filtroTag=null, postAtivoId=null;
-let _listenersAtivos=false, _curtidasCache={}, feedTab='recentes';
-let _postsAleatorios=[], _ultimoEmbaralhamento=0, exportCache=null;
-let _editando=null, _excluindo=null;
+const DB={posts:[],comments:[]};
+let filtroAtivo='todos',filtroTag=null,postAtivoId=null,filtroPlaylistId=null;
+let _listenersAtivos=false,_curtidasCache={},feedTab='recentes';
+let _postsAleatorios=[],_ultimoEmbaralhamento=0,exportCache=null;
+let _editando=null,_excluindo=null;
 
 // ============================================================
 // UTILS
 // ============================================================
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-const ts  = () => new Date().toISOString();
-const tsF = iso => { const d=new Date(iso); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); };
-const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
-
-function toast(msg, tipo='info') {
-  const w=document.getElementById('toast-wrap');
-  const el=document.createElement('div'); el.className=`toast ${tipo}`; el.textContent=msg;
-  w.appendChild(el); requestAnimationFrame(()=>el.classList.add('show'));
-  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),400); },3500);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const ts=()=>new Date().toISOString();
+const tsF=iso=>{const d=new Date(iso);return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+function toast(msg,tipo='info'){
+  const w=document.getElementById('toast-wrap'),el=document.createElement('div');
+  el.className=`toast ${tipo}`;el.textContent=msg;w.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),400);},3500);
 }
-const fecharModal = id => document.getElementById(id)?.classList.remove('open');
-const abrirModal  = id => document.getElementById(id)?.classList.add('open');
-
-function linkify(text) {
-  return esc(text).replace(/(https?:\/\/[^\s<>"']+)/g, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
-}
-function parseTags(str) {
-  return [...new Set(str.toLowerCase().split(/[\s,;]+/).map(t=>t.replace(/^#+/,'').replace(/[^a-z0-9áàãâéêíóôõúüçñ_-]/gi,'').trim()).filter(t=>t.length>=2))];
-}
+const fecharModal=id=>document.getElementById(id)?.classList.remove('open');
+const abrirModal=id=>document.getElementById(id)?.classList.add('open');
+function linkify(text){return esc(text).replace(/(https?:\/\/[^\s<>"']+)/g,url=>`<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);}
+function parseTags(str){return[...new Set(str.toLowerCase().split(/[\s,;]+/).map(t=>t.replace(/^#+/,'').replace(/[^a-z0-9áàãâéêíóôõúüçñ_-]/gi,'').trim()).filter(t=>t.length>=2))];}
 
 // ============================================================
 // VÍDEO
 // ============================================================
-function extrairIdYouTube(url) {
-  if(!url) return null;
+function extrairIdYouTube(url){
+  if(!url)return null;
   const ps=[/(?:youtube\.com\/watch\?v=)([\w-]+)/,/(?:youtu\.be\/)([\w-]+)/,/(?:youtube\.com\/embed\/)([\w-]+)/,/(?:youtube\.com\/shorts\/)([\w-]+)/];
-  for(const p of ps){ const m=url.match(p); if(m) return m[1]; }
-  return null;
+  for(const p of ps){const m=url.match(p);if(m)return m[1];}return null;
 }
-function gerarEmbedYouTube(id) { return `<iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>`; }
-function previsualizarVideoModal() {
-  const url=document.getElementById('video-url').value.trim();
-  const id=extrairIdYouTube(url);
+function gerarEmbedYouTube(id){return`<iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>`;}
+function previsualizarVideoModal(){
+  const url=document.getElementById('video-url').value.trim(),id=extrairIdYouTube(url);
   const c=document.getElementById('video-preview-modal');
-  if(id){ c.innerHTML=gerarEmbedYouTube(id); c.style.display='block'; toast('Prévia carregada!','success'); }
-  else if(url) toast('URL inválida.','warning');
-  else c.style.display='none';
+  if(id){c.innerHTML=gerarEmbedYouTube(id);c.style.display='block';toast('Prévia carregada!','success');}
+  else if(url)toast('URL inválida.','warning');else c.style.display='none';
 }
-function limparVideoModal() { document.getElementById('video-url').value=''; document.getElementById('video-preview-modal').style.display='none'; }
+function limparVideoModal(){document.getElementById('video-url').value='';document.getElementById('video-preview-modal').style.display='none';}
+function previsualizarVideoEdicao(){
+  const url=document.getElementById('edit-video-url').value.trim(),id=extrairIdYouTube(url);
+  const c=document.getElementById('video-preview-edicao');
+  if(id){c.innerHTML=gerarEmbedYouTube(id);c.style.display='block';toast('Prévia carregada!','success');}
+  else if(url)toast('URL inválida.','warning');else{toast('Cole uma URL do YouTube primeiro.','warning');c.style.display='none';}
+}
+function limparVideoEdicao(){document.getElementById('edit-video-url').value='';const c=document.getElementById('video-preview-edicao');c.innerHTML='';c.style.display='none';}
 
 // ============================================================
 // CRIAR POST
 // ============================================================
-function abrirModalPostagem() {
-  document.getElementById('np-texto').value='';
-  document.getElementById('np-tags').value='';
-  document.getElementById('video-url').value='';
-  const prev=document.getElementById('video-preview-modal');
-  prev.innerHTML='';
-  prev.style.display='none';
+function abrirModalPostagem(){
+  document.getElementById('np-texto').value='';document.getElementById('np-tags').value='';document.getElementById('video-url').value='';
+  const p=document.getElementById('video-preview-modal');p.innerHTML='';p.style.display='none';
   abrirModal('modal-postagem');
 }
-
-function previsualizarVideoEdicao() {
-  const url=document.getElementById('edit-video-url').value.trim();
-  const id=extrairIdYouTube(url);
-  const c=document.getElementById('video-preview-edicao');
-  if(id){ c.innerHTML=gerarEmbedYouTube(id); c.style.display='block'; toast('Prévia carregada!','success'); }
-  else if(url) toast('URL inválida.','warning');
-  else { toast('Cole uma URL do YouTube primeiro.','warning'); c.style.display='none'; }
-}
-function limparVideoEdicao() { document.getElementById('edit-video-url').value=''; const c=document.getElementById('video-preview-edicao'); c.innerHTML=''; c.style.display='none'; }
-
-async function criarPostModal() {
+async function criarPostModal(){
   const texto=document.getElementById('np-texto').value.trim();
   const tipo=document.getElementById('np-tipo').value;
   const tagsRaw=document.getElementById('np-tags').value;
   const videoUrl=document.getElementById('video-url').value.trim();
-  if(!texto&&!videoUrl){ toast('Escreva algo ou adicione um vídeo.','warning'); return; }
+  if(!texto&&!videoUrl){toast('Escreva algo ou adicione um vídeo.','warning');return;}
   const tagsDoTexto=(texto.match(/#[\wáàãâéêíóôõúüçñ-]+/gi)||[]).map(t=>t.slice(1).toLowerCase());
   const tags=[...new Set([...parseTags(tagsRaw),...tagsDoTexto])].slice(0,10);
   const videoId=extrairIdYouTube(videoUrl);
   const p={id:uid(),conteudo:texto||(videoId?'📹 Vídeo':''),tipo,tags,timestamp:ts(),status:'ativo',inedito:true};
-  if(videoId) p.video={url:videoUrl,videoId,embed:gerarEmbedYouTube(videoId)};
+  if(videoId)p.video={url:videoUrl,videoId,embed:gerarEmbedYouTube(videoId)};
   await db.collection('posts').doc(p.id).set(p);
-  fecharModal('modal-postagem');
-  toast('Post publicado!','success');
-  _postsAleatorios=[]; _ultimoEmbaralhamento=0;
-  carregarLote(true);
+  fecharModal('modal-postagem');toast('Post publicado!','success');
+  _postsAleatorios=[];_ultimoEmbaralhamento=0;carregarLote(true);
 }
 
 // ============================================================
 // EXPORTAR / IMPORTAR
 // ============================================================
-function getConteudoInedito() {
+function getConteudoInedito(){
   const r=[];
   DB.posts.filter(p=>p.inedito&&p.status!=='excluido').forEach(p=>{r.push({tipo:'post',id:p.id,conteudo:p.conteudo,tipoPosta:p.tipo,tags:p.tags||[],contexto:`[POST — ${p.tipo}]\n${p.conteudo}`});});
   DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito'&&!c.excluido).forEach(c=>{
@@ -982,51 +793,47 @@ function getConteudoInedito() {
   });
   return r;
 }
-
-function abrirExportar() {
+function abrirExportar(){
   const its=getConteudoInedito();
   if(!its.length){toast('Nenhum conteúdo inédito.','warning');return;}
   exportCache=its;
   document.getElementById('exportar-json').textContent=JSON.stringify({exportadoEm:ts(),tarefas:its.map(i=>i.tipo==='post'?{tarefaId:`task_post_${i.id}`,tipo:'responder_post',post:i.conteudo,tipoPosta:i.tipoPosta,tags:i.tags,contexto:i.contexto}:{tarefaId:`task_comment_${i.id}`,tipo:'responder_comentario',comentario:i.conteudo,contexto:i.contexto})},null,2);
   abrirModal('modal-exportar');
 }
-async function copiarExportacao() { try{await navigator.clipboard.writeText(document.getElementById('exportar-json').textContent);toast('JSON copiado!','success');}catch{toast('Selecione o texto manualmente.','error');} }
-async function confirmarExportacao() {
-  if(!exportCache) return;
+async function copiarExportacao(){try{await navigator.clipboard.writeText(document.getElementById('exportar-json').textContent);toast('JSON copiado!','success');}catch{toast('Selecione o texto manualmente.','error');}}
+async function confirmarExportacao(){
+  if(!exportCache)return;
   for(const item of exportCache){
     if(item.tipo==='comentario'){await db.collection('comments').doc(item.id).update({statusLeitura:'processado_pendente'});const c=DB.comments.find(x=>x.id===item.id);if(c)c.statusLeitura='processado_pendente';}
     else{await db.collection('posts').doc(item.id).update({inedito:false,status:'exportado'});const p=DB.posts.find(x=>x.id===item.id);if(p){p.inedito=false;p.status='exportado';}}
   }
-  exportCache=null; toast('Itens marcados como exportados!','success'); fecharModal('modal-exportar'); atualizarContadores(); renderFeed();
+  exportCache=null;toast('Itens marcados como exportados!','success');fecharModal('modal-exportar');atualizarContadores();renderFeed();
 }
-
 function abrirImportar(){document.getElementById('importar-json').value='';abrirModal('modal-importar');}
-async function executarImportacao() {
+async function executarImportacao(){
   const txt=document.getElementById('importar-json').value.trim();
   if(!txt){toast('Cole o JSON antes.','warning');return;}
-  let dados; try{dados=JSON.parse(txt);}catch{toast('JSON inválido.','error');return;}
-  const respostas=dados.respostas||[];
-  let ok=0,nao=[];
+  let dados;try{dados=JSON.parse(txt);}catch{toast('JSON inválido.','error');return;}
+  const respostas=dados.respostas||[];let ok=0,nao=[];
   for(const r of respostas){
-    const{tarefaId,autor,tipo,conteudo}=r;
-    if(!tarefaId||!conteudo)continue;
+    const{tarefaId,autor,tipo,conteudo}=r;if(!tarefaId||!conteudo)continue;
     let postId=null,parentId=null;
     if(tarefaId.startsWith('task_post_')){const id=tarefaId.replace('task_post_','');const p=DB.posts.find(x=>x.id===id);if(!p){nao.push(tarefaId);continue;}postId=id;await db.collection('posts').doc(id).update({inedito:false,status:'respondido'});p.inedito=false;}
     else if(tarefaId.startsWith('task_comment_')){const id=tarefaId.replace('task_comment_','');const c=DB.comments.find(x=>x.id===id);if(!c){nao.push(tarefaId);continue;}postId=c.postId;parentId=c.id;await db.collection('comments').doc(id).update({statusLeitura:'processado'});c.statusLeitura='processado';}
     else{nao.push(tarefaId);continue;}
     const nc={id:uid(),postId,parentId,autor:autor||'IA',conteudo,tipo:tipo||'resposta',origem:'ia',statusLeitura:'processado',timestamp:ts()};
-    await db.collection('comments').doc(nc.id).set(nc); DB.comments.push(nc); ok++;
+    await db.collection('comments').doc(nc.id).set(nc);DB.comments.push(nc);ok++;
   }
   if(ok>0)toast(`${ok} resposta(s) importada(s)!`,'success');
   if(nao.length){toast(`${nao.length} ID(s) não encontrado(s).`,'warning');console.warn('IDs não encontrados:',nao);}
-  fecharModal('modal-importar'); atualizarContadores(); renderFeed(); if(postAtivoId)renderDrawer(postAtivoId);
+  fecharModal('modal-importar');atualizarContadores();renderFeed();if(postAtivoId)renderDrawer(postAtivoId);
 }
 
 // ============================================================
 // EDIÇÃO / EXCLUSÃO
 // ============================================================
-function abrirEditarPost(postId) {
-  const p=DB.posts.find(x=>x.id===postId); if(!p)return;
+function abrirEditarPost(postId){
+  const p=DB.posts.find(x=>x.id===postId);if(!p)return;
   _editando={tipo:'post',id:postId};
   document.getElementById('edit-modal-title').textContent='✏️ Editar Post';
   document.getElementById('edit-conteudo').value=p.conteudo;
@@ -1034,16 +841,15 @@ function abrirEditarPost(postId) {
   document.getElementById('edit-tipo').value=p.tipo;
   document.getElementById('edit-tags-row').style.display='block';
   document.getElementById('edit-tags').value=(p.tags||[]).map(t=>'#'+t).join(' ');
-  // Campo de vídeo
   document.getElementById('edit-video-row').style.display='block';
   document.getElementById('edit-video-url').value=p.video?.url||'';
   const prev=document.getElementById('video-preview-edicao');
-  if(p.video?.embed){ prev.innerHTML=p.video.embed; prev.style.display='block'; }
-  else { prev.innerHTML=''; prev.style.display='none'; }
+  if(p.video?.embed){prev.innerHTML=p.video.embed;prev.style.display='block';}
+  else{prev.innerHTML='';prev.style.display='none';}
   abrirModal('modal-editar');
 }
-function abrirEditarComentario(id) {
-  const c=DB.comments.find(x=>x.id===id); if(!c)return;
+function abrirEditarComentario(id){
+  const c=DB.comments.find(x=>x.id===id);if(!c)return;
   _editando={tipo:'comentario',id};
   document.getElementById('edit-modal-title').textContent='✏️ Editar Comentário';
   document.getElementById('edit-conteudo').value=c.conteudo;
@@ -1055,29 +861,28 @@ function abrirEditarComentario(id) {
   document.getElementById('video-preview-edicao').style.display='none';
   abrirModal('modal-editar');
 }
-async function salvarEdicao() {
+async function salvarEdicao(){
   if(!_editando)return;
   const conteudo=document.getElementById('edit-conteudo').value.trim();
-  if(!conteudo && _editando.tipo==='comentario'){toast('Conteúdo não pode ser vazio.','warning');return;}
+  if(!conteudo&&_editando.tipo==='comentario'){toast('Conteúdo não pode ser vazio.','warning');return;}
   if(_editando.tipo==='post'){
     const tipo=document.getElementById('edit-tipo').value;
     const tags=[...new Set([...parseTags(document.getElementById('edit-tags').value),...(conteudo.match(/#[\wáàãâéêíóôõúüçñ-]+/gi)||[]).map(t=>t.slice(1).toLowerCase())])].slice(0,10);
     const videoUrl=document.getElementById('edit-video-url').value.trim();
     const videoId=extrairIdYouTube(videoUrl);
-    if(!conteudo && !videoId){toast('Escreva algo ou adicione um vídeo.','warning');return;}
+    if(!conteudo&&!videoId){toast('Escreva algo ou adicione um vídeo.','warning');return;}
     const upd={conteudo:conteudo||(videoId?'📹 Vídeo':''),tipo,tags,editadoEm:ts()};
-    if(videoId) upd.video={url:videoUrl,videoId,embed:gerarEmbedYouTube(videoId)};
-    else upd.video=null;
+    if(videoId)upd.video={url:videoUrl,videoId,embed:gerarEmbedYouTube(videoId)};else upd.video=null;
     await db.collection('posts').doc(_editando.id).update(upd);
-    const p=DB.posts.find(x=>x.id===_editando.id); if(p){Object.assign(p,upd);}
+    const p=DB.posts.find(x=>x.id===_editando.id);if(p)Object.assign(p,upd);
     toast('Post atualizado!','success');
-  } else {
+  }else{
     if(!conteudo){toast('Conteúdo não pode ser vazio.','warning');return;}
     await db.collection('comments').doc(_editando.id).update({conteudo,editadoEm:ts()});
-    const c=DB.comments.find(x=>x.id===_editando.id); if(c){c.conteudo=conteudo;c.editadoEm=ts();}
+    const c=DB.comments.find(x=>x.id===_editando.id);if(c){c.conteudo=conteudo;c.editadoEm=ts();}
     toast('Comentário atualizado!','success');
   }
-  fecharModal('modal-editar'); _editando=null; _postsAleatorios=[]; renderFeed(); if(postAtivoId)renderDrawer(postAtivoId);
+  fecharModal('modal-editar');_editando=null;_postsAleatorios=[];renderFeed();if(postAtivoId)renderDrawer(postAtivoId);
 }
 function abrirConfirmarExclusao(){if(!_editando)return;_excluindo={..._editando};fecharModal('modal-editar');abrirModal('modal-confirmar');}
 async function confirmarExclusao(){
@@ -1087,12 +892,12 @@ async function confirmarExclusao(){
     const p=DB.posts.find(x=>x.id===_excluindo.id);if(p){p.status='excluido';p.conteudo='[Post removido]';p.tags=[];}
     if(postAtivoId===_excluindo.id)fecharDrawer();
     toast('Post excluído!','success');
-  } else {
+  }else{
     await db.collection('comments').doc(_excluindo.id).update({conteudo:'[Comentário removido]',excluido:true});
     const c=DB.comments.find(x=>x.id===_excluindo.id);if(c){c.conteudo='[Comentário removido]';c.excluido=true;}
     toast('Comentário excluído!','success');
   }
-  fecharModal('modal-confirmar'); _excluindo=null; _postsAleatorios=[]; renderFeed(); if(postAtivoId)renderDrawer(postAtivoId);
+  fecharModal('modal-confirmar');_excluindo=null;_postsAleatorios=[];renderFeed();if(postAtivoId)renderDrawer(postAtivoId);
 }
 
 // ============================================================
@@ -1102,26 +907,204 @@ function getUserId(){let id=localStorage.getItem('st-uid');if(!id){id='u_'+uid()
 async function carregarCurtidas(){try{const s=await db.collection('curtidas').doc(getUserId()).get();_curtidasCache=s.exists?s.data():{};}catch{try{_curtidasCache=JSON.parse(localStorage.getItem('st-curtidas')||'{}');}catch{_curtidasCache={};}}}
 async function salvarCurtidas(){try{await db.collection('curtidas').doc(getUserId()).set(_curtidasCache);localStorage.setItem('st-curtidas',JSON.stringify(_curtidasCache));}catch{localStorage.setItem('st-curtidas',JSON.stringify(_curtidasCache));}}
 async function toggleCurtir(postId){
-  const p=DB.posts.find(x=>x.id===postId); if(!p||p.status==='excluido')return;
+  const p=DB.posts.find(x=>x.id===postId);if(!p||p.status==='excluido')return;
   if(_curtidasCache[postId]){delete _curtidasCache[postId];p.curtidas=Math.max(0,(p.curtidas||0)-1);await db.collection('posts').doc(postId).update({curtidas:p.curtidas});}
   else{_curtidasCache[postId]={ts:Date.now()};p.curtidas=(p.curtidas||0)+1;await db.collection('posts').doc(postId).update({curtidas:p.curtidas});}
-  await salvarCurtidas(); renderFeed(); if(postAtivoId===postId)renderDrawer(postId);
+  await salvarCurtidas();renderFeed();if(postAtivoId===postId)renderDrawer(postId);
+}
+
+// ============================================================
+// PLAYLISTS — Firebase
+// ============================================================
+let _playlistsCache=[];  // [{id, nome, emoji, criadaEm, postIds:[]}]
+let _postSalvando=null;
+let _emojiPlaylistSel='📚';
+let _playlistsListener=null;
+
+function selecionarEmojiPlaylist(btn){
+  document.querySelectorAll('.playlist-emoji-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _emojiPlaylistSel=btn.dataset.emoji;
+}
+
+// Inicia listener em tempo real para playlists do usuário
+function iniciarListenerPlaylists(){
+  if(_playlistsListener)return;
+  _playlistsListener=db.collection('playlists')
+    .where('userId','==',getUserId())
+    .orderBy('criadaEm','desc')
+    .onSnapshot(snap=>{
+      _playlistsCache=snap.docs.map(d=>({id:d.id,...d.data()}));
+      renderPlaylistsSidebar();
+      // Atualiza modal se estiver aberto
+      if(document.getElementById('modal-playlist').classList.contains('open')&&_postSalvando){
+        renderPlaylistsModal(_postSalvando);
+      }
+      if(document.getElementById('modal-playlists-gerenciar').classList.contains('open')){
+        renderPlaylistsGerenciar();
+      }
+    },err=>{
+      console.warn('Erro ao carregar playlists:',err);
+    });
+}
+
+// Abre o modal de salvar em playlist
+async function abrirSalvarPlaylist(postId){
+  _postSalvando=postId;
+  // Reseta emoji
+  _emojiPlaylistSel='📚';
+  document.querySelectorAll('.playlist-emoji-btn').forEach(b=>b.classList.remove('sel'));
+  document.querySelector('.playlist-emoji-btn[data-emoji="📚"]')?.classList.add('sel');
+  document.getElementById('nova-playlist-nome').value='';
+  renderPlaylistsModal(postId);
+  abrirModal('modal-playlist');
+}
+
+// Renderiza a lista de playlists no modal
+function renderPlaylistsModal(postId){
+  const container=document.getElementById('playlists-lista-modal');
+  if(!_playlistsCache.length){
+    container.innerHTML='<div class="playlist-empty">Nenhuma playlist ainda.<br>Crie uma abaixo! 👇</div>';
+    return;
+  }
+  container.innerHTML=`
+    <div class="playlist-section-title">Suas playlists</div>
+    ${_playlistsCache.map(pl=>{
+      const salvo=(pl.postIds||[]).includes(postId);
+      return`<div class="playlist-item${salvo?' saved':''}" onclick="togglePostNaPlaylist('${pl.id}','${postId}')">
+        <span class="playlist-item-icon">${pl.emoji||'📚'}</span>
+        <span class="playlist-item-name">${esc(pl.nome)}</span>
+        <span class="playlist-item-count">${(pl.postIds||[]).length} post${(pl.postIds||[]).length!==1?'s':''}</span>
+        <span class="playlist-item-check">${salvo?'✓':''}</span>
+      </div>`;
+    }).join('')}`;
+}
+
+// Adiciona ou remove post de uma playlist
+async function togglePostNaPlaylist(playlistId,postId){
+  const pl=_playlistsCache.find(x=>x.id===playlistId);if(!pl)return;
+  const postIds=[...(pl.postIds||[])];
+  const idx=postIds.indexOf(postId);
+  if(idx>=0){
+    postIds.splice(idx,1);
+    await db.collection('playlists').doc(playlistId).update({postIds});
+    toast('Post removido da playlist.','warning');
+  }else{
+    postIds.push(postId);
+    await db.collection('playlists').doc(playlistId).update({postIds});
+    toast('✅ Post salvo na playlist!','success');
+  }
+  // Atualiza cache local imediatamente
+  pl.postIds=postIds;
+  renderPlaylistsModal(postId);
+  renderPlaylistsSidebar();
+  renderFeed();
+}
+
+// Cria nova playlist e já adiciona o post
+async function criarESalvarPlaylist(){
+  const nome=document.getElementById('nova-playlist-nome').value.trim();
+  if(!nome){toast('Digite o nome da playlist.','warning');return;}
+  if(_playlistsCache.find(p=>p.nome.toLowerCase()===nome.toLowerCase())){toast('Já existe uma playlist com esse nome.','warning');return;}
+  const nova={
+    id:uid(),
+    userId:getUserId(),
+    nome,
+    emoji:_emojiPlaylistSel,
+    criadaEm:ts(),
+    postIds:_postSalvando?[_postSalvando]:[],
+  };
+  await db.collection('playlists').doc(nova.id).set(nova);
+  document.getElementById('nova-playlist-nome').value='';
+  toast(`Playlist "${nome}" criada e post salvo!`,'success');
+}
+
+// Exclui playlist
+async function excluirPlaylist(playlistId){
+  if(!confirm('Excluir esta playlist? Os posts não serão apagados.'))return;
+  await db.collection('playlists').doc(playlistId).delete();
+  toast('Playlist excluída.','warning');
+}
+
+// Sidebar: lista de playlists
+function renderPlaylistsSidebar(){
+  const sb=document.getElementById('playlists-sidebar');
+  if(!_playlistsCache.length){
+    sb.innerHTML='<div style="color:#4a4030;font-size:.7rem;padding:4px 10px;">Nenhuma playlist.</div>';
+    return;
+  }
+  sb.innerHTML=_playlistsCache.map(pl=>`
+    <div class="playlist-sidebar-item${filtroPlaylistId===pl.id?' active':''}" onclick="filtrarPorPlaylist('${pl.id}')">
+      <span>${pl.emoji||'📚'}</span>
+      <span style="flex:1;">${esc(pl.nome)}</span>
+      <span style="font-size:.6rem;color:${filtroPlaylistId===pl.id?'var(--gold)':'var(--ghost)'};">${(pl.postIds||[]).length}</span>
+    </div>`).join('');
+}
+
+// Filtra feed pela playlist
+function filtrarPorPlaylist(playlistId){
+  if(filtroPlaylistId===playlistId){
+    filtroPlaylistId=null;
+    feedTab='recentes';
+    document.querySelectorAll('.feed-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  }else{
+    filtroPlaylistId=playlistId;
+    feedTab='playlist';
+    document.querySelectorAll('.feed-tab').forEach(t=>t.classList.remove('active'));
+  }
+  renderPlaylistsSidebar();
+  _postsAleatorios=[];
+  renderFeed();
+}
+
+// Modal gerenciar todas as playlists
+function abrirModalPlaylistsGerenciar(){
+  renderPlaylistsGerenciar();
+  abrirModal('modal-playlists-gerenciar');
+}
+function renderPlaylistsGerenciar(){
+  const container=document.getElementById('playlists-gerenciar-lista');
+  if(!_playlistsCache.length){
+    container.innerHTML='<div class="playlist-empty">Nenhuma playlist criada ainda.</div>';
+    return;
+  }
+  container.innerHTML=_playlistsCache.map(pl=>`
+    <div class="assunto-item" style="margin-bottom:8px;">
+      <span style="font-size:1.2rem;">${pl.emoji||'📚'}</span>
+      <span class="assunto-label">${esc(pl.nome)}</span>
+      <span class="assunto-count">${(pl.postIds||[]).length} post${(pl.postIds||[]).length!==1?'s':''}</span>
+      <span style="font-family:var(--mono);font-size:.6rem;color:var(--ghost);">${pl.criadaEm?tsF(pl.criadaEm):''}</span>
+      <button class="assunto-del" onclick="excluirPlaylist('${pl.id}')" title="Excluir playlist">🗑</button>
+    </div>`).join('');
+}
+
+// Verifica se post está em alguma playlist do usuário
+function postEstaSalvo(postId){
+  return _playlistsCache.some(pl=>(pl.postIds||[]).includes(postId));
 }
 
 // ============================================================
 // RENDER FEED
 // ============================================================
-function renderFeed() {
-  const container=document.getElementById('posts-list'); if(!container)return;
+function renderFeed(){
+  const container=document.getElementById('posts-list');if(!container)return;
   let posts=[...DB.posts];
-  if(feedTab==='aleatorio') posts=getPostsAleatorios();
-  else if(feedTab==='curtidos') posts=posts.filter(p=>_curtidasCache[p.id]);
-  if(filtroAtivo!=='todos') posts=posts.filter(p=>p.tipo===filtroAtivo);
-  if(filtroTag) posts=posts.filter(p=>Array.isArray(p.tags)&&p.tags.includes(filtroTag));
+
+  if(feedTab==='aleatorio')posts=getPostsAleatorios();
+  else if(feedTab==='curtidos')posts=posts.filter(p=>_curtidasCache[p.id]);
+  else if(feedTab==='salvos')posts=posts.filter(p=>postEstaSalvo(p.id));
+  else if(feedTab==='playlist'&&filtroPlaylistId){
+    const pl=_playlistsCache.find(x=>x.id===filtroPlaylistId);
+    const ids=pl?.postIds||[];
+    posts=posts.filter(p=>ids.includes(p.id));
+  }
+
+  if(filtroAtivo!=='todos')posts=posts.filter(p=>p.tipo===filtroAtivo);
+  if(filtroTag)posts=posts.filter(p=>Array.isArray(p.tags)&&p.tags.includes(filtroTag));
   posts=posts.filter(p=>p.status!=='excluido');
 
   if(!posts.length){
-    const msgs={recentes:'Nenhum post ainda. Clique no ✏️ para criar!',aleatorio:'Nenhum post para mostrar.',curtidos:'Você ainda não curtiu nenhum post.'};
+    const msgs={recentes:'Nenhum post ainda. Clique no ✏️ para criar!',aleatorio:'Nenhum post para mostrar.',curtidos:'Você ainda não curtiu nenhum post.',salvos:'Você ainda não salvou nenhum post em playlists.',playlist:'Esta playlist está vazia.'};
     container.innerHTML=`<div class="empty-feed"><div class="empty-icon">📖</div><div class="empty-text">${msgs[feedTab]||'Nenhum post encontrado.'}</div></div>`;
     return;
   }
@@ -1129,12 +1112,13 @@ function renderFeed() {
   container.innerHTML=posts.map(p=>{
     const total=DB.comments.filter(c=>c.postId===p.id&&!c.excluido).length;
     const curtido=!!_curtidasCache[p.id];
+    const salvo=postEstaSalvo(p.id);
     const sc=p.inedito?'s-inedito':'s-processado';
     const st=p.inedito?'Sem resposta':'Respondido';
     const ac=postAtivoId===p.id?'active':'';
     const tags=(p.tags||[]).map(t=>`<span class="tag-chip" onclick="event.stopPropagation();filtrarTag('${t}')">#${t}</span>`).join('');
     const videoHtml=p.video?`<div class="post-video" onclick="event.stopPropagation()">${p.video.embed}</div>`:'';
-    return `<div class="post-card ${ac}" id="pc-${p.id}">
+    return`<div class="post-card ${ac}" id="pc-${p.id}">
       <div class="post-head">
         <span class="tipo-badge tipo-${p.tipo}">${p.tipo}</span>
         <span class="post-ts">${tsF(p.timestamp)}${p.editadoEm?' ✎':''}</span>
@@ -1147,6 +1131,7 @@ function renderFeed() {
       <div class="post-foot">
         <button class="btn-curtir${curtido?' curtido':''}" onclick="event.stopPropagation();toggleCurtir('${p.id}')">${curtido?'❤':'🤍'} ${p.curtidas||0}</button>
         <button class="btn btn-ghost btn-sm" onclick="abrirThread('${p.id}')">🧵 ${total} comentário${total!==1?'s':''}</button>
+        <button class="btn-foot-action btn-salvar-post${salvo?' salvo':''}" onclick="event.stopPropagation();abrirSalvarPlaylist('${p.id}')" title="${salvo?'Salvo em playlist':'Salvar em playlist'}">${salvo?'🔖 Salvo':'🔖 Salvar'}</button>
         <button class="btn-foot-action" onclick="event.stopPropagation();abrirCompartilhar('${p.id}')" title="Compartilhar post">📤</button>
         <button class="btn-foot-action btn-aprofundar" onclick="event.stopPropagation();aprofundarPost('${p.id}')" title="Aprofundar tema">🔬 Aprofundar</button>
       </div>
@@ -1161,7 +1146,7 @@ function renderFeed() {
 // ============================================================
 function abrirThread(postId){
   if(postAtivoId){document.getElementById('pc-'+postAtivoId)?.classList.remove('active');}
-  postAtivoId=postId; document.getElementById('pc-'+postId)?.classList.add('active');
+  postAtivoId=postId;document.getElementById('pc-'+postId)?.classList.add('active');
   const p=DB.posts.find(x=>x.id===postId);
   if(p){document.getElementById('drawer-title').textContent='Thread — '+p.tipo;document.getElementById('drawer-preview').textContent=(p.conteudo||'').substring(0,100);}
   renderDrawer(postId);
@@ -1172,10 +1157,11 @@ function fecharDrawer(){document.getElementById('thread-overlay').classList.remo
 function toggleInlineDrawer(id){document.getElementById('inline-drawer-'+id)?.classList.toggle('open');}
 
 function renderDrawer(postId){
-  const p=DB.posts.find(x=>x.id===postId); if(!p)return;
+  const p=DB.posts.find(x=>x.id===postId);if(!p)return;
   const all=DB.comments.filter(c=>c.postId===postId&&!c.excluido);
   const raiz=all.filter(c=>!c.parentId);
   const curtido=!!_curtidasCache[p.id];
+  const salvo=postEstaSalvo(p.id);
   const tags=(p.tags||[]).map(t=>`<span class="tag-chip" onclick="filtrarTag('${t}')">#${t}</span>`).join('');
   document.getElementById('drawer-content').innerHTML=`
     <div class="drawer-post-card">
@@ -1190,6 +1176,7 @@ function renderDrawer(postId){
       ${tags?`<div class="tag-chips" style="padding:8px 14px 0;">${tags}</div>`:''}
       <div class="drawer-post-foot">
         <button class="btn-curtir${curtido?' curtido':''}" onclick="toggleCurtir('${p.id}')">${curtido?'❤':'🤍'} ${p.curtidas||0}</button>
+        <button class="btn-foot-action btn-salvar-post${salvo?' salvo':''}" onclick="abrirSalvarPlaylist('${p.id}')">${salvo?'🔖 Salvo':'🔖 Salvar'}</button>
         <button class="btn btn-ghost btn-sm" onclick="abrirCompartilhar('${p.id}')">📤 Compartilhar</button>
         <button class="btn btn-sage btn-sm" onclick="aprofundarPost('${p.id}')">🔬 Aprofundar</button>
       </div>
@@ -1203,7 +1190,7 @@ function renderDrawer(postId){
 function renderCommentNode(c,all,postId,depth=0){
   const replies=all.filter(x=>x.parentId===c.id);
   const excluido=c.excluido||false;
-  return `<div class="comment-node${depth>0?' nested':''}" id="cn-${c.id}">
+  return`<div class="comment-node${depth>0?' nested':''}" id="cn-${c.id}">
     <div class="c-bubble">
       <div class="c-head">
         <span class="c-autor">${esc(c.autor)}</span>
@@ -1211,10 +1198,7 @@ function renderCommentNode(c,all,postId,depth=0){
         ${!excluido?`<button class="btn-edit" onclick="abrirEditarComentario('${c.id}')" style="margin-left:auto;">✏️</button>`:''}
       </div>
       <div class="c-body">${excluido?`<em style="color:#4a4030;">${esc(c.conteudo)}</em>`:linkify(c.conteudo)}</div>
-      ${!excluido?`<div class="c-foot">
-        <button class="btn-dark-ghost" onclick="toggleInlineDrawer('${c.id}')">↩ Responder</button>
-        <span class="c-ts">${tsF(c.timestamp)}${c.editadoEm?' ✎':''}</span>
-      </div>`:''}
+      ${!excluido?`<div class="c-foot"><button class="btn-dark-ghost" onclick="toggleInlineDrawer('${c.id}')">↩ Responder</button><span class="c-ts">${tsF(c.timestamp)}${c.editadoEm?' ✎':''}</span></div>`:''}
     </div>
     ${!excluido?`<div class="inline-composer" id="inline-drawer-${c.id}">
       <textarea placeholder="Sua resposta…"></textarea>
@@ -1230,18 +1214,18 @@ function renderCommentNode(c,all,postId,depth=0){
 
 async function adicionarManualPost(){
   if(!postAtivoId)return;
-  const ta=document.getElementById('mini-ta'); if(!ta.value.trim()){toast('Escreva um comentário.','warning');return;}
+  const ta=document.getElementById('mini-ta');if(!ta.value.trim()){toast('Escreva um comentário.','warning');return;}
   const c={id:uid(),postId:postAtivoId,parentId:null,autor:'Usuário',conteudo:ta.value,tipo:document.getElementById('mini-tipo').value,origem:'manual',statusLeitura:'inedito',timestamp:ts()};
-  await db.collection('comments').doc(c.id).set(c); DB.comments.push(c);
-  ta.value=''; toast('Comentário adicionado!','success'); renderDrawer(postAtivoId); renderFeed(); atualizarContadores();
+  await db.collection('comments').doc(c.id).set(c);DB.comments.push(c);
+  ta.value='';toast('Comentário adicionado!','success');renderDrawer(postAtivoId);renderFeed();atualizarContadores();
 }
 async function adicionarManualReplyDrawer(postId,parentId){
-  const cont=document.getElementById('inline-drawer-'+parentId); if(!cont)return;
-  const ta=cont.querySelector('textarea'); const sel=cont.querySelector('select');
+  const cont=document.getElementById('inline-drawer-'+parentId);if(!cont)return;
+  const ta=cont.querySelector('textarea'),sel=cont.querySelector('select');
   if(!ta.value.trim()){toast('Escreva uma resposta.','warning');return;}
   const c={id:uid(),postId,parentId,autor:'Usuário',conteudo:ta.value,tipo:sel?.value||'resposta',origem:'manual',statusLeitura:'inedito',timestamp:ts()};
-  await db.collection('comments').doc(c.id).set(c); DB.comments.push(c);
-  ta.value=''; cont.classList.remove('open'); toast('Resposta adicionada!','success'); renderDrawer(postId); renderFeed(); atualizarContadores();
+  await db.collection('comments').doc(c.id).set(c);DB.comments.push(c);
+  ta.value='';cont.classList.remove('open');toast('Resposta adicionada!','success');renderDrawer(postId);renderFeed();atualizarContadores();
 }
 
 // ============================================================
@@ -1255,24 +1239,21 @@ function renderTagsSidebar(){
   sidebar.innerHTML=!sorted.length?'<div style="color:#4a4030;font-size:.7rem;">Nenhuma tag ainda.</div>':
     sorted.map(([t,n])=>`<div class="assunto-tag-sidebar${filtroTag===t?' active':''}" onclick="filtrarTag('${t}')"><span>#${t}</span><span style="font-size:.65rem;color:${filtroTag===t?'var(--gold)':'var(--ghost)'};">${n}</span></div>`).join('');
 }
-function filtrarTag(tag){filtroTag=filtroTag===tag?null:tag;renderTagsSidebar();const bar=document.getElementById('tag-filtro-bar');const lbl=document.getElementById('tag-filtro-label');if(filtroTag){bar.classList.add('visible');lbl.textContent=`Filtrando por #${filtroTag}`;}else{bar.classList.remove('visible');}_postsAleatorios=[];renderFeed();}
+function filtrarTag(tag){filtroTag=filtroTag===tag?null:tag;renderTagsSidebar();const bar=document.getElementById('tag-filtro-bar'),lbl=document.getElementById('tag-filtro-label');if(filtroTag){bar.classList.add('visible');lbl.textContent=`Filtrando por #${filtroTag}`;}else{bar.classList.remove('visible');}_postsAleatorios=[];renderFeed();}
 function limparFiltroTag(){filtroTag=null;renderTagsSidebar();document.getElementById('tag-filtro-bar').classList.remove('visible');_postsAleatorios=[];renderFeed();}
-
 function filtrar(el){
   filtroAtivo=el.dataset.tipo;
   document.querySelectorAll('.filter-tag').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  _postsAleatorios=[]; _ultimoEmbaralhamento=0;
+  _postsAleatorios=[];_ultimoEmbaralhamento=0;
   carregarLote(true);
 }
-
 function renderFilterTags(){
   const todos=getTodosAssuntos();
   document.getElementById('filter-tags-list').innerHTML=
     `<div class="filter-tag${filtroAtivo==='todos'?' active':''}" onclick="filtrar(this)" data-tipo="todos"><span class="dot" style="background:#c4952a"></span>Todos</div>`+
     todos.map(a=>`<div class="filter-tag${filtroAtivo===a.id?' active':''}" onclick="filtrar(this)" data-tipo="${a.id}"><span class="dot" style="background:${a.cor}"></span>${a.nome}</div>`).join('');
 }
-
 function renderSelectsAssunto(){
   const todos=getTodosAssuntos();
   const opts=todos.map(a=>`<option value="${a.id}">${a.nome}</option>`).join('');
@@ -1290,11 +1271,12 @@ function getPostsAleatorios(){
   let posts=[...DB.posts].filter(p=>p.status!=='excluido');
   if(filtroAtivo!=='todos')posts=posts.filter(p=>p.tipo===filtroAtivo);
   if(filtroTag)posts=posts.filter(p=>Array.isArray(p.tags)&&p.tags.includes(filtroTag));
-  _postsAleatorios=embaralharArray(posts); _ultimoEmbaralhamento=Date.now(); return _postsAleatorios;
+  _postsAleatorios=embaralharArray(posts);_ultimoEmbaralhamento=Date.now();return _postsAleatorios;
 }
 function mudarFeedTab(aba){
-  feedTab=aba;
-  document.querySelectorAll('.feed-tab').forEach((tab,i)=>tab.classList.toggle('active',(aba==='recentes'&&i===0)||(aba==='aleatorio'&&i===1)||(aba==='curtidos'&&i===2)));
+  feedTab=aba;filtroPlaylistId=null;
+  document.querySelectorAll('.feed-tab').forEach((tab,i)=>tab.classList.toggle('active',(aba==='recentes'&&i===0)||(aba==='aleatorio'&&i===1)||(aba==='curtidos'&&i===2)||(aba==='salvos'&&i===3)));
+  renderPlaylistsSidebar();
   if(aba==='aleatorio'){_postsAleatorios=[];_ultimoEmbaralhamento=0;}
   renderFeed();
 }
@@ -1307,10 +1289,9 @@ async function carregarLote(resetar=false){
   try{
     const snap=await db.collection('posts').orderBy('timestamp','desc').limit(200).get();
     DB.posts=snap.docs.map(d=>d.data());
-    renderFeed(); atualizarContadores();
+    renderFeed();atualizarContadores();
   }catch(e){console.error('Erro ao carregar posts:',e);toast('Erro ao carregar posts: '+e.message,'error');}
 }
-
 function atualizarContadores(){
   const psr=DB.posts.filter(p=>p.inedito&&p.status!=='excluido').length;
   const cmi=DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito'&&!c.excluido).length;
@@ -1318,13 +1299,13 @@ function atualizarContadores(){
   document.getElementById('cnt-posts').textContent=`Posts s/ resposta: ${psr}`;
   document.getElementById('cnt-comments').textContent=`Comentários manuais: ${cmi}`;
 }
-
 function iniciarListeners(){
-  if(_listenersAtivos)return; _listenersAtivos=true;
+  if(_listenersAtivos)return;_listenersAtivos=true;
   carregarCurtidas().then(()=>renderFeed());
+  iniciarListenerPlaylists();
   db.collection('comments').onSnapshot(snap=>{
     DB.comments=snap.docs.map(d=>d.data());
-    atualizarContadores(); renderFeed(); if(postAtivoId)renderDrawer(postAtivoId);
+    atualizarContadores();renderFeed();if(postAtivoId)renderDrawer(postAtivoId);
   });
   carregarLote(true);
 }
@@ -1340,158 +1321,33 @@ function mudarFonte(delta){aplicarFonte(fonteAtual+delta);}
 // ============================================================
 // COMPARTILHAR
 // ============================================================
-let _postCompartilhando = null;
-
-function abrirCompartilhar(postId) {
-  _postCompartilhando = postId;
-  const p = DB.posts.find(x => x.id === postId);
-  if (!p) return;
-  // Preview padrão: texto do post
-  const preview = gerarTextoCompartilhamento(p);
-  document.getElementById('share-preview').value = preview;
-  abrirModal('modal-compartilhar');
-}
-
-function gerarTextoCompartilhamento(p) {
-  const tags = (p.tags || []).map(t => '#' + t).join(' ');
-  const tipo = p.tipo.charAt(0).toUpperCase() + p.tipo.slice(1);
-  let txt = `📚 [${tipo}] — StudyThread\n\n${p.conteudo || ''}`;
-  if (tags) txt += `\n\n${tags}`;
-  if (p.video) txt += `\n\n📹 ${p.video.url}`;
-  return txt;
-}
-
-function compartilharCopiarTexto() {
-  const p = DB.posts.find(x => x.id === _postCompartilhando);
-  if (!p) return;
-  const txt = gerarTextoCompartilhamento(p);
-  document.getElementById('share-preview').value = txt;
-  navigator.clipboard.writeText(txt).then(() => toast('Texto copiado!', 'success'));
-}
-
-function compartilharCopiarLink() {
-  const p = DB.posts.find(x => x.id === _postCompartilhando);
-  if (!p) return;
-  const txt = `[StudyThread — ${p.tipo}]\nID: ${p.id}\n\n${(p.conteudo || '').substring(0, 200)}${(p.conteudo||'').length > 200 ? '…' : ''}`;
-  document.getElementById('share-preview').value = txt;
-  navigator.clipboard.writeText(txt).then(() => toast('Referência copiada!', 'success'));
-}
-
-function compartilharWhatsApp() {
-  const p = DB.posts.find(x => x.id === _postCompartilhando);
-  if (!p) return;
-  const txt = gerarTextoCompartilhamento(p);
-  document.getElementById('share-preview').value = txt;
-  const encoded = encodeURIComponent(txt);
-  window.open(`https://wa.me/?text=${encoded}`, '_blank');
-}
-
-function compartilharComoJson() {
-  const p = DB.posts.find(x => x.id === _postCompartilhando);
-  if (!p) return;
-  const json = JSON.stringify({
-    tarefaId: `task_post_${p.id}`,
-    tipo: 'responder_post',
-    postId: p.id,
-    tipoPosta: p.tipo,
-    tags: p.tags || [],
-    post: p.conteudo,
-    instrucoes: `Gere uma resposta educativa para este post de ${p.tipo}.`
-  }, null, 2);
-  document.getElementById('share-preview').value = json;
-  navigator.clipboard.writeText(json).then(() => toast('JSON copiado!', 'success'));
-}
-
-function copiarSharePreview() {
-  const txt = document.getElementById('share-preview').value;
-  if (!txt) return;
-  navigator.clipboard.writeText(txt).then(() => toast('Copiado!', 'success'));
-}
+let _postCompartilhando=null;
+function abrirCompartilhar(postId){_postCompartilhando=postId;const p=DB.posts.find(x=>x.id===postId);if(!p)return;document.getElementById('share-preview').value=gerarTextoCompartilhamento(p);abrirModal('modal-compartilhar');}
+function gerarTextoCompartilhamento(p){const tags=(p.tags||[]).map(t=>'#'+t).join(' ');const tipo=p.tipo.charAt(0).toUpperCase()+p.tipo.slice(1);let txt=`📚 [${tipo}] — StudyThread\n\n${p.conteudo||''}`;if(tags)txt+=`\n\n${tags}`;if(p.video)txt+=`\n\n📹 ${p.video.url}`;return txt;}
+function compartilharCopiarTexto(){const p=DB.posts.find(x=>x.id===_postCompartilhando);if(!p)return;const txt=gerarTextoCompartilhamento(p);document.getElementById('share-preview').value=txt;navigator.clipboard.writeText(txt).then(()=>toast('Texto copiado!','success'));}
+function compartilharCopiarLink(){const p=DB.posts.find(x=>x.id===_postCompartilhando);if(!p)return;const txt=`[StudyThread — ${p.tipo}]\nID: ${p.id}\n\n${(p.conteudo||'').substring(0,200)}${(p.conteudo||'').length>200?'…':''}`;document.getElementById('share-preview').value=txt;navigator.clipboard.writeText(txt).then(()=>toast('Referência copiada!','success'));}
+function compartilharWhatsApp(){const p=DB.posts.find(x=>x.id===_postCompartilhando);if(!p)return;const txt=gerarTextoCompartilhamento(p);document.getElementById('share-preview').value=txt;window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`,'_blank');}
+function compartilharComoJson(){const p=DB.posts.find(x=>x.id===_postCompartilhando);if(!p)return;const json=JSON.stringify({tarefaId:`task_post_${p.id}`,tipo:'responder_post',postId:p.id,tipoPosta:p.tipo,tags:p.tags||[],post:p.conteudo,instrucoes:`Gere uma resposta educativa para este post de ${p.tipo}.`},null,2);document.getElementById('share-preview').value=json;navigator.clipboard.writeText(json).then(()=>toast('JSON copiado!','success'));}
+function copiarSharePreview(){const txt=document.getElementById('share-preview').value;if(!txt)return;navigator.clipboard.writeText(txt).then(()=>toast('Copiado!','success'));}
 
 // ============================================================
-// APROFUNDAR TEMA
+// APROFUNDAR
 // ============================================================
-let _postAprofundando = null;
-
-function aprofundarPost(postId) {
-  const p = DB.posts.find(x => x.id === postId);
-  if (!p) return;
-  
-  // 1. Salva o postId no localStorage para a página de aprofundamento
-  localStorage.setItem('st-aprofundamento-postId', postId);
-  
-  // 2. Salva também os dados do post
-  localStorage.setItem('st-aprofundamento-postData', JSON.stringify({
-    id: p.id,
-    conteudo: p.conteudo,
-    tipo: p.tipo,
-    tags: p.tags || [],
-    timestamp: p.timestamp
-  }));
-  
-  // 3. Gera o JSON de aprofundamento (para colar na IA)
-  const comentarios = DB.comments
-    .filter(c => c.postId === postId && !c.excluido)
-    .map(c => `— ${c.autor} (${c.tipo}): ${c.conteudo.substring(0, 200)}`).join('\n');
-  
-  const aprofundamentoJson = {
-    instrucao: "Aprofunde o tema abaixo seguindo a estrutura de 3 posts:",
-    post_original: {
-      id: p.id,
-      conteudo: p.conteudo,
-      tipo: p.tipo,
-      tags: p.tags || []
-    },
-    comentarios_existentes: comentarios || "Nenhum comentário ainda",
-    formato_esperado: {
-      posts: [
-        {
-          tipo: "explicacao",
-          conteudo: "Explicação detalhada do tema com conceitos e exemplos"
-        },
-        {
-          tipo: "questionamentos", 
-          conteudo: "Questões em aberto e pontos para reflexão"
-        },
-        {
-          tipo: "conexoes",
-          conteudo: "Relações com outras áreas do conhecimento"
-        }
-      ]
-    }
-  };
-  
-  // 4. Copia o JSON para a área de transferência
-  const jsonString = JSON.stringify(aprofundamentoJson, null, 2);
-  navigator.clipboard.writeText(jsonString).then(() => {
-    // 5. Abre a página de aprofundamento
-    window.open('studythread-aprofundamento.html', '_blank');
-    
-    // 6. Mostra toast de confirmação
-    toast('✅ JSON copiado! Cole na IA. Página de aprofundamento aberta.', 'success');
-  }).catch(() => {
-    // Fallback se não conseguir copiar
-    toast('⚠️ Não foi possível copiar automaticamente. Copie manualmente.', 'warning');
-    window.open('studythread-aprofundamento.html', '_blank');
-  });
+function aprofundarPost(postId){
+  const p=DB.posts.find(x=>x.id===postId);if(!p)return;
+  localStorage.setItem('st-aprofundamento-postId',postId);
+  localStorage.setItem('st-aprofundamento-postData',JSON.stringify({id:p.id,conteudo:p.conteudo,tipo:p.tipo,tags:p.tags||[],timestamp:p.timestamp}));
+  const comentarios=DB.comments.filter(c=>c.postId===postId&&!c.excluido).map(c=>`— ${c.autor} (${c.tipo}): ${c.conteudo.substring(0,200)}`).join('\n');
+  const aprofundamentoJson={instrucao:"Aprofunde o tema abaixo seguindo a estrutura de 3 posts:",post_original:{id:p.id,conteudo:p.conteudo,tipo:p.tipo,tags:p.tags||[]},comentarios_existentes:comentarios||"Nenhum comentário ainda",formato_esperado:{posts:[{tipo:"explicacao",conteudo:"Explicação detalhada do tema com conceitos e exemplos"},{tipo:"questionamentos",conteudo:"Questões em aberto e pontos para reflexão"},{tipo:"conexoes",conteudo:"Relações com outras áreas do conhecimento"}]}};
+  const jsonString=JSON.stringify(aprofundamentoJson,null,2);
+  navigator.clipboard.writeText(jsonString).then(()=>{window.open('studythread-aprofundamento.html','_blank');toast('✅ JSON copiado! Cole na IA. Página aberta.','success');}).catch(()=>{toast('⚠️ Não foi possível copiar automaticamente.','warning');window.open('studythread-aprofundamento.html','_blank');});
 }
+function copiarAprofundamento(){navigator.clipboard.writeText(document.getElementById('aprofundar-json').textContent).then(()=>toast('JSON copiado!','success'));}
+function abrirPaginaImportacao(){navigator.clipboard.writeText(document.getElementById('aprofundar-json').textContent).then(()=>toast('JSON copiado! Cole na página de importação.','success'));window.open('studythread-importar-lote.html','_blank');fecharModal('modal-aprofundar');}
 
-function copiarAprofundamento() {
-  const txt = document.getElementById('aprofundar-json').textContent;
-  navigator.clipboard.writeText(txt).then(() => toast('JSON copiado!', 'success'));
-}
-
-function abrirPaginaImportacao() {
-  // Copia para clipboard antes de abrir a página
-  const txt = document.getElementById('aprofundar-json').textContent;
-  navigator.clipboard.writeText(txt).then(() => {
-    toast('JSON copiado! Cole na página de importação.', 'success');
-  });
-  // Abre a página de importação em nova aba
-  window.open('studythread-importar-lote.html', '_blank');
-  fecharModal('modal-aprofundar');
-}
-
+// ============================================================
+// INIT
+// ============================================================
 function onAppReady(){
   injetarCSSAssuntos();
   renderSelectsAssunto();
