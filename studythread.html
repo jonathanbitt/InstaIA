@@ -184,12 +184,24 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 .pl-grid-empty-sub{font-family:var(--mono);font-size:.68rem;color:var(--ghost);margin-top:6px;opacity:.7;}
 
 /* ── PLAYLIST HEADER (quando uma playlist está aberta) ── */
-.pl-feed-header{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:10px 24px;background:rgba(196,149,42,.12);border-bottom:1px solid rgba(196,149,42,.25);}
+.pl-feed-header{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:10px 24px;background:rgba(196,149,42,.12);border-bottom:1px solid rgba(196,149,42,.25);flex-wrap:wrap;}
 .pl-feed-header-emoji{font-size:1.4rem;}
-.pl-feed-header-name{font-family:var(--display);font-size:1rem;color:var(--ink);font-weight:600;flex:1;}
+.pl-feed-header-name{font-family:var(--display);font-size:1rem;color:var(--ink);font-weight:600;flex:1;min-width:80px;}
 .pl-feed-header-count{font-family:var(--mono);font-size:.62rem;color:var(--ghost);}
 .pl-feed-back{background:transparent;border:1px solid var(--margin);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:.62rem;color:var(--ghost);cursor:pointer;transition:all .15s;}
 .pl-feed-back:hover{border-color:var(--gold);color:var(--gold);}
+.pl-feed-btn-rename{background:transparent;border:1px solid rgba(196,149,42,.4);border-radius:20px;padding:4px 10px;font-family:var(--mono);font-size:.62rem;color:var(--gold);cursor:pointer;transition:all .15s;}
+.pl-feed-btn-rename:hover{background:rgba(196,149,42,.15);border-color:var(--gold);}
+.pl-feed-btn-del{background:transparent;border:1px solid rgba(139,58,42,.4);border-radius:20px;padding:4px 10px;font-family:var(--mono);font-size:.62rem;color:var(--rust);cursor:pointer;transition:all .15s;}
+.pl-feed-btn-del:hover{background:rgba(139,58,42,.12);border-color:var(--rust);}
+/* botão remover post da playlist */
+.btn-remover-playlist{border-color:rgba(139,58,42,.35);color:var(--rust);}
+.btn-remover-playlist:hover{background:rgba(139,58,42,.1);border-color:var(--rust);}
+/* modal renomear playlist */
+.rename-input{width:100%;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:10px 12px;font-family:'Crimson Pro',serif;font-size:1rem;color:var(--ink);outline:none;margin-top:8px;}
+.rename-input:focus{border-color:var(--gold);}
+.rename-emoji-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px;}
+.rename-lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ghost);}
 
 .side-drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:26;pointer-events:none;transition:background .25s;}
 .side-drawer-overlay.open{background:rgba(0,0,0,.6);pointer-events:all;}
@@ -280,6 +292,8 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
     <span class="pl-feed-header-emoji" id="pl-header-emoji">📚</span>
     <span class="pl-feed-header-name" id="pl-header-name"></span>
     <span class="pl-feed-header-count" id="pl-header-count"></span>
+    <button class="pl-feed-btn-rename" onclick="abrirRenomearPlaylist()">✏️ Renomear</button>
+    <button class="pl-feed-btn-del" onclick="excluirPlaylistAtiva()">🗑 Excluir</button>
     <button class="pl-feed-back" onclick="voltarParaPlaylists()">← Voltar</button>
   </div>
   <div id="posts-list"></div>
@@ -316,6 +330,9 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 
 <!-- MODAL APROFUNDAR -->
 <div class="modal-overlay" id="modal-aprofundar"><div class="modal"><div class="modal-head"><span class="modal-title">🔬 Aprofundar</span><button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-aprofundar')">✕</button></div><div class="modal-body"><div class="json-block" id="aprofundar-json"></div></div><div class="modal-foot"><button class="btn btn-gold" onclick="copiarAprofundamento()">Copiar JSON</button><button class="btn btn-ghost" onclick="fecharModal('modal-aprofundar')">Fechar</button></div></div></div>
+
+<!-- MODAL RENOMEAR PLAYLIST -->
+<div class="modal-overlay" id="modal-renomear-playlist"><div class="modal" style="max-width:400px;"><div class="modal-head"><span class="modal-title">✏️ Renomear Playlist</span><button class="btn btn-ghost btn-sm" onclick="fecharModal('modal-renomear-playlist')">✕</button></div><div class="modal-body"><div class="rename-lbl">Emoji</div><div class="rename-emoji-row" id="rename-emoji-row"><button class="playlist-emoji-btn sel" data-emoji="📚" onclick="selecionarEmojiRename(this)">📚</button><button class="playlist-emoji-btn" data-emoji="⭐" onclick="selecionarEmojiRename(this)">⭐</button><button class="playlist-emoji-btn" data-emoji="🧠" onclick="selecionarEmojiRename(this)">🧠</button><button class="playlist-emoji-btn" data-emoji="💡" onclick="selecionarEmojiRename(this)">💡</button><button class="playlist-emoji-btn" data-emoji="🔬" onclick="selecionarEmojiRename(this)">🔬</button><button class="playlist-emoji-btn" data-emoji="📖" onclick="selecionarEmojiRename(this)">📖</button><button class="playlist-emoji-btn" data-emoji="🎯" onclick="selecionarEmojiRename(this)">🎯</button><button class="playlist-emoji-btn" data-emoji="🚀" onclick="selecionarEmojiRename(this)">🚀</button></div><div class="rename-lbl" style="margin-top:14px;">Nome</div><input class="rename-input" id="rename-playlist-nome" type="text" placeholder="Nome da playlist" onkeydown="if(event.key==='Enter')salvarRenomeio()" /></div><div class="modal-foot"><button class="btn btn-gold" onclick="salvarRenomeio()">✓ Salvar</button><button class="btn btn-ghost" onclick="fecharModal('modal-renomear-playlist')">Cancelar</button></div></div></div>
 
 <!-- DRAWER -->
 <div class="thread-overlay" id="thread-overlay" onclick="fecharDrawer()"></div>
@@ -597,6 +614,7 @@ function renderFeed(){
         <button class="btn-foot-action btn-salvar-post${salvo?' salvo':''}" onclick="event.stopPropagation();abrirSalvarPlaylist('${p.id}')">${salvo?'🔖 Salvo':'🔖 Salvar'}</button>
         <button class="btn-foot-action" onclick="event.stopPropagation();abrirCompartilhar('${p.id}')">📤</button>
         <button class="btn-foot-action btn-aprofundar" onclick="event.stopPropagation();aprofundarPost('${p.id}')">🔬</button>
+        ${feedTab==='salvos'&&playlistSelecionadaId?`<button class="btn-foot-action btn-remover-playlist" onclick="event.stopPropagation();removerPostDaPlaylistAtiva('${p.id}')">× Remover</button>`:''}
       </div>
     </div>`;
   }).join('');
@@ -639,6 +657,67 @@ async function carregarLote(resetar=false){if(resetar)DB.posts=[];try{const snap
 function atualizarContadores(){const psr=DB.posts.filter(p=>p.inedito&&p.status!=='excluido').length,cmi=DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito'&&!c.excluido).length;document.getElementById('cnt-total').textContent=psr+cmi;document.getElementById('cnt-posts').textContent=`Posts s/ resposta: ${psr}`;document.getElementById('cnt-comments').textContent=`Comentários manuais: ${cmi}`;}
 function iniciarListeners(){if(_listenersAtivos)return;_listenersAtivos=true;carregarCurtidas().then(()=>renderFeed());carregarPlaylistsDoUsuario();db.collection('comments').onSnapshot(snap=>{DB.comments=snap.docs.map(d=>d.data());atualizarContadores();renderFeed();if(postAtivoId)renderDrawer(postAtivoId);});carregarLote(true);}
 const FONTE_MIN=13,FONTE_MAX=26;let fonteAtual=parseInt(localStorage.getItem('st-fonte')||'17');function aplicarFonte(px){fonteAtual=Math.min(FONTE_MAX,Math.max(FONTE_MIN,px));document.body.style.fontSize=fonteAtual+'px';document.getElementById('font-val').textContent=fonteAtual+'px';localStorage.setItem('st-fonte',fonteAtual);}function mudarFonte(delta){aplicarFonte(fonteAtual+delta);}
+// ============================================================
+// PLAYLIST — RENOMEAR / EXCLUIR ATIVA / REMOVER POST
+// ============================================================
+let _emojiRenomeiaSel='📚';
+
+function abrirRenomearPlaylist(){
+  if(!playlistSelecionadaId)return;
+  const pl=_playlistsCache.find(x=>x.id===playlistSelecionadaId);
+  if(!pl)return;
+  _emojiRenomeiaSel=pl.emoji||'📚';
+  document.getElementById('rename-playlist-nome').value=pl.nome;
+  // marca emoji atual
+  document.querySelectorAll('#rename-emoji-row .playlist-emoji-btn').forEach(b=>{
+    b.classList.toggle('sel',b.dataset.emoji===_emojiRenomeiaSel);
+  });
+  abrirModal('modal-renomear-playlist');
+}
+
+function selecionarEmojiRename(btn){
+  document.querySelectorAll('#rename-emoji-row .playlist-emoji-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _emojiRenomeiaSel=btn.dataset.emoji;
+}
+
+async function salvarRenomeio(){
+  if(!playlistSelecionadaId)return;
+  const nome=document.getElementById('rename-playlist-nome').value.trim();
+  if(!nome){toast('Digite um nome.','warning');return;}
+  await db.collection('playlists').doc(playlistSelecionadaId).update({nome,emoji:_emojiRenomeiaSel});
+  const pl=_playlistsCache.find(x=>x.id===playlistSelecionadaId);
+  if(pl){pl.nome=nome;pl.emoji=_emojiRenomeiaSel;}
+  toast('Playlist renomeada!','success');
+  fecharModal('modal-renomear-playlist');
+  renderPlaylistsSidebar();
+  renderFeed();
+}
+
+async function excluirPlaylistAtiva(){
+  if(!playlistSelecionadaId)return;
+  const pl=_playlistsCache.find(x=>x.id===playlistSelecionadaId);
+  if(!confirm(`Excluir a playlist "${pl?.nome||''}"? Os posts não serão apagados.`))return;
+  await db.collection('playlists').doc(playlistSelecionadaId).delete();
+  toast('Playlist excluída.','warning');
+  _playlistsCache=_playlistsCache.filter(x=>x.id!==playlistSelecionadaId);
+  playlistSelecionadaId=null;
+  renderPlaylistsSidebar();
+  renderFeed();
+}
+
+async function removerPostDaPlaylistAtiva(postId){
+  if(!playlistSelecionadaId)return;
+  const pl=_playlistsCache.find(x=>x.id===playlistSelecionadaId);
+  if(!pl)return;
+  const ids=(pl.postIds||[]).filter(id=>id!==postId);
+  await db.collection('playlists').doc(playlistSelecionadaId).update({postIds:ids});
+  pl.postIds=ids;
+  toast('Post removido da playlist.','warning');
+  renderPlaylistsSidebar();
+  renderFeed();
+}
+
 function onAppReady(){injetarCSSAssuntos();renderSelectsAssunto();renderFilterTags();iniciarListeners();aplicarFonte(fonteAtual);document.getElementById('posts-list').innerHTML='<div class="empty-feed"><div class="empty-icon">⏳</div><div class="empty-text">Conectando ao Firebase...</div></div>';}
 </script>
 </body>
