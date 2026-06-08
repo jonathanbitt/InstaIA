@@ -211,6 +211,31 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:#4a3d2a;border-radius:3px;}
 
+/* ── NOTIFICAÇÕES ── */
+#notif-btn{position:relative;background:transparent;border:1px solid rgba(196,149,42,.35);border-radius:20px;padding:5px 10px;color:var(--gold);cursor:pointer;font-size:1rem;display:flex;align-items:center;gap:5px;transition:all .15s;}
+#notif-btn:hover{background:rgba(196,149,42,.1);}
+#notif-badge{position:absolute;top:-5px;right:-5px;background:var(--rust);color:#fff;font-family:var(--mono);font-size:.55rem;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;pointer-events:none;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+#notif-panel{position:fixed;top:calc(var(--bar) + 6px);right:12px;width:340px;max-width:calc(100vw - 24px);background:var(--paper);border:1px solid var(--margin);border-radius:10px;box-shadow:0 8px 32px var(--shadow);z-index:90;display:none;flex-direction:column;overflow:hidden;animation:fadeIn .18s ease both;}
+#notif-panel.open{display:flex;}
+.notif-head{padding:10px 14px;background:var(--aged);border-bottom:1px solid var(--margin);display:flex;align-items:center;gap:8px;}
+.notif-head-title{font-family:var(--display);font-size:.9rem;color:var(--ink);flex:1;}
+.notif-mark-all{background:transparent;border:none;font-family:var(--mono);font-size:.6rem;color:var(--ghost);cursor:pointer;padding:2px 6px;border-radius:var(--r);}
+.notif-mark-all:hover{color:var(--gold);}
+.notif-close{background:transparent;border:none;color:var(--ghost);cursor:pointer;font-size:1rem;padding:2px 4px;}
+.notif-list{max-height:340px;overflow-y:auto;}
+.notif-item{display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid var(--margin);cursor:pointer;transition:background .12s;}
+.notif-item:hover{background:rgba(196,149,42,.07);}
+.notif-item.unread{background:rgba(196,149,42,.06);border-left:3px solid var(--gold);}
+.notif-item.unread:hover{background:rgba(196,149,42,.12);}
+.notif-icon{font-size:1.1rem;flex-shrink:0;margin-top:2px;}
+.notif-body{flex:1;min-width:0;}
+.notif-title{font-family:var(--mono);font-size:.65rem;color:var(--ink);font-weight:600;margin-bottom:2px;}
+.notif-text{font-size:.78rem;color:var(--ghost);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.notif-ts{font-family:var(--mono);font-size:.55rem;color:var(--ghost);margin-top:3px;opacity:.7;}
+.notif-empty{text-align:center;padding:30px;color:var(--ghost);font-family:var(--display);font-style:italic;font-size:.9rem;}
+.notif-overlay{position:fixed;inset:0;z-index:89;display:none;}
+.notif-overlay.open{display:block;}
+@keyframes popIn{from{transform:scale(0);}to{transform:scale(1);}}
 /* assunto modal helpers */
 .add-assunto-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
 .add-assunto-row input[type=text]{flex:1;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:7px 10px;font-family:var(--mono);font-size:.78rem;color:var(--ink);outline:none;}
@@ -263,6 +288,7 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
   <div style="flex:1;"></div>
   <div id="bar-actions">
     <div id="font-ctrl"><button onclick="mudarFonte(-1)">A−</button><span id="font-val">17px</span><button onclick="mudarFonte(1)">A+</button></div>
+    <button id="notif-btn" onclick="toggleNotifPanel()">🔔<span id="notif-badge" style="display:none;">0</span></button>
     <button class="btn btn-ghost btn-sm" onclick="abrirGerenciarAssuntos()">📚 Assuntos</button>
     <button class="btn btn-sage btn-sm" onclick="abrirExportar()">⬆ Exportar</button>
     <button class="btn btn-gold btn-sm" onclick="abrirImportar()">⬇ Importar IA</button>
@@ -337,6 +363,17 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 <!-- DRAWER -->
 <div class="thread-overlay" id="thread-overlay" onclick="fecharDrawer()"></div>
 <div class="thread-drawer" id="thread-drawer"><div class="drawer-header"><div class="drawer-header-text"><div class="drawer-title" id="drawer-title">Thread</div><div class="drawer-preview" id="drawer-preview"></div></div><button class="drawer-close" onclick="fecharDrawer()">✕ Fechar</button></div><div class="drawer-content" id="drawer-content"></div><div class="mini-composer"><div class="mini-lbl">✦ Adicionar comentário</div><textarea id="mini-ta" placeholder="Escreva seu comentário…"></textarea><div class="mini-row"><select class="dark-sel" id="mini-tipo"><option value="resposta">Resposta</option><option value="explicacao">Explicação</option><option value="exercicio">Exercício</option></select><button class="btn btn-gold btn-sm" onclick="adicionarManualPost()">Adicionar</button></div></div></div>
+
+<!-- PAINEL NOTIFICAÇÕES -->
+<div class="notif-overlay" id="notif-overlay" onclick="fecharNotifPanel()"></div>
+<div id="notif-panel">
+  <div class="notif-head">
+    <span class="notif-head-title">🔔 Notificações</span>
+    <button class="notif-mark-all" onclick="marcarTodasLidas()">✓ Marcar todas lidas</button>
+    <button class="notif-close" onclick="fecharNotifPanel()">✕</button>
+  </div>
+  <div class="notif-list" id="notif-list"><div class="notif-empty">Nenhuma notificação.</div></div>
+</div>
 
 <div class="toast-wrap" id="toast-wrap"></div>
 
@@ -427,6 +464,10 @@ let _postsAleatorios=[],_ultimoEmbaralhamento=0,exportCache=null;
 let _editando=null,_excluindo=null;
 let _playlistsCache=[],_postSalvando=null,_emojiPlaylistSel='📚';
 let _postCompartilhando=null;
+// notificações
+let _notificacoes=[]; // {id, tipo, postId, commentId, texto, ts, lida}
+let _commentsSnapshotAnterior=new Set(); // ids de comments já conhecidos
+let _playlistDiscussaoId=null; // id da playlist "💬 Discussão"
 
 // ============================================================
 // UTILS
@@ -458,7 +499,7 @@ async function criarPostModal(){
   await db.collection('posts').doc(p.id).set(p);fecharModal('modal-postagem');toast('Post publicado!','success');_postsAleatorios=[];carregarLote(true);
 }
 function abrirImportar(){document.getElementById('importar-json').value='';abrirModal('modal-importar');}
-async function executarImportacao(){const txt=document.getElementById('importar-json').value.trim();if(!txt){toast('Cole o JSON.','warning');return;}let dados;try{dados=JSON.parse(txt);}catch{toast('JSON inválido.','error');return;}const respostas=dados.respostas||[];let ok=0;for(const r of respostas){const{tarefaId,autor,tipo,conteudo}=r;if(!tarefaId||!conteudo)continue;let postId=null,parentId=null;if(tarefaId.startsWith('task_post_')){const id=tarefaId.replace('task_post_','');const p=DB.posts.find(x=>x.id===id);if(!p)continue;postId=id;await db.collection('posts').doc(id).update({inedito:false,status:'respondido'});p.inedito=false;}else if(tarefaId.startsWith('task_comment_')){const id=tarefaId.replace('task_comment_','');const c=DB.comments.find(x=>x.id===id);if(!c)continue;postId=c.postId;parentId=c.id;await db.collection('comments').doc(id).update({statusLeitura:'processado'});c.statusLeitura='processado';}else continue;const nc={id:uid(),postId,parentId,autor:autor||'IA',conteudo,tipo:tipo||'resposta',origem:'ia',statusLeitura:'processado',timestamp:ts()};await db.collection('comments').doc(nc.id).set(nc);DB.comments.push(nc);ok++;}if(ok>0)toast(`${ok} resposta(s) importada(s)!`,'success');fecharModal('modal-importar');atualizarContadores();renderFeed();}
+// executarImportacao é definida mais abaixo com suporte a notificações
 function abrirExportar(){const its=getConteudoInedito();if(!its.length){toast('Nenhum conteúdo inédito.','warning');return;}exportCache=its;document.getElementById('exportar-json').textContent=JSON.stringify({exportadoEm:ts(),tarefas:its.map(i=>i.tipo==='post'?{tarefaId:`task_post_${i.id}`,tipo:'responder_post',post:i.conteudo,tipoPosta:i.tipoPosta,tags:i.tags,contexto:i.contexto}:{tarefaId:`task_comment_${i.id}`,tipo:'responder_comentario',comentario:i.conteudo,contexto:i.contexto})},null,2);abrirModal('modal-exportar');}
 async function copiarExportacao(){try{await navigator.clipboard.writeText(document.getElementById('exportar-json').textContent);toast('JSON copiado!','success');}catch{toast('Selecione manualmente.','error');}}
 async function confirmarExportacao(){if(!exportCache)return;for(const item of exportCache){if(item.tipo==='comentario'){await db.collection('comments').doc(item.id).update({statusLeitura:'processado_pendente'});const c=DB.comments.find(x=>x.id===item.id);if(c)c.statusLeitura='processado_pendente';}else{await db.collection('posts').doc(item.id).update({inedito:false,status:'exportado'});const p=DB.posts.find(x=>x.id===item.id);if(p){p.inedito=false;p.status='exportado';}}}exportCache=null;toast('Itens marcados como exportados!','success');fecharModal('modal-exportar');atualizarContadores();renderFeed();}
@@ -477,7 +518,17 @@ async function salvarCurtidas(){try{await db.collection('curtidas').doc(getUserI
 // PLAYLISTS
 // ============================================================
 function selecionarEmojiPlaylist(btn){document.querySelectorAll('.playlist-emoji-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');_emojiPlaylistSel=btn.dataset.emoji;}
-async function carregarPlaylistsDoUsuario(){try{const snap=await db.collection('playlists').where('userId','==',getUserId()).get();_playlistsCache=snap.docs.map(d=>({id:d.id,...d.data()}));renderPlaylistsSidebar();renderFeed();}catch(e){console.error(e);}}
+async function carregarPlaylistsDoUsuario(){
+  try{
+    const snap=await db.collection('playlists').where('userId','==',getUserId()).get();
+    _playlistsCache=snap.docs.map(d=>({id:d.id,...d.data()}));
+    // identifica a playlist de discussão se já existir
+    const disc=_playlistsCache.find(p=>p._sistema==='discussao');
+    if(disc)_playlistDiscussaoId=disc.id;
+    else await garantirPlaylistDiscussao();
+    renderPlaylistsSidebar();renderFeed();
+  }catch(e){console.error(e);}
+}
 function postEstaSalvo(postId){return _playlistsCache.some(pl=>(pl.postIds||[]).includes(postId));}
 async function abrirSalvarPlaylist(postId){_postSalvando=postId;await carregarPlaylistsDoUsuario();document.getElementById('nova-playlist-nome').value='';renderPlaylistsModal(postId);abrirModal('modal-playlist');}
 function renderPlaylistsModal(postId){const c=document.getElementById('playlists-lista-modal');if(!_playlistsCache.length){c.innerHTML='<div class="playlist-empty">Nenhuma playlist. Crie uma!</div>';return;}c.innerHTML=`<div class="playlist-section-title">Suas playlists</div>${_playlistsCache.map(pl=>{const salvo=(pl.postIds||[]).includes(postId);return`<div class="playlist-item ${salvo?'saved':''}" onclick="togglePostNaPlaylist('${pl.id}','${postId}')"><span class="playlist-item-icon">${pl.emoji||'📚'}</span><span class="playlist-item-name">${esc(pl.nome)}</span><span class="playlist-item-count">${(pl.postIds||[]).length}</span><span class="playlist-item-check">${salvo?'✓':''}</span></div>`;}).join('')}`;}
@@ -655,7 +706,228 @@ function aprofundarPost(postId){const p=DB.posts.find(x=>x.id===postId);if(!p)re
 function copiarAprofundamento(){navigator.clipboard.writeText(document.getElementById('aprofundar-json').textContent).then(()=>toast('JSON copiado!','success'));}
 async function carregarLote(resetar=false){if(resetar)DB.posts=[];try{const snap=await db.collection('posts').orderBy('timestamp','desc').limit(200).get();DB.posts=snap.docs.map(d=>d.data());renderFeed();atualizarContadores();}catch(e){console.error(e);toast('Erro ao carregar posts.','error');}}
 function atualizarContadores(){const psr=DB.posts.filter(p=>p.inedito&&p.status!=='excluido').length,cmi=DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito'&&!c.excluido).length;document.getElementById('cnt-total').textContent=psr+cmi;document.getElementById('cnt-posts').textContent=`Posts s/ resposta: ${psr}`;document.getElementById('cnt-comments').textContent=`Comentários manuais: ${cmi}`;}
-function iniciarListeners(){if(_listenersAtivos)return;_listenersAtivos=true;carregarCurtidas().then(()=>renderFeed());carregarPlaylistsDoUsuario();db.collection('comments').onSnapshot(snap=>{DB.comments=snap.docs.map(d=>d.data());atualizarContadores();renderFeed();if(postAtivoId)renderDrawer(postAtivoId);});carregarLote(true);}
+function iniciarListeners(){
+  if(_listenersAtivos)return;
+  _listenersAtivos=true;
+  carregarCurtidas().then(()=>renderFeed());
+  carregarPlaylistsDoUsuario();
+  carregarNotificacoes();
+  db.collection('comments').onSnapshot(snap=>{
+    const novos=snap.docs.map(d=>d.data());
+    // detecta comentários novos que chegaram DEPOIS da carga inicial
+    if(_commentsSnapshotAnterior.size>0){
+      novos.forEach(c=>{
+        if(!_commentsSnapshotAnterior.has(c.id)&&!c.excluido&&c.origem==='ia'){
+          // é uma resposta nova da IA — verifica se responde a algo do usuário
+          verificarEGerarNotificacao(c);
+        }
+      });
+    }
+    // atualiza conjunto conhecido
+    novos.forEach(c=>_commentsSnapshotAnterior.add(c.id));
+    DB.comments=novos;
+    atualizarContadores();
+    renderFeed();
+    if(postAtivoId)renderDrawer(postAtivoId);
+  });
+  carregarLote(true);
+}
+
+// ============================================================
+// PLAYLIST DISCUSSÃO — garante que exista
+// ============================================================
+async function garantirPlaylistDiscussao(){
+  // procura nos já carregados
+  const existe=_playlistsCache.find(p=>p._sistema==='discussao');
+  if(existe){_playlistDiscussaoId=existe.id;return existe.id;}
+  // cria
+  const nova={userId:getUserId(),nome:'Discussão',emoji:'💬',criadaEm:ts(),postIds:[],_sistema:'discussao'};
+  const ref=await db.collection('playlists').add(nova);
+  _playlistDiscussaoId=ref.id;
+  _playlistsCache.push({id:ref.id,...nova});
+  renderPlaylistsSidebar();
+  return ref.id;
+}
+
+async function adicionarPostNaDiscussao(postId){
+  const pid=_playlistDiscussaoId||await garantirPlaylistDiscussao();
+  const pl=_playlistsCache.find(x=>x.id===pid);
+  if(!pl)return;
+  const ids=pl.postIds||[];
+  if(ids.includes(postId))return; // já está
+  ids.push(postId);
+  await db.collection('playlists').doc(pid).update({postIds:ids});
+  pl.postIds=ids;
+  renderPlaylistsSidebar();
+  renderFeed();
+}
+
+// ============================================================
+// NOTIFICAÇÕES
+// ============================================================
+function carregarNotificacoes(){
+  try{_notificacoes=JSON.parse(localStorage.getItem('st-notificacoes')||'[]');}
+  catch{_notificacoes=[];}
+  renderNotifBadge();
+  renderNotifPanel();
+}
+
+function salvarNotificacoes(){
+  // mantém só as 60 mais recentes
+  _notificacoes=_notificacoes.slice(0,60);
+  localStorage.setItem('st-notificacoes',JSON.stringify(_notificacoes));
+}
+
+function adicionarNotificacao(notif){
+  // evita duplicata
+  if(_notificacoes.find(n=>n.commentId&&n.commentId===notif.commentId))return;
+  _notificacoes.unshift({id:uid(),lida:false,ts:ts(),...notif});
+  salvarNotificacoes();
+  renderNotifBadge();
+  renderNotifPanel();
+  // toast sutil
+  toast(`🔔 ${notif.texto}`,'success');
+}
+
+function renderNotifBadge(){
+  const n=_notificacoes.filter(x=>!x.lida).length;
+  const badge=document.getElementById('notif-badge');
+  if(n>0){badge.textContent=n>9?'9+':n;badge.style.display='flex';}
+  else badge.style.display='none';
+}
+
+function renderNotifPanel(){
+  const list=document.getElementById('notif-list');
+  if(!_notificacoes.length){list.innerHTML='<div class="notif-empty">Nenhuma notificação.</div>';return;}
+  list.innerHTML=_notificacoes.map(n=>{
+    const p=DB.posts.find(x=>x.id===n.postId);
+    const preview=(p?.conteudo||'').substring(0,60)||'(sem texto)';
+    return`<div class="notif-item${n.lida?'':' unread'}" onclick="clicarNotif('${n.id}')">
+      <span class="notif-icon">${n.icon||'💬'}</span>
+      <div class="notif-body">
+        <div class="notif-title">${esc(n.texto)}</div>
+        <div class="notif-text">${esc(preview)}</div>
+        <div class="notif-ts">${tsF(n.ts)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleNotifPanel(){
+  const panel=document.getElementById('notif-panel'),overlay=document.getElementById('notif-overlay');
+  const isOpen=panel.classList.contains('open');
+  if(isOpen){fecharNotifPanel();}
+  else{panel.classList.add('open');overlay.classList.add('open');}
+}
+function fecharNotifPanel(){
+  document.getElementById('notif-panel').classList.remove('open');
+  document.getElementById('notif-overlay').classList.remove('open');
+}
+
+function clicarNotif(nid){
+  const n=_notificacoes.find(x=>x.id===nid);
+  if(!n)return;
+  n.lida=true;
+  salvarNotificacoes();
+  renderNotifBadge();
+  renderNotifPanel();
+  fecharNotifPanel();
+  if(n.postId){
+    feedTab='recentes';
+    playlistSelecionadaId=null;
+    document.querySelectorAll('.feed-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
+    renderFeed();
+    setTimeout(()=>abrirThread(n.postId),200);
+  }
+}
+
+function marcarTodasLidas(){
+  _notificacoes.forEach(n=>n.lida=true);
+  salvarNotificacoes();
+  renderNotifBadge();
+  renderNotifPanel();
+}
+
+// Verifica se um comment novo da IA é resposta a algo do usuário e gera notificação
+async function verificarEGerarNotificacao(comment){
+  // É resposta a um comentário manual?
+  if(comment.parentId){
+    const pai=DB.comments.find(x=>x.id===comment.parentId);
+    if(pai&&pai.origem==='manual'){
+      const post=DB.posts.find(x=>x.id===comment.postId);
+      adicionarNotificacao({
+        tipo:'resposta_comentario',
+        postId:comment.postId,
+        commentId:comment.id,
+        icon:'↩️',
+        texto:`IA respondeu seu comentário em "${(post?.conteudo||'post').substring(0,40)}"`
+      });
+      await adicionarPostNaDiscussao(comment.postId);
+      return;
+    }
+  }
+  // É resposta ao post em si (post estava inédito e agora tem resposta IA)?
+  const post=DB.posts.find(x=>x.id===comment.postId);
+  if(post&&post.inedito===false){
+    // post foi respondido
+    adicionarNotificacao({
+      tipo:'resposta_post',
+      postId:comment.postId,
+      commentId:comment.id,
+      icon:'✅',
+      texto:`Sua pergunta foi respondida: "${(post?.conteudo||'').substring(0,40)}"`
+    });
+    await adicionarPostNaDiscussao(comment.postId);
+  }
+}
+
+// Hook na importação: após importar, gera notificações para cada resposta nova
+const _executarImportacaoOriginal=async function(){
+  const txt=document.getElementById('importar-json').value.trim();
+  if(!txt){toast('Cole o JSON.','warning');return;}
+  let dados;try{dados=JSON.parse(txt);}catch{toast('JSON inválido.','error');return;}
+  const respostas=dados.respostas||[];let ok=0;
+  for(const r of respostas){
+    const{tarefaId,autor,tipo,conteudo}=r;
+    if(!tarefaId||!conteudo)continue;
+    let postId=null,parentId=null;
+    if(tarefaId.startsWith('task_post_')){
+      const id=tarefaId.replace('task_post_','');
+      const p=DB.posts.find(x=>x.id===id);if(!p)continue;
+      postId=id;
+      await db.collection('posts').doc(id).update({inedito:false,status:'respondido'});
+      p.inedito=false;
+    }else if(tarefaId.startsWith('task_comment_')){
+      const id=tarefaId.replace('task_comment_','');
+      const c=DB.comments.find(x=>x.id===id);if(!c)continue;
+      postId=c.postId;parentId=c.id;
+      await db.collection('comments').doc(id).update({statusLeitura:'processado'});
+      c.statusLeitura='processado';
+    }else continue;
+    const nc={id:uid(),postId,parentId,autor:autor||'IA',conteudo,tipo:tipo||'resposta',origem:'ia',statusLeitura:'processado',timestamp:ts()};
+    await db.collection('comments').doc(nc.id).set(nc);
+    DB.comments.push(nc);
+    ok++;
+    // gera notificação e adiciona à playlist Discussão
+    const post=DB.posts.find(x=>x.id===postId);
+    if(parentId){
+      const pai=DB.comments.find(x=>x.id===parentId);
+      if(pai&&pai.origem==='manual'){
+        adicionarNotificacao({tipo:'resposta_comentario',postId,commentId:nc.id,icon:'↩️',
+          texto:`IA respondeu seu comentário em "${(post?.conteudo||'post').substring(0,40)}"`});
+        await adicionarPostNaDiscussao(postId);
+      }
+    } else {
+      adicionarNotificacao({tipo:'resposta_post',postId,commentId:nc.id,icon:'✅',
+        texto:`Sua pergunta foi respondida: "${(post?.conteudo||'').substring(0,40)}"`});
+      await adicionarPostNaDiscussao(postId);
+    }
+  }
+  if(ok>0)toast(`${ok} resposta(s) importada(s)!`,'success');
+  fecharModal('modal-importar');atualizarContadores();renderFeed();
+};
+// substitui a função global
+window.executarImportacao=_executarImportacaoOriginal;
 const FONTE_MIN=13,FONTE_MAX=26;let fonteAtual=parseInt(localStorage.getItem('st-fonte')||'17');function aplicarFonte(px){fonteAtual=Math.min(FONTE_MAX,Math.max(FONTE_MIN,px));document.body.style.fontSize=fonteAtual+'px';document.getElementById('font-val').textContent=fonteAtual+'px';localStorage.setItem('st-fonte',fonteAtual);}function mudarFonte(delta){aplicarFonte(fonteAtual+delta);}
 // ============================================================
 // PLAYLIST — RENOMEAR / EXCLUIR ATIVA / REMOVER POST
