@@ -80,15 +80,19 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 #tag-filtro-bar.visible{display:flex;}
 .thread-overlay{position:fixed;inset:0;background:rgba(10,8,4,0);pointer-events:none;z-index:40;transition:background .25s;}
 .thread-overlay.open{background:rgba(10,8,4,.55);pointer-events:all;}
-.thread-drawer{position:fixed;top:0;right:0;width:480px;max-width:95vw;height:100vh;background:#1c1610;border-left:1px solid #4a3d2a;display:flex;flex-direction:column;z-index:50;transform:translateX(100%);transition:transform .3s cubic-bezier(.32,0,.67,0);}
+.thread-drawer{position:fixed;top:0;right:0;width:480px;max-width:95vw;height:100vh;height:100dvh;background:#1c1610;border-left:1px solid #4a3d2a;display:flex;flex-direction:column;z-index:50;transform:translateX(100%);transition:transform .3s cubic-bezier(.32,0,.67,0);overflow:hidden;}
 .thread-drawer.open{transform:translateX(0);}
-.drawer-header{flex-shrink:0;padding:14px 18px;background:#221b13;border-bottom:1px solid #3d3020;display:flex;gap:10px;}
-.drawer-header-text{flex:1;}
-.drawer-title{font-family:var(--display);font-size:.95rem;color:var(--sepia);}
-.drawer-preview{font-size:.77rem;color:var(--ghost);max-height:60px;overflow-y:auto;}
-.drawer-close{background:transparent;border:1px solid #4a3d2a;color:#7a6a50;padding:4px 8px;border-radius:var(--r);cursor:pointer;}
-.drawer-content{flex:1;overflow-y:auto;padding:16px;}
-.drawer-post-card{background:#252018;border:1px solid #3d3020;border-radius:8px;margin-bottom:20px;overflow:hidden;}
+.drawer-header{flex:0 0 auto;padding:14px 18px;background:#221b13;border-bottom:1px solid #3d3020;display:flex;gap:10px;}
+.drawer-header-text{flex:1;min-width:0;}
+.drawer-title{font-family:var(--display);font-size:.95rem;color:var(--sepia);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.drawer-preview{font-size:.77rem;color:var(--ghost);max-height:40px;overflow:hidden;text-overflow:ellipsis;}
+.drawer-close{background:transparent;border:1px solid #4a3d2a;color:#7a6a50;padding:4px 10px;border-radius:var(--r);cursor:pointer;flex-shrink:0;}
+.drawer-content{flex:1 1 0%;overflow-y:auto;overflow-x:hidden;padding:16px;min-height:0;-webkit-overflow-scrolling:touch;}
+.mini-composer{flex:0 0 auto;border-top:2px solid #4a3d2a;padding:10px 13px 12px;background:#1c1610;display:flex;flex-direction:column;gap:6px;}
+.mini-lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:#8a7050;}
+.mini-composer textarea{width:100%;background:#252018;border:1px solid #4a3d2a;border-radius:var(--r);padding:7px 9px;font-family:'Crimson Pro',serif;font-size:.84rem;color:#bfb090;resize:none;height:52px;outline:none;line-height:1.5;box-sizing:border-box;display:block;}
+.mini-composer textarea:focus{border-color:var(--gold);}
+.mini-row{display:flex;gap:7px;align-items:center;}.drawer-post-card{background:#252018;border:1px solid #3d3020;border-radius:8px;margin-bottom:20px;overflow:hidden;}
 .drawer-post-head{padding:12px 14px;border-bottom:1px solid #3d3020;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .drawer-post-video{margin-bottom:0;}
 .drawer-post-video iframe{width:100%;aspect-ratio:16/9;border:none;display:block;}
@@ -117,10 +121,6 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 .btn-dark-ghost{background:transparent;border:1px solid #4a3d2a;color:#8a7a60;padding:4px 9px;border-radius:var(--r);cursor:pointer;font-size:.62rem;font-family:var(--mono);}
 .btn-edit{background:transparent;border:none;color:#5a4d3a;font-size:.7rem;padding:2px 5px;border-radius:2px;cursor:pointer;}
 .btn-edit:hover{color:var(--gold);background:rgba(196,149,42,.1);}
-.mini-composer{flex-shrink:0;border-top:1px solid #3d3020;padding:11px 13px;background:#1c1610;}
-.mini-lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:#5a4d3a;margin-bottom:6px;}
-.mini-composer textarea{width:100%;background:#252018;border:1px solid #4a3d2a;border-radius:var(--r);padding:7px 9px;font-family:'Crimson Pro',serif;font-size:.84rem;color:#bfb090;resize:vertical;min-height:60px;}
-.mini-row{display:flex;gap:7px;margin-top:6px;}
 .dark-sel{flex:1;background:#252018;border:1px solid #4a3d2a;border-radius:var(--r);padding:5px 7px;font-family:var(--mono);font-size:.62rem;color:#8a7a60;}
 .tipo-sel{flex:1;background:var(--paper);border:1px solid var(--margin);border-radius:var(--r);padding:6px 9px;font-family:var(--mono);font-size:.7rem;color:var(--ink);outline:none;cursor:pointer;}
 .modal-overlay{position:fixed;inset:0;background:rgba(10,8,4,.8);backdrop-filter:blur(3px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
@@ -362,7 +362,28 @@ body{font-family:'Crimson Pro','Times New Roman',serif;font-size:17px;line-heigh
 
 <!-- DRAWER -->
 <div class="thread-overlay" id="thread-overlay" onclick="fecharDrawer()"></div>
-<div class="thread-drawer" id="thread-drawer"><div class="drawer-header"><div class="drawer-header-text"><div class="drawer-title" id="drawer-title">Thread</div><div class="drawer-preview" id="drawer-preview"></div></div><button class="drawer-close" onclick="fecharDrawer()">✕ Fechar</button></div><div class="drawer-content" id="drawer-content"></div><div class="mini-composer"><div class="mini-lbl">✦ Adicionar comentário</div><textarea id="mini-ta" placeholder="Escreva seu comentário…"></textarea><div class="mini-row"><select class="dark-sel" id="mini-tipo"><option value="resposta">Resposta</option><option value="explicacao">Explicação</option><option value="exercicio">Exercício</option></select><button class="btn btn-gold btn-sm" onclick="adicionarManualPost()">Adicionar</button></div></div></div>
+<div class="thread-drawer" id="thread-drawer">
+  <div class="drawer-header">
+    <div class="drawer-header-text">
+      <div class="drawer-title" id="drawer-title">Thread</div>
+      <div class="drawer-preview" id="drawer-preview"></div>
+    </div>
+    <button class="drawer-close" onclick="fecharDrawer()">✕ Fechar</button>
+  </div>
+  <div class="drawer-content" id="drawer-content"></div>
+  <div class="mini-composer" id="mini-composer">
+    <div class="mini-lbl">✦ Adicionar comentário</div>
+    <textarea id="mini-ta" placeholder="Escreva seu comentário…"></textarea>
+    <div class="mini-row">
+      <select class="dark-sel" id="mini-tipo">
+        <option value="resposta">Resposta</option>
+        <option value="explicacao">Explicação</option>
+        <option value="exercicio">Exercício</option>
+      </select>
+      <button class="btn btn-gold btn-sm" onclick="adicionarManualPost()">Adicionar</button>
+    </div>
+  </div>
+</div>
 
 <!-- PAINEL NOTIFICAÇÕES -->
 <div class="notif-overlay" id="notif-overlay" onclick="fecharNotifPanel()"></div>
@@ -501,7 +522,27 @@ async function criarPostModal(){
 function abrirImportar(){document.getElementById('importar-json').value='';abrirModal('modal-importar');}
 // executarImportacao é definida mais abaixo com suporte a notificações
 function abrirExportar(){const its=getConteudoInedito();if(!its.length){toast('Nenhum conteúdo inédito.','warning');return;}exportCache=its;document.getElementById('exportar-json').textContent=JSON.stringify({exportadoEm:ts(),tarefas:its.map(i=>i.tipo==='post'?{tarefaId:`task_post_${i.id}`,tipo:'responder_post',post:i.conteudo,tipoPosta:i.tipoPosta,tags:i.tags,contexto:i.contexto}:{tarefaId:`task_comment_${i.id}`,tipo:'responder_comentario',comentario:i.conteudo,contexto:i.contexto})},null,2);abrirModal('modal-exportar');}
-async function copiarExportacao(){try{await navigator.clipboard.writeText(document.getElementById('exportar-json').textContent);toast('JSON copiado!','success');}catch{toast('Selecione manualmente.','error');}}
+async function copiarExportacao(){
+  const texto=document.getElementById('exportar-json').textContent;
+  try{
+    await navigator.clipboard.writeText(texto);
+    toast('JSON copiado!','success');
+  }catch{
+    // fallback: cria textarea temporário e execCommand
+    const ta=document.createElement('textarea');
+    ta.value=texto;
+    ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(ta);
+    ta.focus();ta.select();
+    try{
+      document.execCommand('copy');
+      toast('JSON copiado!','success');
+    }catch{
+      toast('Erro ao copiar. Selecione o texto manualmente.','error');
+    }
+    document.body.removeChild(ta);
+  }
+}
 async function confirmarExportacao(){if(!exportCache)return;for(const item of exportCache){if(item.tipo==='comentario'){await db.collection('comments').doc(item.id).update({statusLeitura:'processado_pendente'});const c=DB.comments.find(x=>x.id===item.id);if(c)c.statusLeitura='processado_pendente';}else{await db.collection('posts').doc(item.id).update({inedito:false,status:'exportado'});const p=DB.posts.find(x=>x.id===item.id);if(p){p.inedito=false;p.status='exportado';}}}exportCache=null;toast('Itens marcados como exportados!','success');fecharModal('modal-exportar');atualizarContadores();renderFeed();}
 function getConteudoInedito(){const r=[];DB.posts.filter(p=>p.inedito&&p.status!=='excluido').forEach(p=>{r.push({tipo:'post',id:p.id,conteudo:p.conteudo,tipoPosta:p.tipo,tags:p.tags||[],contexto:`[POST — ${p.tipo}]\n${p.conteudo}`});});DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito'&&!c.excluido).forEach(c=>{const post=DB.posts.find(p=>p.id===c.postId);let ctx=`[POST — ${post?.tipo||'?'}]\n${post?.conteudo||'?'}\n\n`;DB.comments.filter(x=>x.postId===c.postId&&x.id!==c.id).forEach(x=>{ctx+=`— ${x.autor} (${x.tipo}): ${x.conteudo}\n`;});if(c.parentId){const pai=DB.comments.find(x=>x.id===c.parentId);if(pai)ctx+=`\n[RESPOSTA A: ${pai.autor}]\n${pai.conteudo}\n\n`;}ctx+=`[COMENTÁRIO MANUAL]\n${c.conteudo}`;r.push({tipo:'comentario',id:c.id,postId:c.postId,parentId:c.parentId,conteudo:c.conteudo,contexto:ctx});});return r;}
 function abrirEditarPost(id){const p=DB.posts.find(x=>x.id===id);if(!p)return;_editando={tipo:'post',id};document.getElementById('edit-modal-title').textContent='✏️ Editar Post';document.getElementById('edit-conteudo').value=p.conteudo;document.getElementById('edit-tipo-row').style.display='block';document.getElementById('edit-tipo').value=p.tipo;abrirModal('modal-editar');}
@@ -704,7 +745,7 @@ function compartilharWhatsApp(){const p=DB.posts.find(x=>x.id===_postCompartilha
 function copiarSharePreview(){navigator.clipboard.writeText(document.getElementById('share-preview').value).then(()=>toast('Copiado!','success'));}
 function aprofundarPost(postId){const p=DB.posts.find(x=>x.id===postId);if(!p)return;const json={post:{id:p.id,conteudo:p.conteudo,tipo:p.tipo,tags:p.tags||[]}};document.getElementById('aprofundar-json').textContent=JSON.stringify(json,null,2);abrirModal('modal-aprofundar');}
 function copiarAprofundamento(){navigator.clipboard.writeText(document.getElementById('aprofundar-json').textContent).then(()=>toast('JSON copiado!','success'));}
-async function carregarLote(resetar=false){if(resetar)DB.posts=[];try{const snap=await db.collection('posts').orderBy('timestamp','desc').limit(200).get();DB.posts=snap.docs.map(d=>d.data());renderFeed();atualizarContadores();}catch(e){console.error(e);toast('Erro ao carregar posts.','error');}}
+async function carregarLote(resetar=false){if(resetar)DB.posts=[];try{const snap=await db.collection('posts').orderBy('timestamp','desc').limit(200).get();DB.posts=snap.docs.map(d=>({...d.data(),id:d.data().id||d.id}));renderFeed();atualizarContadores();}catch(e){console.error(e);toast('Erro ao carregar posts.','error');}}
 function atualizarContadores(){const psr=DB.posts.filter(p=>p.inedito&&p.status!=='excluido').length,cmi=DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito'&&!c.excluido).length;document.getElementById('cnt-total').textContent=psr+cmi;document.getElementById('cnt-posts').textContent=`Posts s/ resposta: ${psr}`;document.getElementById('cnt-comments').textContent=`Comentários manuais: ${cmi}`;}
 function iniciarListeners(){
   if(_listenersAtivos)return;
@@ -713,17 +754,15 @@ function iniciarListeners(){
   carregarPlaylistsDoUsuario();
   carregarNotificacoes();
   db.collection('comments').onSnapshot(snap=>{
-    const novos=snap.docs.map(d=>d.data());
+    const novos=snap.docs.map(d=>({...d.data(),id:d.data().id||d.id}));
     // detecta comentários novos que chegaram DEPOIS da carga inicial
     if(_commentsSnapshotAnterior.size>0){
       novos.forEach(c=>{
         if(!_commentsSnapshotAnterior.has(c.id)&&!c.excluido&&c.origem==='ia'){
-          // é uma resposta nova da IA — verifica se responde a algo do usuário
           verificarEGerarNotificacao(c);
         }
       });
     }
-    // atualiza conjunto conhecido
     novos.forEach(c=>_commentsSnapshotAnterior.add(c.id));
     DB.comments=novos;
     atualizarContadores();
@@ -886,47 +925,73 @@ const _executarImportacaoOriginal=async function(){
   const txt=document.getElementById('importar-json').value.trim();
   if(!txt){toast('Cole o JSON.','warning');return;}
   let dados;try{dados=JSON.parse(txt);}catch{toast('JSON inválido.','error');return;}
-  const respostas=dados.respostas||[];let ok=0;
+  // aceita tanto {respostas:[]} quanto {comentarios:[]} (formato alternativo da IA)
+  const respostas=dados.respostas||dados.comentarios||[];
+  let ok=0,pulados=0;
   for(const r of respostas){
-    const{tarefaId,autor,tipo,conteudo}=r;
-    if(!tarefaId||!conteudo)continue;
+    const tarefaId=r.tarefaId||'';
+    // aceita "conteudo" ou "resposta" como chave do texto
+    const conteudo=(r.conteudo||r.resposta||'').trim();
+    const autor=r.autor||'IA';
+    const tipo=r.tipo||'resposta';
+    if(!conteudo){pulados++;continue;}
+    // ignora tarefaId undefined ou inválido
+    if(!tarefaId||tarefaId.endsWith('_undefined')||tarefaId.endsWith('_null')){
+      pulados++;
+      toast(`Ignorado: tarefaId inválido ("${tarefaId}")`, 'warning');
+      continue;
+    }
     let postId=null,parentId=null;
     if(tarefaId.startsWith('task_post_')){
       const id=tarefaId.replace('task_post_','');
-      const p=DB.posts.find(x=>x.id===id);if(!p)continue;
+      let p=DB.posts.find(x=>x.id===id);
+      if(!p){
+        try{const snap=await db.collection('posts').doc(id).get();if(snap.exists){p=snap.data();DB.posts.push(p);}else{pulados++;continue;}}catch{pulados++;continue;}
+      }
       postId=id;
       await db.collection('posts').doc(id).update({inedito:false,status:'respondido'});
-      p.inedito=false;
+      p.inedito=false;p.status='respondido';
     }else if(tarefaId.startsWith('task_comment_')){
       const id=tarefaId.replace('task_comment_','');
-      const c=DB.comments.find(x=>x.id===id);if(!c)continue;
+      let c=DB.comments.find(x=>x.id===id);
+      if(!c){
+        try{const snap=await db.collection('comments').doc(id).get();if(snap.exists){c=snap.data();DB.comments.push(c);}else{pulados++;continue;}}catch{pulados++;continue;}
+      }
       postId=c.postId;parentId=c.id;
       await db.collection('comments').doc(id).update({statusLeitura:'processado'});
       c.statusLeitura='processado';
-    }else continue;
-    const nc={id:uid(),postId,parentId,autor:autor||'IA',conteudo,tipo:tipo||'resposta',origem:'ia',statusLeitura:'processado',timestamp:ts()};
+    }else{pulados++;continue;}
+    if(!postId){pulados++;continue;}
+    const nc={id:uid(),postId,parentId:parentId||null,autor,conteudo,tipo,origem:'ia',statusLeitura:'processado',timestamp:ts()};
     await db.collection('comments').doc(nc.id).set(nc);
     DB.comments.push(nc);
     ok++;
-    // gera notificação e adiciona à playlist Discussão
     const post=DB.posts.find(x=>x.id===postId);
     if(parentId){
       const pai=DB.comments.find(x=>x.id===parentId);
       if(pai&&pai.origem==='manual'){
         adicionarNotificacao({tipo:'resposta_comentario',postId,commentId:nc.id,icon:'↩️',
-          texto:`IA respondeu seu comentário em "${(post?.conteudo||'post').substring(0,40)}"`});
+          texto:`IA respondeu: "${(post?.conteudo||'post').substring(0,40)}"`});
         await adicionarPostNaDiscussao(postId);
       }
     } else {
       adicionarNotificacao({tipo:'resposta_post',postId,commentId:nc.id,icon:'✅',
-        texto:`Sua pergunta foi respondida: "${(post?.conteudo||'').substring(0,40)}"`});
+        texto:`Respondido: "${(post?.conteudo||'').substring(0,40)}"`});
       await adicionarPostNaDiscussao(postId);
     }
   }
-  if(ok>0)toast(`${ok} resposta(s) importada(s)!`,'success');
-  fecharModal('modal-importar');atualizarContadores();renderFeed();
+  // recarrega tudo do Firestore para garantir sincronia
+  const cSnap=await db.collection('comments').get();
+  DB.comments=cSnap.docs.map(d=>({...d.data(),id:d.data().id||d.id}));
+  const pSnap=await db.collection('posts').orderBy('timestamp','desc').limit(200).get();
+  DB.posts=pSnap.docs.map(d=>({...d.data(),id:d.data().id||d.id}));
+  fecharModal('modal-importar');
+  atualizarContadores();
+  renderFeed();
+  if(postAtivoId)renderDrawer(postAtivoId);
+  if(ok>0)toast(`✅ ${ok} resposta(s) importada(s)${pulados>0?` (${pulados} ignorada(s))`:''}!`,'success');
+  else toast(`Nenhuma resposta importada.${pulados>0?` ${pulados} item(s) ignorado(s) por tarefaId inválido.`:''}`, 'warning');
 };
-// substitui a função global
 window.executarImportacao=_executarImportacaoOriginal;
 const FONTE_MIN=13,FONTE_MAX=26;let fonteAtual=parseInt(localStorage.getItem('st-fonte')||'17');function aplicarFonte(px){fonteAtual=Math.min(FONTE_MAX,Math.max(FONTE_MIN,px));document.body.style.fontSize=fonteAtual+'px';document.getElementById('font-val').textContent=fonteAtual+'px';localStorage.setItem('st-fonte',fonteAtual);}function mudarFonte(delta){aplicarFonte(fonteAtual+delta);}
 // ============================================================
