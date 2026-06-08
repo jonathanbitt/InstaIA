@@ -544,7 +544,23 @@ async function copiarExportacao(){
   }
 }
 async function confirmarExportacao(){if(!exportCache)return;for(const item of exportCache){if(item.tipo==='comentario'){await db.collection('comments').doc(item.id).update({statusLeitura:'processado_pendente'});const c=DB.comments.find(x=>x.id===item.id);if(c)c.statusLeitura='processado_pendente';}else{await db.collection('posts').doc(item.id).update({inedito:false,status:'exportado'});const p=DB.posts.find(x=>x.id===item.id);if(p){p.inedito=false;p.status='exportado';}}}exportCache=null;toast('Itens marcados como exportados!','success');fecharModal('modal-exportar');atualizarContadores();renderFeed();}
-function getConteudoInedito(){const r=[];DB.posts.filter(p=>p.inedito&&p.status!=='excluido').forEach(p=>{r.push({tipo:'post',id:p.id,conteudo:p.conteudo,tipoPosta:p.tipo,tags:p.tags||[],contexto:`[POST — ${p.tipo}]\n${p.conteudo}`});});DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito'&&!c.excluido).forEach(c=>{const post=DB.posts.find(p=>p.id===c.postId);let ctx=`[POST — ${post?.tipo||'?'}]\n${post?.conteudo||'?'}\n\n`;DB.comments.filter(x=>x.postId===c.postId&&x.id!==c.id).forEach(x=>{ctx+=`— ${x.autor} (${x.tipo}): ${x.conteudo}\n`;});if(c.parentId){const pai=DB.comments.find(x=>x.id===c.parentId);if(pai)ctx+=`\n[RESPOSTA A: ${pai.autor}]\n${pai.conteudo}\n\n`;}ctx+=`[COMENTÁRIO MANUAL]\n${c.conteudo}`;r.push({tipo:'comentario',id:c.id,postId:c.postId,parentId:c.parentId,conteudo:c.conteudo,contexto:ctx});});return r;}
+function getConteudoInedito(){
+  const r=[];
+  DB.posts.filter(p=>p.inedito&&p.status!=='excluido').forEach(p=>{
+    if(!p.id)return; // ignora posts sem id
+    r.push({tipo:'post',id:p.id,conteudo:p.conteudo,tipoPosta:p.tipo,tags:p.tags||[],contexto:`[POST — ${p.tipo}]\n${p.conteudo}`});
+  });
+  DB.comments.filter(c=>c.origem==='manual'&&c.statusLeitura==='inedito'&&!c.excluido).forEach(c=>{
+    if(!c.id||c.id==='undefined')return; // ignora comentários sem id válido
+    const post=DB.posts.find(p=>p.id===c.postId);
+    let ctx=`[POST — ${post?.tipo||'?'}]\n${post?.conteudo||'?'}\n\n`;
+    DB.comments.filter(x=>x.postId===c.postId&&x.id!==c.id).forEach(x=>{ctx+=`— ${x.autor} (${x.tipo}): ${x.conteudo}\n`;});
+    if(c.parentId){const pai=DB.comments.find(x=>x.id===c.parentId);if(pai)ctx+=`\n[RESPOSTA A: ${pai.autor}]\n${pai.conteudo}\n\n`;}
+    ctx+=`[COMENTÁRIO MANUAL]\n${c.conteudo}`;
+    r.push({tipo:'comentario',id:c.id,postId:c.postId,parentId:c.parentId,conteudo:c.conteudo,contexto:ctx});
+  });
+  return r;
+}
 function abrirEditarPost(id){const p=DB.posts.find(x=>x.id===id);if(!p)return;_editando={tipo:'post',id};document.getElementById('edit-modal-title').textContent='✏️ Editar Post';document.getElementById('edit-conteudo').value=p.conteudo;document.getElementById('edit-tipo-row').style.display='block';document.getElementById('edit-tipo').value=p.tipo;abrirModal('modal-editar');}
 function abrirEditarComentario(id){const c=DB.comments.find(x=>x.id===id);if(!c)return;_editando={tipo:'comentario',id};document.getElementById('edit-modal-title').textContent='✏️ Editar Comentário';document.getElementById('edit-conteudo').value=c.conteudo;document.getElementById('edit-tipo-row').style.display='none';abrirModal('modal-editar');}
 async function salvarEdicao(){if(!_editando)return;const conteudo=document.getElementById('edit-conteudo').value.trim();if(!conteudo&&_editando.tipo==='comentario'){toast('Conteúdo vazio.','warning');return;}if(_editando.tipo==='post'){const tipo=document.getElementById('edit-tipo').value;const upd={conteudo,tipo,editadoEm:ts()};await db.collection('posts').doc(_editando.id).update(upd);const p=DB.posts.find(x=>x.id===_editando.id);if(p)Object.assign(p,upd);toast('Post atualizado!','success');}else{await db.collection('comments').doc(_editando.id).update({conteudo,editadoEm:ts()});const c=DB.comments.find(x=>x.id===_editando.id);if(c){c.conteudo=conteudo;c.editadoEm=ts();}toast('Comentário atualizado!','success');}fecharModal('modal-editar');_editando=null;_postsAleatorios=[];renderFeed();if(postAtivoId)renderDrawer(postAtivoId);}
@@ -953,12 +969,26 @@ const _executarImportacaoOriginal=async function(){
       p.inedito=false;p.status='respondido';
     }else if(tarefaId.startsWith('task_comment_')){
       const id=tarefaId.replace('task_comment_','');
+      // busca primeiro pelo campo id, depois pelo doc ID do Firestore
       let c=DB.comments.find(x=>x.id===id);
       if(!c){
-        try{const snap=await db.collection('comments').doc(id).get();if(snap.exists){c=snap.data();DB.comments.push(c);}else{pulados++;continue;}}catch{pulados++;continue;}
+        try{
+          const snap=await db.collection('comments').doc(id).get();
+          if(snap.exists){
+            c={...snap.data(),id:snap.data().id||snap.id};
+            DB.comments.push(c);
+          } else {
+            // último recurso: busca por query no campo id
+            const q=await db.collection('comments').where('id','==',id).limit(1).get();
+            if(!q.empty){c={...q.docs[0].data(),id:q.docs[0].data().id||q.docs[0].id};DB.comments.push(c);}
+            else{pulados++;continue;}
+          }
+        }catch{pulados++;continue;}
       }
       postId=c.postId;parentId=c.id;
-      await db.collection('comments').doc(id).update({statusLeitura:'processado'});
+      // atualiza pelo doc ID real do Firestore
+      const docId=c.id||id;
+      try{await db.collection('comments').doc(docId).update({statusLeitura:'processado'});}catch{}
       c.statusLeitura='processado';
     }else{pulados++;continue;}
     if(!postId){pulados++;continue;}
