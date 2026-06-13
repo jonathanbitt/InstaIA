@@ -1,0 +1,106 @@
+{
+  "icone": "🏅",
+  "titulo_materia": "🏆 OBMEP - Matemática 5º Ano",
+  "aulas": [
+    {
+      "titulo": "Múltiplos e Divisores",
+      "explicacao": "Múltiplos de um número são os resultados de multiplicar esse número por 1, 2, 3, 4... 🔢 Já os divisores de um número são os números que cabem dentro dele um número exato de vezes (sem deixar resto).",
+      "dica": "💡 Para achar múltiplos, é só multiplicar (3, 6, 9, 12...). Para saber se um número é divisor de outro, faça a divisão: se o resto for 0, é divisor!",
+      "exemplo": "Múltiplos de 4: 4, 8, 12, 16, 20... (4x1, 4x2, 4x3...). Já os divisores de 12 são: 1, 2, 3, 4, 6 e 12, porque todos eles dividem o 12 sem deixar resto.",
+      "pergunta": "Qual dos números abaixo é um múltiplo de 7?",
+      "opcoes": ["27", "35", "40", "50"],
+      "resposta": "35",
+      "explicacao_resposta": "35 é múltiplo de 7 porque 7 x 5 = 35. Os outros números (27, 40, 50) não aparecem na tabuada do 7. ⭐"
+    },
+    {
+      "titulo": "Sequências com Multiplicação e Divisão",
+      "explicacao": "Algumas sequências não somam ou subtraem sempre o mesmo número — elas multiplicam ou dividem! 🚀 Para descobrir a regra, veja o que precisa ser feito com um número para chegar ao próximo: se ele aumenta muito rápido, pode ser multiplicação; se diminui pela metade, pode ser divisão.",
+      "dica": "💡 Divida o segundo número pelo primeiro. Se o resultado for sempre o mesmo, essa é a regra de multiplicação da sequência!",
+      "exemplo": "Veja: 2, 6, 18, 54... Dividindo 6 por 2 = 3. Dividindo 18 por 6 = 3. A regra é 'multiplicar por 3'. Então depois de 54 vem 54 x 3 = 162.",
+      "pergunta": "Qual é o próximo número da sequência: 3, 6, 12, 24, ___?",
+      "opcoes": ["28", "36", "42", "48"],
+      "resposta": "48",
+      "explicacao_resposta": "A regra dessa sequência é 'multiplicar por 2': 3 → 6 (x2) → 12 (x2) → 24 (x2). Então o próximo número é 24 x 2 = 48. 🧠"
+    },
+    {
+      "titulo": "Porcentagem do Dia a Dia",
+      "explicacao": "Porcentagem é uma forma de mostrar uma parte de algo em relação a 100. 💯 O símbolo % significa 'a cada 100'. Para calcular porcentagens fáceis como 50%, 25% e 10%, podemos usar frações: 50% é a metade, 25% é um quarto e 10% é a décima parte.",
+      "dica": "💡 50% = dividir por 2. 25% = dividir por 4. 10% = dividir por 10. Depois de achar o 10%, é fácil achar 20%, 30%, etc, multiplicando o valor do 10%!",
+      "exemplo": "Quanto é 10% de 80? Dividimos 80 por 10 = 8. Então 10% de 80 é 8. E 20% de 80 seria 8 x 2 = 16.",
+      "pergunta": "Uma loja deu 25% de desconto em um brinquedo de R$40. Quantos reais de desconto a criança ganhou?",
+      "opcoes": ["R$4", "R$8", "R$10", "R$20"],
+      "resposta": "R$10",
+      "explicacao_resposta": "25% significa 'um quarto'. Para achar 25% de 40, dividimos 40 por 4: 40 ÷ 4 = 10. O desconto foi de R$10. 💡"
+    },
+    {
+      "titulo": "Valor Posicional dos Algarismos",
+      "explicacao": "Em um número, cada algarismo tem um valor diferente dependendo da posição em que ele está: unidade, dezena, centena, milhar... 🔢 O mesmo algarismo pode valer 1 ou pode valer 1000, dependendo de onde ele está escrito!",
+      "dica": "💡 Comece contando as posições da direita para a esquerda: unidade, dezena, centena, unidade de milhar... Para saber o valor de um algarismo, multiplique-o pelo valor da sua posição.",
+      "exemplo": "No número 4.582, o algarismo 5 está na posição das centenas, então ele representa 500 (e não apenas 5). Já o algarismo 4 está na posição dos milhares e representa 4.000.",
+      "pergunta": "No número 6.749, qual é o valor que o algarismo 7 representa?",
+      "opcoes": ["7", "70", "700", "7.000"],
+      "resposta": "700",
+      "explicacao_resposta": "No número 6.749, o algarismo 7 está na posição das centenas. Por isso, ele representa 700 (e não apenas 7). 📚"
+    },
+    {
+      "titulo": "Área em Quadriculados",
+      "explicacao": "A área de uma figura mostra o quanto de espaço ela ocupa. 📐 Uma forma simples de medir a área é contar quantos quadradinhos iguais cabem dentro da figura, quando ela está desenhada em um papel quadriculado.",
+      "dica": "💡 Se a figura for um retângulo, você pode contar quantos quadradinhos há em uma linha e multiplicar pela quantidade de linhas — é mais rápido do que contar um por um!",
+      "exemplo": "Um retângulo desenhado em um quadriculado tem 5 quadradinhos de largura e 3 quadradinhos de altura. A área é 5 x 3 = 15 quadradinhos.",
+      "pergunta": "Um terreno retangular tem 8 quadradinhos de comprimento e 4 quadradinhos de largura, em um mapa quadriculado. Qual é a área desse terreno, em quadradinhos?",
+      "opcoes": ["12", "24", "32", "36"],
+      "resposta": "32",
+      "explicacao_resposta": "Para achar a área de um retângulo, multiplicamos o comprimento pela largura: 8 x 4 = 32 quadradinhos. 🎯"
+    },
+    {
+      "titulo": "Calculando a Média",
+      "explicacao": "A média é um número que representa um valor 'equilibrado' entre vários valores diferentes. 🎯 Para calcular a média, somamos todos os valores e depois dividimos pela quantidade de valores que somamos.",
+      "dica": "💡 Passo 1: some todos os números. Passo 2: divida essa soma pela quantidade de números que você somou. O resultado é a média!",
+      "exemplo": "Em 3 provas, um aluno tirou 6, 8 e 10. A soma é 6 + 8 + 10 = 24. Como foram 3 provas, dividimos 24 por 3 = 8. A média do aluno foi 8.",
+      "pergunta": "Lucas jogou 4 partidas de um jogo e fez 5, 7, 9 e 3 pontos. Qual foi a média de pontos de Lucas por partida?",
+      "opcoes": ["5", "6", "7", "8"],
+      "resposta": "6",
+      "explicacao_resposta": "Primeiro somamos os pontos: 5 + 7 + 9 + 3 = 24. Depois dividimos pela quantidade de partidas (4): 24 ÷ 4 = 6. A média foi 6 pontos por partida. ⭐"
+    },
+    {
+      "titulo": "Razão e Proporção",
+      "explicacao": "Uma razão compara duas quantidades, mostrando quantas vezes uma é maior (ou menor) que a outra. ⚖️ Quando duas razões representam a mesma comparação, dizemos que elas são proporcionais — como uma receita que pode ser feita em dobro mantendo as mesmas proporções dos ingredientes.",
+      "dica": "💡 Se uma quantidade dobra, a outra quantidade que está na mesma proporção também precisa dobrar, para manter a receita (ou a comparação) igual.",
+      "exemplo": "Uma receita usa 2 xícaras de farinha para 1 xícara de açúcar (razão 2 para 1). Se eu quiser usar 4 xícaras de farinha, mantendo a proporção, vou precisar de 2 xícaras de açúcar (o dobro de antes).",
+      "pergunta": "Uma receita de suco usa 3 limões para cada 2 litros de água. Se eu usar 9 limões, mantendo a mesma proporção, quantos litros de água eu vou precisar?",
+      "opcoes": ["4 litros", "5 litros", "6 litros", "9 litros"],
+      "resposta": "6 litros",
+      "explicacao_resposta": "Se 3 limões correspondem a 2 litros, e 9 é o triplo de 3 (3 x 3 = 9), então também precisamos do triplo de água: 2 x 3 = 6 litros. 🧠"
+    },
+    {
+      "titulo": "Pistas e Dedução Lógica",
+      "explicacao": "Em alguns problemas, recebemos várias pistas sobre pessoas ou coisas, e precisamos usar a lógica para descobrir quem é quem. 🕵️ O segredo é ler todas as pistas com calma e ir eliminando as opções que não são possíveis, até sobrar apenas uma resposta certa.",
+      "dica": "💡 Anote as pistas em ordem e vá riscando (mentalmente ou no papel) as possibilidades que as pistas eliminam, até sobrar só uma opção válida.",
+      "exemplo": "Três amigos (Ana, Beto e Caio) têm idades diferentes: 8, 10 e 12 anos. Pista 1: Ana não é a mais velha. Pista 2: Beto é mais velho que Ana. Conclusão: Caio é o mais velho (12 anos), Beto tem 10 e Ana tem 8.",
+      "pergunta": "Três amigas (Júlia, Carla e Sofia) usam camisetas de cores diferentes: azul, verde e amarela. Pista 1: Júlia não usa azul nem amarela. Pista 2: Carla não usa verde. Qual cor de camiseta Júlia está usando?",
+      "opcoes": ["Azul", "Verde", "Amarela", "Não é possível saber"],
+      "resposta": "Verde",
+      "explicacao_resposta": "Pela pista 1, Júlia não usa azul nem amarela — então ela só pode usar verde. Como Carla não usa verde (pista 2), Carla deve usar azul ou amarela, e Sofia fica com a cor que restar. Mas a pergunta só pede a cor de Júlia, que é verde. 🎯"
+    },
+    {
+      "titulo": "Sequências de Figuras (Números Triangulares)",
+      "explicacao": "Algumas sequências de números aparecem quando contamos pontinhos organizados em formas geométricas, como triângulos. 🔺 Esses são chamados de 'números triangulares', e cada novo número é formado adicionando uma nova fileira de pontos à figura anterior.",
+      "dica": "💡 Para descobrir o próximo número triangular, observe quanto cada termo aumenta em relação ao anterior: o aumento também cresce de 1 em 1 a cada passo (+2, +3, +4...).",
+      "exemplo": "Os números triangulares começam assim: 1, 3, 6, 10, 15... A diferença entre eles é 2, 3, 4, 5. Então o próximo depois de 15 seria 15 + 6 = 21.",
+      "pergunta": "Observe a sequência de números triangulares: 1, 3, 6, 10, 15, ___. Qual é o próximo número?",
+      "opcoes": ["18", "20", "21", "25"],
+      "resposta": "21",
+      "explicacao_resposta": "As diferenças entre os números são 2, 3, 4, 5 — então a próxima diferença é 6. Por isso, o próximo número é 15 + 6 = 21. 🔺"
+    },
+    {
+      "titulo": "Desafio Olímpico: O Problema das Idades",
+      "explicacao": "Os desafios de idade são clássicos das olimpíadas de matemática! 🏆 Eles costumam dar pistas sobre a soma ou a diferença das idades de duas pessoas, e pedem para descobrirmos a idade de cada uma. O segredo é montar as informações com cuidado, como em um quebra-cabeça.",
+      "dica": "💡 Se você sabe a soma de duas idades e a diferença entre elas, pode tentar valores e verificar quais batem com as duas condições ao mesmo tempo.",
+      "exemplo": "A soma das idades de dois irmãos é 14, e a diferença entre eles é 2. Testando: se o mais novo tem 6, o mais velho tem 8 (soma 14, diferença 2). Os irmãos têm 6 e 8 anos.",
+      "pergunta": "A soma das idades de Pedro e seu pai é 50 anos. Sabendo que o pai tem 30 anos mais que Pedro, qual é a idade de Pedro?",
+      "opcoes": ["8 anos", "10 anos", "15 anos", "20 anos"],
+      "resposta": "10 anos",
+      "explicacao_resposta": "Se a soma é 50 e a diferença é 30, podemos pensar assim: se Pedro tem 10, o pai tem 10 + 30 = 40. Somando: 10 + 40 = 50. ✅ Confere com as duas pistas! Pedro tem 10 anos. 🏅"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "icone": "🏅",
+  "titulo_materia": "🏆 OBMEP - Matemática 6º Ano",
+  "aulas": [
+    {
+      "titulo": "Números Negativos no Dia a Dia",
+      "explicacao": "Números negativos representam quantidades 'menores que zero', como temperaturas abaixo de zero, andares de subsolo ou dívidas. ❄️ Quanto mais para a esquerda do zero na reta numérica, menor é o número — ou seja, -5 é menor que -1!",
+      "dica": "💡 Imagine uma reta numérica: o zero está no meio, os números positivos vão para a direita e os negativos para a esquerda. Quanto mais à esquerda, menor o número.",
+      "exemplo": "Se a temperatura era -3°C e subiu 5 graus, o novo valor é -3 + 5 = 2°C. Pense na reta numérica: começando em -3 e andando 5 casas para a direita, chegamos no 2.",
+      "pergunta": "Em uma manhã muito fria, a temperatura estava em -4°C. Durante o dia, ela subiu 9 graus. Qual foi a temperatura ao final do dia?",
+      "opcoes": ["5°C", "-5°C", "13°C", "-13°C"],
+      "resposta": "5°C",
+      "explicacao_resposta": "Começando em -4 e subindo 9 graus, fazemos -4 + 9 = 5. A temperatura final foi 5°C. ⭐"
+    },
+    {
+      "titulo": "Ordem das Operações",
+      "explicacao": "Quando uma expressão tem várias operações misturadas (soma, subtração, multiplicação, divisão e parênteses), existe uma ordem certa para resolver! 🧮 Primeiro resolvemos o que está dentro dos parênteses, depois multiplicações e divisões, e por último somas e subtrações.",
+      "dica": "💡 Lembre-se da ordem: 1º Parênteses, 2º Multiplicação e Divisão (na ordem que aparecem), 3º Soma e Subtração (na ordem que aparecem).",
+      "exemplo": "Calcule 2 + 3 x 4. Primeiro fazemos a multiplicação: 3 x 4 = 12. Depois somamos: 2 + 12 = 14. Se fizéssemos a soma primeiro (2+3=5, depois x4=20), o resultado seria errado!",
+      "pergunta": "Qual é o resultado de (4 + 2) x 3 - 5?",
+      "opcoes": ["13", "15", "18", "21"],
+      "resposta": "13",
+      "explicacao_resposta": "Primeiro resolvemos o parênteses: 4 + 2 = 6. Depois a multiplicação: 6 x 3 = 18. Por fim, a subtração: 18 - 5 = 13. 🧠"
+    },
+    {
+      "titulo": "Comparando e Somando Frações",
+      "explicacao": "Para comparar ou somar frações, é mais fácil quando elas têm o mesmo denominador (o número de baixo). 🍰 Se os denominadores forem diferentes, precisamos transformar as frações para que tenham o mesmo denominador antes de comparar ou somar.",
+      "dica": "💡 Para comparar frações com denominadores diferentes, procure um número que seja múltiplo dos dois denominadores e transforme as frações para esse novo denominador.",
+      "exemplo": "Para somar 1/4 + 1/2, transformamos 1/2 em 2/4 (multiplicando cima e baixo por 2). Agora ficou fácil: 1/4 + 2/4 = 3/4.",
+      "pergunta": "Quanto é 1/3 + 1/6?",
+      "opcoes": ["1/2", "2/9", "2/6", "1/9"],
+      "resposta": "1/2",
+      "explicacao_resposta": "Transformamos 1/3 em 2/6 (multiplicando cima e baixo por 2). Agora: 2/6 + 1/6 = 3/6. E 3/6 é igual a 1/2 (dividindo cima e baixo por 3). 📚"
+    },
+    {
+      "titulo": "Aumentos e Descontos em Porcentagem",
+      "explicacao": "Quando um preço sofre um desconto, ele diminui. Quando sofre um aumento, ele cresce. 💰 Para calcular o novo preço, primeiro descobrimos o valor da porcentagem e depois somamos (se for aumento) ou subtraímos (se for desconto) do preço original.",
+      "dica": "💡 Passo 1: calcule a porcentagem do valor original. Passo 2: some (aumento) ou subtraia (desconto) esse valor do preço original para achar o preço final.",
+      "exemplo": "Um produto custa R$50 e tem 10% de desconto. 10% de 50 é 5. O novo preço é 50 - 5 = R$45.",
+      "pergunta": "Uma mochila custava R$80 e teve um aumento de 15%. Qual é o novo preço da mochila?",
+      "opcoes": ["R$12", "R$88", "R$92", "R$95"],
+      "resposta": "R$92",
+      "explicacao_resposta": "Primeiro calculamos 15% de 80: 10% de 80 é 8, e 5% de 80 é 4 (a metade de 8). Somando, 15% de 80 = 8 + 4 = 12. Agora somamos o aumento ao preço original: 80 + 12 = R$92. ⭐"
+    },
+    {
+      "titulo": "Números Primos e Compostos",
+      "explicacao": "Um número primo é aquele que só pode ser dividido exatamente por 1 e por ele mesmo, sem deixar resto. 🔢 Já um número composto pode ser dividido por outros números também, além de 1 e ele mesmo. O número 1 não é considerado primo nem composto.",
+      "dica": "💡 Para saber se um número é primo, tente dividi-lo por 2, 3, 5, 7... Se nenhum desses números (menores que ele) o dividir exatamente, ele é primo!",
+      "exemplo": "O número 7 só pode ser dividido exatamente por 1 e por 7 — então é primo. Já o número 8 pode ser dividido por 1, 2, 4 e 8 — então é composto.",
+      "pergunta": "Qual dos números a seguir é um número primo?",
+      "opcoes": ["9", "12", "13", "15"],
+      "resposta": "13",
+      "explicacao_resposta": "13 só pode ser dividido exatamente por 1 e por 13, então é primo. Já 9 (3x3), 12 (várias divisões) e 15 (3x5) são compostos, porque têm outros divisores além de 1 e eles mesmos. 🧠"
+    },
+    {
+      "titulo": "Perímetro e Área de Figuras Compostas",
+      "explicacao": "Uma figura composta é formada pela junção de duas ou mais figuras simples, como quadrados e retângulos. 📐 Para achar a área total, podemos dividir a figura composta em partes menores, calcular a área de cada parte separadamente, e depois somar tudo.",
+      "dica": "💡 Desenhe uma linha imaginária para dividir a figura composta em retângulos ou quadrados menores. Calcule a área de cada parte e some os resultados!",
+      "exemplo": "Uma figura em forma de 'L' pode ser dividida em dois retângulos: um de 4x2 (área 8) e outro de 2x3 (área 6). A área total da figura é 8 + 6 = 14.",
+      "pergunta": "Uma sala tem o formato de um retângulo grande de 6m x 4m, mas tem um cantinho quadrado de 2m x 2m que foi removido (não faz parte da sala). Qual é a área real da sala?",
+      "opcoes": ["18 m²", "20 m²", "22 m²", "24 m²"],
+      "resposta": "20 m²",
+      "explicacao_resposta": "A área do retângulo grande é 6 x 4 = 24 m². A área do quadrado removido é 2 x 2 = 4 m². Para achar a área da sala, subtraímos: 24 - 4 = 20 m². 🎯"
+    },
+    {
+      "titulo": "Regra de Três Simples",
+      "explicacao": "A regra de três simples é usada quando duas grandezas são proporcionais: se uma aumenta, a outra também aumenta na mesma proporção (ou se uma diminui, a outra diminui também). ⚖️ Para resolver, organizamos os valores conhecidos e descobrimos o valor que falta por meio de uma multiplicação cruzada.",
+      "dica": "💡 Organize os dados em duas colunas (por exemplo, 'quantidade' e 'preço'). Multiplique os valores em diagonal e divida pelo valor que sobrou para achar a resposta.",
+      "exemplo": "Se 3 cadernos custam R$15, quanto custam 5 cadernos? Fazemos: 3 cadernos → 15 reais; 5 cadernos → x reais. Multiplicando em cruz: 3 vezes x = 5 vezes 15, então 3x = 75, e x = 75 ÷ 3 = 25. Os 5 cadernos custam R$25.",
+      "pergunta": "Se uma máquina produz 120 brinquedos em 4 horas, quantos brinquedos ela produz em 6 horas (mantendo o mesmo ritmo)?",
+      "opcoes": ["150", "160", "180", "200"],
+      "resposta": "180",
+      "explicacao_resposta": "Em 4 horas são 120 brinquedos, então em 1 hora são 120 ÷ 4 = 30 brinquedos. Em 6 horas, a máquina produz 30 x 6 = 180 brinquedos. 💡"
+    },
+    {
+      "titulo": "Conjuntos e Diagramas",
+      "explicacao": "Um diagrama mostra grupos de coisas que têm algo em comum, e às vezes esses grupos se cruzam — ou seja, alguns elementos pertencem aos dois grupos ao mesmo tempo! 🟢🔵 Esses diagramas ajudam a organizar informações e a contar quantos elementos existem em cada parte.",
+      "dica": "💡 Quando dois grupos se cruzam, tome cuidado para não contar duas vezes quem está nos dois grupos ao mesmo tempo!",
+      "exemplo": "Em uma turma, 12 alunos gostam de futebol, 8 gostam de vôlei, e 3 alunos gostam dos dois esportes. Para saber quantos gostam de futebol OU vôlei, fazemos 12 + 8 - 3 = 17 (subtraímos os 3 que foram contados duas vezes).",
+      "pergunta": "Em uma turma de 30 alunos, 18 têm um cachorro, 10 têm um gato, e 5 alunos têm os dois animais. Quantos alunos têm cachorro OU gato?",
+      "opcoes": ["18", "23", "28", "33"],
+      "resposta": "23",
+      "explicacao_resposta": "Somamos os dois grupos: 18 + 10 = 28. Como 5 alunos foram contados duas vezes (eles têm os dois animais), subtraímos esse valor: 28 - 5 = 23 alunos têm cachorro ou gato. 🧩"
+    },
+    {
+      "titulo": "Sequências com Letras (Padrões Algébricos)",
+      "explicacao": "Em algumas sequências, usamos uma letra para representar a posição do termo (1º, 2º, 3º...) e descobrimos uma fórmula que funciona para qualquer posição. ✏️ Isso é o começo da álgebra: encontrar uma regra geral, em vez de só olhar termo por termo.",
+      "dica": "💡 Veja como o número da posição se relaciona com o valor do termo. Tente multiplicar, somar ou subtrair a posição por algum número até encontrar uma regra que funcione para todos os termos.",
+      "exemplo": "Sequência: 1º termo = 2, 2º termo = 4, 3º termo = 6, 4º termo = 8. A regra é 'multiplicar a posição por 2'. Para o 10º termo, seria 10 x 2 = 20.",
+      "pergunta": "Em uma sequência, o valor de cada termo é igual à posição multiplicada por 3, mais 1 (ou seja, posição x 3 + 1). Qual é o valor do 5º termo dessa sequência?",
+      "opcoes": ["13", "15", "16", "18"],
+      "resposta": "16",
+      "explicacao_resposta": "Aplicando a regra para a posição 5: 5 x 3 + 1 = 15 + 1 = 16. O 5º termo da sequência é 16. 🚀"
+    },
+    {
+      "titulo": "Desafio Olímpico: Quadrados Mágicos",
+      "explicacao": "Um quadrado mágico é uma tabela de números onde a soma de cada linha, cada coluna e cada diagonal é sempre igual ao mesmo valor, chamado de 'soma mágica'. 🏆 Esses desafios aparecem muito em olimpíadas de matemática e treinam o raciocínio lógico.",
+      "dica": "💡 Primeiro descubra a soma mágica usando uma linha, coluna ou diagonal que já está completa. Depois, use essa soma para descobrir os números que faltam nas outras linhas e colunas.",
+      "exemplo": "Em um quadrado mágico 3x3 com os números de 1 a 9, a soma mágica é sempre 15. Se uma linha tem os números 8, 1 e ?, a soma deve ser 15, então ? = 15 - 8 - 1 = 6.",
+      "pergunta": "Em um quadrado mágico 3x3, a soma mágica é 15. Uma das linhas tem os números 4, 9 e ?. Qual é o número que falta nessa linha?",
+      "opcoes": ["1", "2", "3", "5"],
+      "resposta": "2",
+      "explicacao_resposta": "Como a soma de cada linha deve ser 15, e essa linha já tem 4 + 9 = 13, o número que falta é 15 - 13 = 2. 🏅"
+    }
+  ]
+}

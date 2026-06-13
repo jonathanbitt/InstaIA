@@ -8,6 +8,34 @@
       "descricao": "Sequências, lógica, contagem e desafios olímpicos",
       "icone": "🏅",
       "arquivo": "./data/obmep_4ano.json"
+    },
+    {
+      "id": "obmep_5ano",
+      "nome": "🏆 OBMEP - 5º Ano",
+      "descricao": "Múltiplos, frações, porcentagem e proporção",
+      "icone": "🏅",
+      "arquivo": "./data/obmep_5ano.json"
+    },
+    {
+      "id": "obmep_6ano",
+      "nome": "🏆 OBMEP - 6º Ano",
+      "descricao": "Números negativos, álgebra, regra de três e mais",
+      "icone": "🏅",
+      "arquivo": "./data/obmep_6ano.json"
+    },
+    {
+      "id": "portugues_4ano",
+      "nome": "📖 Português - 4º ao 6º Ano",
+      "descricao": "Gramática, interpretação de texto e ortografia",
+      "icone": "📖",
+      "arquivo": "./data/portugues_4ano.json"
+    },
+    {
+      "id": "ciencias_4ano",
+      "nome": "🔬 Ciências - 4º ao 6º Ano",
+      "descricao": "Matéria, sistema solar, corpo humano e meio ambiente",
+      "icone": "🔬",
+      "arquivo": "./data/ciencias_4ano.json"
     }
   ]
 }
