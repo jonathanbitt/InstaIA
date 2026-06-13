@@ -538,6 +538,34 @@ const FALLBACK_INDEX = {
       "descricao": "Sequências, lógica, contagem e desafios olímpicos",
       "icone": "🏅",
       "arquivo": "./data/obmep_4ano.json"
+    },
+    {
+      "id": "obmep_5ano",
+      "nome": "🏆 OBMEP - 5º Ano",
+      "descricao": "Múltiplos, frações, porcentagem e proporção",
+      "icone": "🏅",
+      "arquivo": "./data/obmep_5ano.json"
+    },
+    {
+      "id": "obmep_6ano",
+      "nome": "🏆 OBMEP - 6º Ano",
+      "descricao": "Números negativos, álgebra, regra de três e mais",
+      "icone": "🏅",
+      "arquivo": "./data/obmep_6ano.json"
+    },
+    {
+      "id": "portugues_4ano",
+      "nome": "📖 Português - 4º ao 6º Ano",
+      "descricao": "Gramática, interpretação de texto e ortografia",
+      "icone": "📖",
+      "arquivo": "./data/portugues_4ano.json"
+    },
+    {
+      "id": "ciencias_4ano",
+      "nome": "🔬 Ciências - 4º ao 6º Ano",
+      "descricao": "Matéria, sistema solar, corpo humano e meio ambiente",
+      "icone": "🔬",
+      "arquivo": "./data/ciencias_4ano.json"
     }
   ]
 };
@@ -649,9 +677,641 @@ const FALLBACK_OBMEP = {
   ]
 };
 
+const FALLBACK_OBMEP_5 = {
+  "icone": "🏅",
+  "titulo_materia": "🏆 OBMEP - Matemática 5º Ano",
+  "aulas": [
+    {
+      "titulo": "Múltiplos e Divisores",
+      "explicacao": "Múltiplos de um número são os resultados de multiplicar esse número por 1, 2, 3, 4... 🔢 Já os divisores de um número são os números que cabem dentro dele um número exato de vezes (sem deixar resto).",
+      "dica": "💡 Para achar múltiplos, é só multiplicar (3, 6, 9, 12...). Para saber se um número é divisor de outro, faça a divisão: se o resto for 0, é divisor!",
+      "exemplo": "Múltiplos de 4: 4, 8, 12, 16, 20... (4x1, 4x2, 4x3...). Já os divisores de 12 são: 1, 2, 3, 4, 6 e 12, porque todos eles dividem o 12 sem deixar resto.",
+      "pergunta": "Qual dos números abaixo é um múltiplo de 7?",
+      "opcoes": [
+        "27",
+        "35",
+        "40",
+        "50"
+      ],
+      "resposta": "35",
+      "explicacao_resposta": "35 é múltiplo de 7 porque 7 x 5 = 35. Os outros números (27, 40, 50) não aparecem na tabuada do 7. ⭐"
+    },
+    {
+      "titulo": "Sequências com Multiplicação e Divisão",
+      "explicacao": "Algumas sequências não somam ou subtraem sempre o mesmo número — elas multiplicam ou dividem! 🚀 Para descobrir a regra, veja o que precisa ser feito com um número para chegar ao próximo: se ele aumenta muito rápido, pode ser multiplicação; se diminui pela metade, pode ser divisão.",
+      "dica": "💡 Divida o segundo número pelo primeiro. Se o resultado for sempre o mesmo, essa é a regra de multiplicação da sequência!",
+      "exemplo": "Veja: 2, 6, 18, 54... Dividindo 6 por 2 = 3. Dividindo 18 por 6 = 3. A regra é 'multiplicar por 3'. Então depois de 54 vem 54 x 3 = 162.",
+      "pergunta": "Qual é o próximo número da sequência: 3, 6, 12, 24, ___?",
+      "opcoes": [
+        "28",
+        "36",
+        "42",
+        "48"
+      ],
+      "resposta": "48",
+      "explicacao_resposta": "A regra dessa sequência é 'multiplicar por 2': 3 → 6 (x2) → 12 (x2) → 24 (x2). Então o próximo número é 24 x 2 = 48. 🧠"
+    },
+    {
+      "titulo": "Porcentagem do Dia a Dia",
+      "explicacao": "Porcentagem é uma forma de mostrar uma parte de algo em relação a 100. 💯 O símbolo % significa 'a cada 100'. Para calcular porcentagens fáceis como 50%, 25% e 10%, podemos usar frações: 50% é a metade, 25% é um quarto e 10% é a décima parte.",
+      "dica": "💡 50% = dividir por 2. 25% = dividir por 4. 10% = dividir por 10. Depois de achar o 10%, é fácil achar 20%, 30%, etc, multiplicando o valor do 10%!",
+      "exemplo": "Quanto é 10% de 80? Dividimos 80 por 10 = 8. Então 10% de 80 é 8. E 20% de 80 seria 8 x 2 = 16.",
+      "pergunta": "Uma loja deu 25% de desconto em um brinquedo de R$40. Quantos reais de desconto a criança ganhou?",
+      "opcoes": [
+        "R$4",
+        "R$8",
+        "R$10",
+        "R$20"
+      ],
+      "resposta": "R$10",
+      "explicacao_resposta": "25% significa 'um quarto'. Para achar 25% de 40, dividimos 40 por 4: 40 ÷ 4 = 10. O desconto foi de R$10. 💡"
+    },
+    {
+      "titulo": "Valor Posicional dos Algarismos",
+      "explicacao": "Em um número, cada algarismo tem um valor diferente dependendo da posição em que ele está: unidade, dezena, centena, milhar... 🔢 O mesmo algarismo pode valer 1 ou pode valer 1000, dependendo de onde ele está escrito!",
+      "dica": "💡 Comece contando as posições da direita para a esquerda: unidade, dezena, centena, unidade de milhar... Para saber o valor de um algarismo, multiplique-o pelo valor da sua posição.",
+      "exemplo": "No número 4.582, o algarismo 5 está na posição das centenas, então ele representa 500 (e não apenas 5). Já o algarismo 4 está na posição dos milhares e representa 4.000.",
+      "pergunta": "No número 6.749, qual é o valor que o algarismo 7 representa?",
+      "opcoes": [
+        "7",
+        "70",
+        "700",
+        "7.000"
+      ],
+      "resposta": "700",
+      "explicacao_resposta": "No número 6.749, o algarismo 7 está na posição das centenas. Por isso, ele representa 700 (e não apenas 7). 📚"
+    },
+    {
+      "titulo": "Área em Quadriculados",
+      "explicacao": "A área de uma figura mostra o quanto de espaço ela ocupa. 📐 Uma forma simples de medir a área é contar quantos quadradinhos iguais cabem dentro da figura, quando ela está desenhada em um papel quadriculado.",
+      "dica": "💡 Se a figura for um retângulo, você pode contar quantos quadradinhos há em uma linha e multiplicar pela quantidade de linhas — é mais rápido do que contar um por um!",
+      "exemplo": "Um retângulo desenhado em um quadriculado tem 5 quadradinhos de largura e 3 quadradinhos de altura. A área é 5 x 3 = 15 quadradinhos.",
+      "pergunta": "Um terreno retangular tem 8 quadradinhos de comprimento e 4 quadradinhos de largura, em um mapa quadriculado. Qual é a área desse terreno, em quadradinhos?",
+      "opcoes": [
+        "12",
+        "24",
+        "32",
+        "36"
+      ],
+      "resposta": "32",
+      "explicacao_resposta": "Para achar a área de um retângulo, multiplicamos o comprimento pela largura: 8 x 4 = 32 quadradinhos. 🎯"
+    },
+    {
+      "titulo": "Calculando a Média",
+      "explicacao": "A média é um número que representa um valor 'equilibrado' entre vários valores diferentes. 🎯 Para calcular a média, somamos todos os valores e depois dividimos pela quantidade de valores que somamos.",
+      "dica": "💡 Passo 1: some todos os números. Passo 2: divida essa soma pela quantidade de números que você somou. O resultado é a média!",
+      "exemplo": "Em 3 provas, um aluno tirou 6, 8 e 10. A soma é 6 + 8 + 10 = 24. Como foram 3 provas, dividimos 24 por 3 = 8. A média do aluno foi 8.",
+      "pergunta": "Lucas jogou 4 partidas de um jogo e fez 5, 7, 9 e 3 pontos. Qual foi a média de pontos de Lucas por partida?",
+      "opcoes": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "resposta": "6",
+      "explicacao_resposta": "Primeiro somamos os pontos: 5 + 7 + 9 + 3 = 24. Depois dividimos pela quantidade de partidas (4): 24 ÷ 4 = 6. A média foi 6 pontos por partida. ⭐"
+    },
+    {
+      "titulo": "Razão e Proporção",
+      "explicacao": "Uma razão compara duas quantidades, mostrando quantas vezes uma é maior (ou menor) que a outra. ⚖️ Quando duas razões representam a mesma comparação, dizemos que elas são proporcionais — como uma receita que pode ser feita em dobro mantendo as mesmas proporções dos ingredientes.",
+      "dica": "💡 Se uma quantidade dobra, a outra quantidade que está na mesma proporção também precisa dobrar, para manter a receita (ou a comparação) igual.",
+      "exemplo": "Uma receita usa 2 xícaras de farinha para 1 xícara de açúcar (razão 2 para 1). Se eu quiser usar 4 xícaras de farinha, mantendo a proporção, vou precisar de 2 xícaras de açúcar (o dobro de antes).",
+      "pergunta": "Uma receita de suco usa 3 limões para cada 2 litros de água. Se eu usar 9 limões, mantendo a mesma proporção, quantos litros de água eu vou precisar?",
+      "opcoes": [
+        "4 litros",
+        "5 litros",
+        "6 litros",
+        "9 litros"
+      ],
+      "resposta": "6 litros",
+      "explicacao_resposta": "Se 3 limões correspondem a 2 litros, e 9 é o triplo de 3 (3 x 3 = 9), então também precisamos do triplo de água: 2 x 3 = 6 litros. 🧠"
+    },
+    {
+      "titulo": "Pistas e Dedução Lógica",
+      "explicacao": "Em alguns problemas, recebemos várias pistas sobre pessoas ou coisas, e precisamos usar a lógica para descobrir quem é quem. 🕵️ O segredo é ler todas as pistas com calma e ir eliminando as opções que não são possíveis, até sobrar apenas uma resposta certa.",
+      "dica": "💡 Anote as pistas em ordem e vá riscando (mentalmente ou no papel) as possibilidades que as pistas eliminam, até sobrar só uma opção válida.",
+      "exemplo": "Três amigos (Ana, Beto e Caio) têm idades diferentes: 8, 10 e 12 anos. Pista 1: Ana não é a mais velha. Pista 2: Beto é mais velho que Ana. Conclusão: Caio é o mais velho (12 anos), Beto tem 10 e Ana tem 8.",
+      "pergunta": "Três amigas (Júlia, Carla e Sofia) usam camisetas de cores diferentes: azul, verde e amarela. Pista 1: Júlia não usa azul nem amarela. Pista 2: Carla não usa verde. Qual cor de camiseta Júlia está usando?",
+      "opcoes": [
+        "Azul",
+        "Verde",
+        "Amarela",
+        "Não é possível saber"
+      ],
+      "resposta": "Verde",
+      "explicacao_resposta": "Pela pista 1, Júlia não usa azul nem amarela — então ela só pode usar verde. Como Carla não usa verde (pista 2), Carla deve usar azul ou amarela, e Sofia fica com a cor que restar. Mas a pergunta só pede a cor de Júlia, que é verde. 🎯"
+    },
+    {
+      "titulo": "Sequências de Figuras (Números Triangulares)",
+      "explicacao": "Algumas sequências de números aparecem quando contamos pontinhos organizados em formas geométricas, como triângulos. 🔺 Esses são chamados de 'números triangulares', e cada novo número é formado adicionando uma nova fileira de pontos à figura anterior.",
+      "dica": "💡 Para descobrir o próximo número triangular, observe quanto cada termo aumenta em relação ao anterior: o aumento também cresce de 1 em 1 a cada passo (+2, +3, +4...).",
+      "exemplo": "Os números triangulares começam assim: 1, 3, 6, 10, 15... A diferença entre eles é 2, 3, 4, 5. Então o próximo depois de 15 seria 15 + 6 = 21.",
+      "pergunta": "Observe a sequência de números triangulares: 1, 3, 6, 10, 15, ___. Qual é o próximo número?",
+      "opcoes": [
+        "18",
+        "20",
+        "21",
+        "25"
+      ],
+      "resposta": "21",
+      "explicacao_resposta": "As diferenças entre os números são 2, 3, 4, 5 — então a próxima diferença é 6. Por isso, o próximo número é 15 + 6 = 21. 🔺"
+    },
+    {
+      "titulo": "Desafio Olímpico: O Problema das Idades",
+      "explicacao": "Os desafios de idade são clássicos das olimpíadas de matemática! 🏆 Eles costumam dar pistas sobre a soma ou a diferença das idades de duas pessoas, e pedem para descobrirmos a idade de cada uma. O segredo é montar as informações com cuidado, como em um quebra-cabeça.",
+      "dica": "💡 Se você sabe a soma de duas idades e a diferença entre elas, pode tentar valores e verificar quais batem com as duas condições ao mesmo tempo.",
+      "exemplo": "A soma das idades de dois irmãos é 14, e a diferença entre eles é 2. Testando: se o mais novo tem 6, o mais velho tem 8 (soma 14, diferença 2). Os irmãos têm 6 e 8 anos.",
+      "pergunta": "A soma das idades de Pedro e seu pai é 50 anos. Sabendo que o pai tem 30 anos mais que Pedro, qual é a idade de Pedro?",
+      "opcoes": [
+        "8 anos",
+        "10 anos",
+        "15 anos",
+        "20 anos"
+      ],
+      "resposta": "10 anos",
+      "explicacao_resposta": "Se a soma é 50 e a diferença é 30, podemos pensar assim: se Pedro tem 10, o pai tem 10 + 30 = 40. Somando: 10 + 40 = 50. ✅ Confere com as duas pistas! Pedro tem 10 anos. 🏅"
+    }
+  ]
+};
+
+const FALLBACK_OBMEP_6 = {
+  "icone": "🏅",
+  "titulo_materia": "🏆 OBMEP - Matemática 6º Ano",
+  "aulas": [
+    {
+      "titulo": "Números Negativos no Dia a Dia",
+      "explicacao": "Números negativos representam quantidades 'menores que zero', como temperaturas abaixo de zero, andares de subsolo ou dívidas. ❄️ Quanto mais para a esquerda do zero na reta numérica, menor é o número — ou seja, -5 é menor que -1!",
+      "dica": "💡 Imagine uma reta numérica: o zero está no meio, os números positivos vão para a direita e os negativos para a esquerda. Quanto mais à esquerda, menor o número.",
+      "exemplo": "Se a temperatura era -3°C e subiu 5 graus, o novo valor é -3 + 5 = 2°C. Pense na reta numérica: começando em -3 e andando 5 casas para a direita, chegamos no 2.",
+      "pergunta": "Em uma manhã muito fria, a temperatura estava em -4°C. Durante o dia, ela subiu 9 graus. Qual foi a temperatura ao final do dia?",
+      "opcoes": [
+        "5°C",
+        "-5°C",
+        "13°C",
+        "-13°C"
+      ],
+      "resposta": "5°C",
+      "explicacao_resposta": "Começando em -4 e subindo 9 graus, fazemos -4 + 9 = 5. A temperatura final foi 5°C. ⭐"
+    },
+    {
+      "titulo": "Ordem das Operações",
+      "explicacao": "Quando uma expressão tem várias operações misturadas (soma, subtração, multiplicação, divisão e parênteses), existe uma ordem certa para resolver! 🧮 Primeiro resolvemos o que está dentro dos parênteses, depois multiplicações e divisões, e por último somas e subtrações.",
+      "dica": "💡 Lembre-se da ordem: 1º Parênteses, 2º Multiplicação e Divisão (na ordem que aparecem), 3º Soma e Subtração (na ordem que aparecem).",
+      "exemplo": "Calcule 2 + 3 x 4. Primeiro fazemos a multiplicação: 3 x 4 = 12. Depois somamos: 2 + 12 = 14. Se fizéssemos a soma primeiro (2+3=5, depois x4=20), o resultado seria errado!",
+      "pergunta": "Qual é o resultado de (4 + 2) x 3 - 5?",
+      "opcoes": [
+        "13",
+        "15",
+        "18",
+        "21"
+      ],
+      "resposta": "13",
+      "explicacao_resposta": "Primeiro resolvemos o parênteses: 4 + 2 = 6. Depois a multiplicação: 6 x 3 = 18. Por fim, a subtração: 18 - 5 = 13. 🧠"
+    },
+    {
+      "titulo": "Comparando e Somando Frações",
+      "explicacao": "Para comparar ou somar frações, é mais fácil quando elas têm o mesmo denominador (o número de baixo). 🍰 Se os denominadores forem diferentes, precisamos transformar as frações para que tenham o mesmo denominador antes de comparar ou somar.",
+      "dica": "💡 Para comparar frações com denominadores diferentes, procure um número que seja múltiplo dos dois denominadores e transforme as frações para esse novo denominador.",
+      "exemplo": "Para somar 1/4 + 1/2, transformamos 1/2 em 2/4 (multiplicando cima e baixo por 2). Agora ficou fácil: 1/4 + 2/4 = 3/4.",
+      "pergunta": "Quanto é 1/3 + 1/6?",
+      "opcoes": [
+        "1/2",
+        "2/9",
+        "2/6",
+        "1/9"
+      ],
+      "resposta": "1/2",
+      "explicacao_resposta": "Transformamos 1/3 em 2/6 (multiplicando cima e baixo por 2). Agora: 2/6 + 1/6 = 3/6. E 3/6 é igual a 1/2 (dividindo cima e baixo por 3). 📚"
+    },
+    {
+      "titulo": "Aumentos e Descontos em Porcentagem",
+      "explicacao": "Quando um preço sofre um desconto, ele diminui. Quando sofre um aumento, ele cresce. 💰 Para calcular o novo preço, primeiro descobrimos o valor da porcentagem e depois somamos (se for aumento) ou subtraímos (se for desconto) do preço original.",
+      "dica": "💡 Passo 1: calcule a porcentagem do valor original. Passo 2: some (aumento) ou subtraia (desconto) esse valor do preço original para achar o preço final.",
+      "exemplo": "Um produto custa R$50 e tem 10% de desconto. 10% de 50 é 5. O novo preço é 50 - 5 = R$45.",
+      "pergunta": "Uma mochila custava R$80 e teve um aumento de 15%. Qual é o novo preço da mochila?",
+      "opcoes": [
+        "R$12",
+        "R$88",
+        "R$92",
+        "R$95"
+      ],
+      "resposta": "R$92",
+      "explicacao_resposta": "Primeiro calculamos 15% de 80: 10% de 80 é 8, e 5% de 80 é 4 (a metade de 8). Somando, 15% de 80 = 8 + 4 = 12. Agora somamos o aumento ao preço original: 80 + 12 = R$92. ⭐"
+    },
+    {
+      "titulo": "Números Primos e Compostos",
+      "explicacao": "Um número primo é aquele que só pode ser dividido exatamente por 1 e por ele mesmo, sem deixar resto. 🔢 Já um número composto pode ser dividido por outros números também, além de 1 e ele mesmo. O número 1 não é considerado primo nem composto.",
+      "dica": "💡 Para saber se um número é primo, tente dividi-lo por 2, 3, 5, 7... Se nenhum desses números (menores que ele) o dividir exatamente, ele é primo!",
+      "exemplo": "O número 7 só pode ser dividido exatamente por 1 e por 7 — então é primo. Já o número 8 pode ser dividido por 1, 2, 4 e 8 — então é composto.",
+      "pergunta": "Qual dos números a seguir é um número primo?",
+      "opcoes": [
+        "9",
+        "12",
+        "13",
+        "15"
+      ],
+      "resposta": "13",
+      "explicacao_resposta": "13 só pode ser dividido exatamente por 1 e por 13, então é primo. Já 9 (3x3), 12 (várias divisões) e 15 (3x5) são compostos, porque têm outros divisores além de 1 e eles mesmos. 🧠"
+    },
+    {
+      "titulo": "Perímetro e Área de Figuras Compostas",
+      "explicacao": "Uma figura composta é formada pela junção de duas ou mais figuras simples, como quadrados e retângulos. 📐 Para achar a área total, podemos dividir a figura composta em partes menores, calcular a área de cada parte separadamente, e depois somar tudo.",
+      "dica": "💡 Desenhe uma linha imaginária para dividir a figura composta em retângulos ou quadrados menores. Calcule a área de cada parte e some os resultados!",
+      "exemplo": "Uma figura em forma de 'L' pode ser dividida em dois retângulos: um de 4x2 (área 8) e outro de 2x3 (área 6). A área total da figura é 8 + 6 = 14.",
+      "pergunta": "Uma sala tem o formato de um retângulo grande de 6m x 4m, mas tem um cantinho quadrado de 2m x 2m que foi removido (não faz parte da sala). Qual é a área real da sala?",
+      "opcoes": [
+        "18 m²",
+        "20 m²",
+        "22 m²",
+        "24 m²"
+      ],
+      "resposta": "20 m²",
+      "explicacao_resposta": "A área do retângulo grande é 6 x 4 = 24 m². A área do quadrado removido é 2 x 2 = 4 m². Para achar a área da sala, subtraímos: 24 - 4 = 20 m². 🎯"
+    },
+    {
+      "titulo": "Regra de Três Simples",
+      "explicacao": "A regra de três simples é usada quando duas grandezas são proporcionais: se uma aumenta, a outra também aumenta na mesma proporção (ou se uma diminui, a outra diminui também). ⚖️ Para resolver, organizamos os valores conhecidos e descobrimos o valor que falta por meio de uma multiplicação cruzada.",
+      "dica": "💡 Organize os dados em duas colunas (por exemplo, 'quantidade' e 'preço'). Multiplique os valores em diagonal e divida pelo valor que sobrou para achar a resposta.",
+      "exemplo": "Se 3 cadernos custam R$15, quanto custam 5 cadernos? Fazemos: 3 cadernos → 15 reais; 5 cadernos → x reais. Multiplicando em cruz: 3 vezes x = 5 vezes 15, então 3x = 75, e x = 75 ÷ 3 = 25. Os 5 cadernos custam R$25.",
+      "pergunta": "Se uma máquina produz 120 brinquedos em 4 horas, quantos brinquedos ela produz em 6 horas (mantendo o mesmo ritmo)?",
+      "opcoes": [
+        "150",
+        "160",
+        "180",
+        "200"
+      ],
+      "resposta": "180",
+      "explicacao_resposta": "Em 4 horas são 120 brinquedos, então em 1 hora são 120 ÷ 4 = 30 brinquedos. Em 6 horas, a máquina produz 30 x 6 = 180 brinquedos. 💡"
+    },
+    {
+      "titulo": "Conjuntos e Diagramas",
+      "explicacao": "Um diagrama mostra grupos de coisas que têm algo em comum, e às vezes esses grupos se cruzam — ou seja, alguns elementos pertencem aos dois grupos ao mesmo tempo! 🟢🔵 Esses diagramas ajudam a organizar informações e a contar quantos elementos existem em cada parte.",
+      "dica": "💡 Quando dois grupos se cruzam, tome cuidado para não contar duas vezes quem está nos dois grupos ao mesmo tempo!",
+      "exemplo": "Em uma turma, 12 alunos gostam de futebol, 8 gostam de vôlei, e 3 alunos gostam dos dois esportes. Para saber quantos gostam de futebol OU vôlei, fazemos 12 + 8 - 3 = 17 (subtraímos os 3 que foram contados duas vezes).",
+      "pergunta": "Em uma turma de 30 alunos, 18 têm um cachorro, 10 têm um gato, e 5 alunos têm os dois animais. Quantos alunos têm cachorro OU gato?",
+      "opcoes": [
+        "18",
+        "23",
+        "28",
+        "33"
+      ],
+      "resposta": "23",
+      "explicacao_resposta": "Somamos os dois grupos: 18 + 10 = 28. Como 5 alunos foram contados duas vezes (eles têm os dois animais), subtraímos esse valor: 28 - 5 = 23 alunos têm cachorro ou gato. 🧩"
+    },
+    {
+      "titulo": "Sequências com Letras (Padrões Algébricos)",
+      "explicacao": "Em algumas sequências, usamos uma letra para representar a posição do termo (1º, 2º, 3º...) e descobrimos uma fórmula que funciona para qualquer posição. ✏️ Isso é o começo da álgebra: encontrar uma regra geral, em vez de só olhar termo por termo.",
+      "dica": "💡 Veja como o número da posição se relaciona com o valor do termo. Tente multiplicar, somar ou subtrair a posição por algum número até encontrar uma regra que funcione para todos os termos.",
+      "exemplo": "Sequência: 1º termo = 2, 2º termo = 4, 3º termo = 6, 4º termo = 8. A regra é 'multiplicar a posição por 2'. Para o 10º termo, seria 10 x 2 = 20.",
+      "pergunta": "Em uma sequência, o valor de cada termo é igual à posição multiplicada por 3, mais 1 (ou seja, posição x 3 + 1). Qual é o valor do 5º termo dessa sequência?",
+      "opcoes": [
+        "13",
+        "15",
+        "16",
+        "18"
+      ],
+      "resposta": "16",
+      "explicacao_resposta": "Aplicando a regra para a posição 5: 5 x 3 + 1 = 15 + 1 = 16. O 5º termo da sequência é 16. 🚀"
+    },
+    {
+      "titulo": "Desafio Olímpico: Quadrados Mágicos",
+      "explicacao": "Um quadrado mágico é uma tabela de números onde a soma de cada linha, cada coluna e cada diagonal é sempre igual ao mesmo valor, chamado de 'soma mágica'. 🏆 Esses desafios aparecem muito em olimpíadas de matemática e treinam o raciocínio lógico.",
+      "dica": "💡 Primeiro descubra a soma mágica usando uma linha, coluna ou diagonal que já está completa. Depois, use essa soma para descobrir os números que faltam nas outras linhas e colunas.",
+      "exemplo": "Em um quadrado mágico 3x3 com os números de 1 a 9, a soma mágica é sempre 15. Se uma linha tem os números 8, 1 e ?, a soma deve ser 15, então ? = 15 - 8 - 1 = 6.",
+      "pergunta": "Em um quadrado mágico 3x3, a soma mágica é 15. Uma das linhas tem os números 4, 9 e ?. Qual é o número que falta nessa linha?",
+      "opcoes": [
+        "1",
+        "2",
+        "3",
+        "5"
+      ],
+      "resposta": "2",
+      "explicacao_resposta": "Como a soma de cada linha deve ser 15, e essa linha já tem 4 + 9 = 13, o número que falta é 15 - 13 = 2. 🏅"
+    }
+  ]
+};
+
+const FALLBACK_PORTUGUES = {
+  "icone": "📖",
+  "titulo_materia": "📖 Língua Portuguesa - 4º ao 6º Ano",
+  "aulas": [
+    {
+      "titulo": "Sinônimos e Antônimos",
+      "explicacao": "Sinônimos são palavras que têm o mesmo significado (ou um significado muito parecido), e antônimos são palavras que têm significados opostos. 📖 Conhecer sinônimos e antônimos ajuda a deixar nossos textos mais ricos e variados, sem repetir sempre a mesma palavra.",
+      "dica": "💡 Para descobrir um sinônimo, pense em outra palavra que poderia substituir a primeira na frase sem mudar o sentido. Para o antônimo, pense no 'contrário' da ideia.",
+      "exemplo": "A palavra 'feliz' tem como sinônimo 'alegre' (significado parecido) e como antônimo 'triste' (significado oposto). Na frase 'O menino estava feliz', podemos trocar por 'O menino estava alegre' sem mudar o sentido.",
+      "pergunta": "Qual palavra é um ANTÔNIMO de 'corajoso'?",
+      "opcoes": [
+        "Valente",
+        "Medroso",
+        "Forte",
+        "Animado"
+      ],
+      "resposta": "Medroso",
+      "explicacao_resposta": "'Corajoso' significa que não tem medo. O antônimo (palavra de sentido oposto) é 'medroso', que significa o contrário: ter muito medo. As outras palavras ('valente', 'forte', 'animado') têm sentidos parecidos com 'corajoso', não opostos. ⭐"
+    },
+    {
+      "titulo": "Tipos de Frases",
+      "explicacao": "As frases podem ser de diferentes tipos, dependendo da intenção de quem está falando: 🎯 frase afirmativa (afirma algo), frase negativa (nega algo, geralmente com a palavra 'não'), frase interrogativa (faz uma pergunta, termina com '?') e frase exclamativa (mostra emoção forte, termina com '!').",
+      "dica": "💡 Olhe para o final da frase e para as palavras usadas: '?' indica pergunta, '!' indica emoção forte, 'não' geralmente indica negação, e quando não há nada disso, geralmente é afirmativa.",
+      "exemplo": "'Eu gosto de futebol.' é afirmativa. 'Eu não gosto de futebol.' é negativa. 'Você gosta de futebol?' é interrogativa. 'Que jogo incrível!' é exclamativa.",
+      "pergunta": "Qual das frases abaixo é uma frase INTERROGATIVA?",
+      "opcoes": [
+        "Que dia lindo!",
+        "Hoje não vou à escola.",
+        "Você fez a lição de casa?",
+        "Eu adoro chocolate."
+      ],
+      "resposta": "Você fez a lição de casa?",
+      "explicacao_resposta": "Uma frase interrogativa é usada para fazer uma pergunta e termina com o sinal de interrogação (?). A frase 'Você fez a lição de casa?' está perguntando algo, por isso é interrogativa. 📚"
+    },
+    {
+      "titulo": "Substantivos: Próprios, Comuns e Coletivos",
+      "explicacao": "Substantivo é a palavra que dá nome às coisas, pessoas, lugares e seres em geral. 🏷️ O substantivo comum nomeia de forma geral (menino, cidade, cachorro). O substantivo próprio nomeia algo específico, sempre com letra maiúscula (Pedro, Brasília, Rex). Já o substantivo coletivo nomeia um grupo de seres da mesma espécie (cardume, manada, enxame).",
+      "dica": "💡 Se o nome começa com letra maiúscula e identifica algo específico (uma pessoa, lugar ou marca), é substantivo próprio. Se nomeia um grupo de seres da mesma espécie, é coletivo!",
+      "exemplo": "'Cachorro' é um substantivo comum (qualquer cachorro). 'Rex' é um substantivo próprio (o nome de um cachorro específico). 'Matilha' é um substantivo coletivo (um grupo de cachorros ou lobos).",
+      "pergunta": "Qual das palavras abaixo é um substantivo COLETIVO?",
+      "opcoes": [
+        "Pássaro",
+        "Bando",
+        "Maria",
+        "Floresta"
+      ],
+      "resposta": "Bando",
+      "explicacao_resposta": "'Bando' é um substantivo coletivo, pois representa um grupo de pássaros (ou outros animais) reunidos. 'Pássaro' é comum, 'Maria' é próprio e 'floresta' é comum. 🐦"
+    },
+    {
+      "titulo": "Adjetivos: Dando Características",
+      "explicacao": "Adjetivo é a palavra que indica uma característica de um substantivo: como ele é, qual é a sua cor, tamanho, qualidade ou estado. 🌈 Os adjetivos ajudam a tornar a descrição de algo muito mais rica e detalhada.",
+      "dica": "💡 Para encontrar o adjetivo em uma frase, pergunte: 'como é essa coisa ou pessoa?'. A palavra que responde a essa pergunta geralmente é o adjetivo.",
+      "exemplo": "Na frase 'O gato preto dormiu no sofá confortável', as palavras 'preto' (característica do gato) e 'confortável' (característica do sofá) são adjetivos.",
+      "pergunta": "Na frase 'A menina esperta resolveu o problema difícil rapidinho', quais palavras são ADJETIVOS?",
+      "opcoes": [
+        "Menina e problema",
+        "Esperta e difícil",
+        "Resolveu e rapidinho",
+        "A e o"
+      ],
+      "resposta": "Esperta e difícil",
+      "explicacao_resposta": "'Esperta' descreve uma característica da menina, e 'difícil' descreve uma característica do problema. Por isso, essas duas palavras são adjetivos. 'Menina' e 'problema' são substantivos. ⭐"
+    },
+    {
+      "titulo": "Tempos Verbais: Presente, Passado e Futuro",
+      "explicacao": "Os verbos indicam ações, e essas ações podem acontecer em diferentes momentos do tempo: 🕐 presente (a ação está acontecendo agora), passado (a ação já aconteceu) e futuro (a ação ainda vai acontecer).",
+      "dica": "💡 Pense em quando a ação acontece: 'Eu como' (agora = presente), 'Eu comi' (já aconteceu = passado), 'Eu comerei' ou 'Eu vou comer' (ainda vai acontecer = futuro).",
+      "exemplo": "'Hoje eu estudo matemática' está no presente. 'Ontem eu estudei português' está no passado. 'Amanhã eu estudarei ciências' está no futuro.",
+      "pergunta": "Em qual tempo verbal está a frase 'Amanhã, nós viajaremos para a praia'?",
+      "opcoes": [
+        "Presente",
+        "Passado",
+        "Futuro",
+        "Não tem verbo"
+      ],
+      "resposta": "Futuro",
+      "explicacao_resposta": "A palavra 'amanhã' já indica que a ação ainda vai acontecer, e o verbo 'viajaremos' está no futuro, indicando algo que ainda não ocorreu. 🚀"
+    },
+    {
+      "titulo": "Interpretação de Texto",
+      "explicacao": "Interpretar um texto é entender não só as palavras escritas, mas também o que elas querem dizer no contexto. 🧐 Algumas respostas estão escritas diretamente no texto (interpretação literal), mas outras vezes precisamos pensar um pouco mais para entender uma ideia que está implícita (subentendida).",
+      "dica": "💡 Leia o texto com atenção, depois leia de novo procurando as palavras-chave da pergunta. Muitas vezes a resposta está escondida em uma frase parecida com a pergunta.",
+      "exemplo": "Texto: 'Marcos correu para a escola porque estava atrasado para a prova.' Pergunta: por que Marcos correu? Resposta: porque ele estava atrasado para a prova — essa informação está escrita diretamente no texto.",
+      "pergunta": "Leia o texto: 'Depois de muitos dias sem chuva, as plantas do jardim de Ana começaram a ficar murchas e amarelas.' De acordo com o texto, por que as plantas ficaram murchas?",
+      "opcoes": [
+        "Porque choveu muito",
+        "Porque ficaram muitos dias sem chuva",
+        "Porque Ana esqueceu de plantá-las",
+        "Porque era inverno"
+      ],
+      "resposta": "Porque ficaram muitos dias sem chuva",
+      "explicacao_resposta": "O texto diz claramente: 'Depois de muitos dias sem chuva, as plantas... começaram a ficar murchas e amarelas'. A falta de chuva é a causa apresentada no texto. 📖"
+    },
+    {
+      "titulo": "Ortografia: Uso de R e RR, S e SS",
+      "explicacao": "Algumas letras têm sons parecidos, mas a forma de escrever muda dependendo da posição na palavra. ✍️ Por exemplo, usamos 'R' no começo da palavra ou depois de consoante, e 'RR' entre vogais. Já o 'S' tem som de 'z' entre vogais, e por isso usamos 'SS' quando queremos o som de 's' nessa posição.",
+      "dica": "💡 Se o som de 's' aparece ENTRE duas vogais (como em 'a-s-a'), normalmente é preciso usar 'SS' para manter o som de 's' (como em 'pa-ss-ar'). Entre vogais, 'S' sozinho tem som de 'z'.",
+      "exemplo": "'Casa' tem o 's' entre vogais com som de 'z'. Já 'passo' tem 'ss' entre vogais com som de 's'. Por isso 'passo' (com ss) e 'casa' (com s) são escritos de formas diferentes, apesar dos sons parecidos.",
+      "pergunta": "Qual das palavras está escrita CORRETAMENTE?",
+      "opcoes": [
+        "Caracol",
+        "Carrinho",
+        "Aranha",
+        "Errado (todas certas)"
+      ],
+      "resposta": "Errado (todas certas)",
+      "explicacao_resposta": "Todas as palavras estão escritas corretamente! 'Carrinho' usa 'rr' entre vogais (som forte de 'r'), e 'caracol' e 'aranha' usam 'r' simples no meio da palavra mesmo entre vogais (com som mais suave), pois fazem parte da grafia correta dessas palavras específicas. 💡"
+    },
+    {
+      "titulo": "Pontuação: Vírgula e Ponto Final",
+      "explicacao": "Os sinais de pontuação ajudam a organizar as ideias de um texto e a indicar pausas na leitura. ✏️ O ponto final (.) marca o fim de uma frase completa. A vírgula (,) indica uma pausa mais curta, usada para separar elementos de uma lista, por exemplo.",
+      "dica": "💡 Quando você tiver uma lista de itens em uma frase, separe-os com vírgulas, e use a palavra 'e' antes do último item (sem vírgula antes do 'e', geralmente).",
+      "exemplo": "'Na minha mochila, eu levo lápis, caderno, borracha e estojo.' Veja como a vírgula separa os itens da lista (lápis, caderno, borracha), e o 'e' liga o último item sem precisar de vírgula antes dele.",
+      "pergunta": "Qual frase está pontuada CORRETAMENTE?",
+      "opcoes": [
+        "Eu comprei, maçã banana e uva.",
+        "Eu comprei maçã, banana e uva.",
+        "Eu comprei maçã banana, e uva.",
+        "Eu, comprei maçã banana e uva."
+      ],
+      "resposta": "Eu comprei maçã, banana e uva.",
+      "explicacao_resposta": "Em uma lista de itens, usamos vírgula para separar os itens (maçã, banana) e a palavra 'e' antes do último item (e uva), sem vírgula antes do 'e'. A frase 'Eu comprei maçã, banana e uva.' segue essa regra corretamente. 🎯"
+    },
+    {
+      "titulo": "Figuras de Linguagem: Comparação e Metáfora",
+      "explicacao": "As figuras de linguagem deixam os textos mais bonitos e criativos! 🎨 A comparação usa palavras como 'como' ou 'parece' para comparar duas coisas ('Ele é forte como um touro'). Já a metáfora compara duas coisas sem usar 'como', dizendo que uma coisa É a outra ('Ele é um touro').",
+      "dica": "💡 Se a frase tiver a palavra 'como', 'parece' ou 'tal qual', geralmente é uma comparação. Se a frase afirma diretamente que uma coisa é outra (sem 'como'), pode ser uma metáfora.",
+      "exemplo": "'Seus olhos são como duas estrelas brilhantes' é uma comparação (usa 'como'). 'Seus olhos são duas estrelas brilhantes' é uma metáfora (afirma diretamente, sem usar 'como').",
+      "pergunta": "Qual frase é um exemplo de METÁFORA?",
+      "opcoes": [
+        "Ele corre como um foguete.",
+        "Ela é um anjo.",
+        "O dia está tão quente quanto um forno.",
+        "A casa parece um castelo."
+      ],
+      "resposta": "Ela é um anjo.",
+      "explicacao_resposta": "A frase 'Ela é um anjo' afirma diretamente que a pessoa É um anjo, sem usar a palavra 'como' — isso é uma metáfora. As outras frases usam 'como', 'quanto' ou 'parece', então são comparações. 🌟"
+    },
+    {
+      "titulo": "Concordância: Singular e Plural",
+      "explicacao": "Concordância significa que as palavras de uma frase precisam 'combinar' entre si em número (singular ou plural). 🔢 Se o substantivo está no plural, geralmente o artigo, o adjetivo e o verbo que acompanham ele também precisam estar no plural.",
+      "dica": "💡 Encontre o substantivo principal da frase e veja se ele está no singular ou no plural. Depois, verifique se os outros elementos da frase (artigos, adjetivos, verbos) estão de acordo com ele.",
+      "exemplo": "'O menino esperto chegou' está tudo no singular (o, menino, esperto, chegou). Se mudarmos para o plural, fica 'Os meninos espertos chegaram' — todas as palavras mudaram para o plural junto com 'meninos'.",
+      "pergunta": "Qual frase está com a concordância CORRETA?",
+      "opcoes": [
+        "As flores amarela são bonitas.",
+        "As flores amarelas são bonitas.",
+        "As flor amarelas são bonita.",
+        "A flores amarelas são bonitas."
+      ],
+      "resposta": "As flores amarelas são bonitas.",
+      "explicacao_resposta": "Como 'flores' está no plural, todas as palavras relacionadas a ela também precisam estar no plural: 'as' (artigo plural), 'amarelas' (adjetivo plural) e 'são bonitas' (verbo e adjetivo no plural). A frase 'As flores amarelas são bonitas.' está correta. ✅"
+    }
+  ]
+};
+
+const FALLBACK_CIENCIAS = {
+  "icone": "🔬",
+  "titulo_materia": "🔬 Ciências - 4º ao 6º Ano",
+  "aulas": [
+    {
+      "titulo": "Os Três Estados da Matéria",
+      "explicacao": "Tudo o que existe ao nosso redor é feito de matéria, e essa matéria pode estar em três estados diferentes: sólido (tem forma fixa, como uma pedra), líquido (toma a forma do recipiente, como a água) e gasoso (se espalha pelo ar, como o vapor). 🧊💧💨 A água é um ótimo exemplo, porque pode ser encontrada nos três estados!",
+      "dica": "💡 Pense na água: quando está gelada e dura, é sólida (gelo). Quando está líquida, é água mesmo. Quando esquenta muito e vira vapor, é gasosa.",
+      "exemplo": "Quando colocamos água no congelador, ela vira gelo (estado sólido). Quando colocamos o gelo fora da geladeira, ele derrete e volta a ser água (estado líquido). Se fervermos a água, ela vira vapor (estado gasoso).",
+      "pergunta": "Qual processo representa a passagem da água do estado SÓLIDO para o estado LÍQUIDO?",
+      "opcoes": [
+        "Congelamento",
+        "Fusão (derretimento)",
+        "Evaporação",
+        "Condensação"
+      ],
+      "resposta": "Fusão (derretimento)",
+      "explicacao_resposta": "A fusão (ou derretimento) é o processo em que um sólido (como o gelo) recebe calor e se transforma em líquido (água). O congelamento é o contrário (líquido para sólido). ⭐"
+    },
+    {
+      "titulo": "O Sistema Solar",
+      "explicacao": "O Sistema Solar é formado pelo Sol e por tudo que gira ao redor dele, principalmente os 8 planetas: Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano e Netuno. ☀️🪐 O Sol está no centro, e os planetas giram em órbitas (caminhos) ao redor dele.",
+      "dica": "💡 Uma forma de lembrar a ordem dos planetas a partir do Sol é criar uma frase com a primeira letra de cada planeta: Mercúrio, Vênus, Terra, Marte, Júpiter, Saturno, Urano, Netuno.",
+      "exemplo": "A Terra é o terceiro planeta a partir do Sol, ficando entre Vênus e Marte. É no nosso planeta, a Terra, que vivemos!",
+      "pergunta": "Qual é o planeta mais próximo do Sol?",
+      "opcoes": [
+        "Terra",
+        "Vênus",
+        "Mercúrio",
+        "Marte"
+      ],
+      "resposta": "Mercúrio",
+      "explicacao_resposta": "Mercúrio é o planeta mais próximo do Sol, seguido por Vênus, Terra, Marte e os demais. Por estar tão perto do Sol, Mercúrio tem temperaturas extremas. 🌞"
+    },
+    {
+      "titulo": "Cadeia Alimentar",
+      "explicacao": "A cadeia alimentar mostra quem come quem em um ambiente! 🌿🐰🦊 Ela começa com os produtores (geralmente plantas, que produzem seu próprio alimento usando a luz do sol), passa pelos consumidores que comem plantas (herbívoros), depois pelos que comem outros animais (carnívoros), até chegar aos decompositores, que reaproveitam o que sobra.",
+      "dica": "💡 As setas em uma cadeia alimentar mostram o sentido da energia, sempre apontando para quem está comendo: 'planta → coelho → raposa' significa que a raposa come o coelho, que come a planta.",
+      "exemplo": "Em uma cadeia alimentar simples: o capim (produtor) é comido pelo gafanhoto (herbívoro), que é comido pelo sapo (carnívoro), que é comido pela cobra (carnívoro maior).",
+      "pergunta": "Em uma cadeia alimentar, quem são os organismos chamados de PRODUTORES?",
+      "opcoes": [
+        "Os animais que comem carne",
+        "As plantas, que produzem seu próprio alimento usando a luz do sol",
+        "Os fungos e bactérias que decompõem restos",
+        "Os animais que comem apenas outros animais"
+      ],
+      "resposta": "As plantas, que produzem seu próprio alimento usando a luz do sol",
+      "explicacao_resposta": "Os produtores são organismos (geralmente plantas) que conseguem produzir seu próprio alimento através da fotossíntese, usando a luz do sol. Eles são a base de quase todas as cadeias alimentares. 🌱"
+    },
+    {
+      "titulo": "O Sistema Digestório",
+      "explicacao": "O sistema digestório é responsável por transformar os alimentos que comemos em nutrientes que o corpo pode usar. 🍎 A digestão começa na boca, onde os dentes trituram o alimento e a saliva começa a quebrá-lo. Depois, o alimento passa pelo esôfago até o estômago, onde é misturado com sucos digestivos, e segue para os intestinos, onde os nutrientes são absorvidos.",
+      "dica": "💡 Pense no caminho do alimento como uma viagem: boca → esôfago → estômago → intestino delgado → intestino grosso. Cada parte tem um papel diferente nessa jornada!",
+      "exemplo": "Quando você mastiga uma maçã, os dentes a quebram em pedaços pequenos e a saliva começa a digestão. Depois, ela desce pelo esôfago até o estômago, onde sucos gástricos continuam o trabalho de digestão.",
+      "pergunta": "Qual órgão do sistema digestório vem IMEDIATAMENTE depois da boca, no caminho do alimento?",
+      "opcoes": [
+        "Estômago",
+        "Esôfago",
+        "Intestino delgado",
+        "Intestino grosso"
+      ],
+      "resposta": "Esôfago",
+      "explicacao_resposta": "Depois de ser mastigado na boca, o alimento passa pelo esôfago, um tubo que liga a boca ao estômago, antes de seguir para o restante do sistema digestório. 🧠"
+    },
+    {
+      "titulo": "Vertebrados e Invertebrados",
+      "explicacao": "Os animais podem ser divididos em dois grandes grupos, de acordo com a presença ou não de uma coluna vertebral (a estrutura de ossos que forma a 'espinha' do corpo). 🦴 Os vertebrados possuem coluna vertebral (como peixes, aves, répteis, anfíbios e mamíferos). Os invertebrados não possuem coluna vertebral (como insetos, minhocas e polvos).",
+      "dica": "💡 Pense na sua própria coluna (a espinha que você sente passando a mão nas suas costas). Se o animal tiver uma estrutura parecida com essa, ele é vertebrado. Se não tiver, é invertebrado.",
+      "exemplo": "Um cachorro é vertebrado, porque tem uma coluna de ossos. Já uma borboleta é invertebrada, porque não tem ossos nem coluna vertebral — seu corpo é sustentado por uma estrutura externa chamada exoesqueleto.",
+      "pergunta": "Qual dos animais abaixo é um INVERTEBRADO?",
+      "opcoes": [
+        "Sapo",
+        "Tubarão",
+        "Minhoca",
+        "Pinguim"
+      ],
+      "resposta": "Minhoca",
+      "explicacao_resposta": "A minhoca não possui coluna vertebral (ossos), por isso é classificada como invertebrada. Sapo, tubarão e pinguim possuem coluna vertebral e são vertebrados. 🐛"
+    },
+    {
+      "titulo": "Fotossíntese: Como as Plantas se Alimentam",
+      "explicacao": "A fotossíntese é o processo pelo qual as plantas produzem seu próprio alimento (um tipo de açúcar) usando a luz do sol, a água (absorvida pelas raízes) e o gás carbônico (absorvido do ar pelas folhas). 🌱☀️ Durante esse processo, as plantas também liberam oxigênio, que é fundamental para a respiração de outros seres vivos, incluindo nós!",
+      "dica": "💡 Lembre dos 'ingredientes' da fotossíntese: luz do sol + água + gás carbônico entram, e açúcar (alimento da planta) + oxigênio saem. As folhas são o principal local onde isso acontece.",
+      "exemplo": "Uma planta no jardim absorve água pelas raízes e gás carbônico pelas folhas. Usando a energia da luz do sol, ela transforma esses materiais em alimento para crescer, e libera oxigênio no ar.",
+      "pergunta": "Durante a fotossíntese, além de produzir seu próprio alimento, o que as plantas liberam no ar e que é essencial para a respiração dos seres vivos?",
+      "opcoes": [
+        "Gás carbônico",
+        "Oxigênio",
+        "Nitrogênio",
+        "Vapor de água apenas"
+      ],
+      "resposta": "Oxigênio",
+      "explicacao_resposta": "Durante a fotossíntese, as plantas absorvem gás carbônico e liberam oxigênio como um dos resultados do processo. Esse oxigênio é essencial para a respiração de quase todos os seres vivos, incluindo os seres humanos. 🌬️"
+    },
+    {
+      "titulo": "O Ciclo da Água",
+      "explicacao": "A água da Terra está sempre se movendo em um ciclo contínuo, passando por diferentes estados e lugares. 💧☁️ A evaporação acontece quando o calor do sol transforma a água líquida (de rios, lagos e oceanos) em vapor. Esse vapor sobe e forma nuvens (condensação). Quando as nuvens ficam pesadas, a água cai como chuva (precipitação), voltando para a terra e os rios.",
+      "dica": "💡 Lembre da ordem: evaporação (a água sobe como vapor) → condensação (forma as nuvens) → precipitação (a chuva cai) → e a água volta para os rios, lagos e oceanos, recomeçando o ciclo.",
+      "exemplo": "Em um dia de sol, a água de um lago evapora e sobe para o céu. Lá, ela se junta a outras gotinhas e forma uma nuvem. Quando a nuvem fica cheia, a água cai como chuva, voltando para o lago ou para o solo.",
+      "pergunta": "Qual é o nome do processo em que o vapor de água sobe e se transforma em gotículas, formando as nuvens?",
+      "opcoes": [
+        "Evaporação",
+        "Condensação",
+        "Precipitação",
+        "Infiltração"
+      ],
+      "resposta": "Condensação",
+      "explicacao_resposta": "A condensação é o processo em que o vapor de água, ao subir e encontrar temperaturas mais baixas, se transforma em pequenas gotas de água, formando as nuvens. Depois, essas gotas podem cair como chuva (precipitação). ☁️"
+    },
+    {
+      "titulo": "Misturas: Separando Materiais",
+      "explicacao": "Uma mistura acontece quando juntamos duas ou mais substâncias diferentes, e cada substância continua mantendo suas próprias características. 🧪 Existem várias formas de separar os materiais de uma mistura, dependendo das características de cada um: filtração (separa sólidos de líquidos usando um filtro), decantação (deixa o sólido mais pesado descer no fundo) e evaporação (separa um sólido dissolvido de um líquido, deixando o líquido evaporar).",
+      "dica": "💡 Pense no tipo de mistura: se for areia e água, a areia afunda e pode ser separada por decantação ou filtração. Se for sal dissolvido em água, a água precisa evaporar para o sal ficar sozinho.",
+      "exemplo": "Para separar a areia da água em um copo, podemos esperar a areia afundar (decantação) e depois despejar a água com cuidado, ou passar a mistura por um filtro de papel (filtração).",
+      "pergunta": "Qual é a melhor forma de separar o SAL que está totalmente dissolvido na água do mar?",
+      "opcoes": [
+        "Filtração com papel",
+        "Decantação",
+        "Deixar a água evaporar",
+        "Usar um imã"
+      ],
+      "resposta": "Deixar a água evaporar",
+      "explicacao_resposta": "Quando o sal está totalmente dissolvido na água, ele não pode ser separado por filtração ou decantação, pois forma uma mistura homogênea (não dá para ver os grãos de sal separados). Deixando a água evaporar, o sal fica sozinho no fundo do recipiente. 🧂"
+    },
+    {
+      "titulo": "Fontes de Energia Renováveis e Não Renováveis",
+      "explicacao": "As fontes de energia podem ser classificadas em dois grupos: renováveis (que não se esgotam, como a energia solar, eólica - do vento - e hidráulica - da água) e não renováveis (que podem se esgotar com o tempo, como o petróleo, o carvão e o gás natural). ⚡☀️💨 É importante usar mais fontes renováveis para cuidar do nosso planeta.",
+      "dica": "💡 Pense se a fonte de energia 'nunca acaba' (como o sol e o vento, que sempre vão existir) ou se ela é algo que foi formado há milhões de anos e está sendo usado sem reposição (como o petróleo).",
+      "exemplo": "Painéis solares transformam a luz do sol em energia elétrica — essa é uma fonte renovável, porque o sol vai continuar brilhando. Já o petróleo, usado para fazer gasolina, é uma fonte não renovável, porque demora milhões de anos para se formar.",
+      "pergunta": "Qual das fontes de energia abaixo é considerada RENOVÁVEL?",
+      "opcoes": [
+        "Petróleo",
+        "Carvão mineral",
+        "Energia eólica (vento)",
+        "Gás natural"
+      ],
+      "resposta": "Energia eólica (vento)",
+      "explicacao_resposta": "A energia eólica vem do vento, que é uma fonte natural que não se esgota — por isso é considerada renovável. Petróleo, carvão e gás natural são fontes não renováveis, pois demoram muito tempo para se formar e podem se esgotar. 🌬️"
+    },
+    {
+      "titulo": "Saúde e Prevenção de Doenças",
+      "explicacao": "Cuidar da saúde envolve hábitos diários simples que ajudam a prevenir doenças, como lavar as mãos antes de comer, manter uma alimentação equilibrada, beber água, dormir bem e praticar atividades físicas. 🧼💧 Muitas doenças são causadas por micro-organismos (como vírus e bactérias) que podem ser evitados com hábitos de higiene.",
+      "dica": "💡 Pense em situações do dia a dia: antes de comer, depois de usar o banheiro, depois de brincar ao ar livre — em todas essas situações, lavar as mãos ajuda a evitar a entrada de germes no corpo.",
+      "exemplo": "Lavar bem as mãos com água e sabão antes das refeições remove germes que podem estar nas mãos depois de tocar em objetos, evitando que esses germes entrem no corpo junto com a comida.",
+      "pergunta": "Qual atitude do dia a dia é mais eficaz para PREVENIR a transmissão de germes e doenças?",
+      "opcoes": [
+        "Lavar as mãos com água e sabão regularmente",
+        "Comer doces todos os dias",
+        "Dormir com a janela sempre fechada",
+        "Evitar beber água"
+      ],
+      "resposta": "Lavar as mãos com água e sabão regularmente",
+      "explicacao_resposta": "Lavar as mãos com água e sabão é uma das formas mais simples e eficazes de remover germes e evitar que doenças sejam transmitidas, especialmente antes de comer e depois de ir ao banheiro. 🧼"
+    }
+  ]
+};
+
 /* Mapa de fallback por id de matéria, para crescer no futuro */
 const FALLBACK_MATERIAS = {
-  "obmep_4ano": FALLBACK_OBMEP
+  "obmep_4ano": FALLBACK_OBMEP,
+  "obmep_5ano": FALLBACK_OBMEP_5,
+  "obmep_6ano": FALLBACK_OBMEP_6,
+  "portugues_4ano": FALLBACK_PORTUGUES,
+  "ciencias_4ano": FALLBACK_CIENCIAS
 };
 
 /* =====================================================
