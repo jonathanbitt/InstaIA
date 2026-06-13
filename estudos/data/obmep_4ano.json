@@ -1,0 +1,106 @@
+{
+  "icone": "🏅",
+  "titulo_materia": "🏆 OBMEP - Matemática 4º Ano",
+  "aulas": [
+    {
+      "titulo": "Sequências Numéricas",
+      "explicacao": "Uma sequência numérica é uma fila de números que segue sempre a mesma regra! 🧠 Pode ser uma regra de somar sempre o mesmo número, dobrar, ou diminuir sempre a mesma quantidade. Para descobrir a regra, é só olhar a diferença entre um número e o número seguinte.",
+      "dica": "💡 Pegue dois números vizinhos da sequência e veja o que precisa fazer para ir de um para o outro (somar, subtrair, dobrar...). Essa é a regra escondida!",
+      "exemplo": "Veja a sequência 2, 4, 6, 8... Da primeira para a segunda foi +2. Da segunda para a terceira também foi +2. Ou seja, a regra é 'somar 2'. Então o próximo número depois do 8 é 8 + 2 = 10.",
+      "pergunta": "Qual é o próximo número da sequência: 3, 6, 9, 12, ___?",
+      "opcoes": ["14", "15", "16", "18"],
+      "resposta": "15",
+      "explicacao_resposta": "A regra dessa sequência é 'somar 3' a cada passo: 3 → 6 (+3) → 9 (+3) → 12 (+3). Então o próximo número é 12 + 3 = 15. ⭐"
+    },
+    {
+      "titulo": "Comparando Quantidades",
+      "explicacao": "Quando comparamos números, queremos saber qual é maior, qual é menor ou se são iguais. 🎯 Para isso, podemos colocar todos os números em ordem, do menor para o maior (ou do maior para o menor), e assim fica fácil ver quem está na frente e quem está atrás.",
+      "dica": "💡 Escreva todos os números numa fila e organize-os do menor para o maior. O primeiro da fila é o menor de todos!",
+      "exemplo": "Ana tem 8 balas, Bia tem 5 balas e Carlos tem 12 balas. Colocando em ordem: 5, 8, 12. Como 5 é o menor número, Bia é quem tem MENOS balas.",
+      "pergunta": "Pedro tem 15 figurinhas, Lucas tem 9, Marina tem 21 e Tomás tem 17. Quem tem MENOS figurinhas?",
+      "opcoes": ["Pedro", "Lucas", "Marina", "Tomás"],
+      "resposta": "Lucas",
+      "explicacao_resposta": "Colocando as quantidades em ordem: 9, 15, 17, 21. O menor número é 9, que é a quantidade de figurinhas do Lucas. Por isso, ele tem menos figurinhas que todo mundo. 📚"
+    },
+    {
+      "titulo": "Contando Combinações",
+      "explicacao": "Às vezes precisamos descobrir de quantas formas diferentes podemos combinar coisas, como roupas, sabores ou cores. 🧩 Para isso, existe um truque muito útil: basta multiplicar a quantidade de opções de cada grupo!",
+      "dica": "💡 Multiplique a quantidade de itens do primeiro grupo pela quantidade de itens do segundo grupo. O resultado é o total de combinações possíveis.",
+      "exemplo": "Se você tem 2 camisas (azul e verde) e 3 calças (preta, jeans e branca), o total de combinações é 2 x 3 = 6. Você pode formar 6 looks diferentes combinando uma camisa com uma calça.",
+      "pergunta": "Maria tem 3 blusas (azul, verde e amarela) e 4 shorts (preto, branco, jeans e vermelho). Quantas combinações diferentes de blusa + short ela pode formar?",
+      "opcoes": ["7", "9", "10", "12"],
+      "resposta": "12",
+      "explicacao_resposta": "Para descobrir o total de combinações, multiplicamos a quantidade de blusas pela quantidade de shorts: 3 x 4 = 12. Maria pode montar 12 looks diferentes! 🎯"
+    },
+    {
+      "titulo": "Somando e Subtraindo no Dia a Dia",
+      "explicacao": "Muitos problemas do nosso dia a dia envolvem mais de uma operação. Pode ser que primeiro precisemos subtrair algo (porque gastamos ou perdemos) e depois somar outra coisa (porque ganhamos ou recebemos). 💰 O segredo é fazer as contas na ordem certa, uma de cada vez.",
+      "dica": "💡 Leia o problema com calma e escreva as contas na ordem em que as coisas acontecem na história. Resolva uma conta por vez, sem pressa.",
+      "exemplo": "João tinha R$50. Ele gastou R$18 com um brinquedo e depois ganhou R$7 de mesada. Primeiro: 50 - 18 = 32. Depois: 32 + 7 = 39. João ficou com R$39.",
+      "pergunta": "Beatriz tinha R$45. Ela comprou um livro por R$23 e, depois, recebeu R$10 de presente da vovó. Quanto dinheiro Beatriz tem agora?",
+      "opcoes": ["R$22", "R$32", "R$58", "R$68"],
+      "resposta": "R$32",
+      "explicacao_resposta": "Primeiro fazemos a subtração: 45 - 23 = 22 (depois de comprar o livro). Depois somamos o presente da vovó: 22 + 10 = 32. Beatriz ficou com R$32. 💡"
+    },
+    {
+      "titulo": "Fração de uma Quantidade",
+      "explicacao": "Uma fração mostra como dividir algo em partes iguais e pegar uma certa quantidade dessas partes. 🍕 O número de baixo (denominador) diz em quantas partes iguais devemos dividir o total. O número de cima (numerador) diz quantas dessas partes nós vamos pegar.",
+      "dica": "💡 Para achar uma fração de um número, primeiro divida o número pelo denominador (a parte de baixo da fração). Depois, se o numerador for maior que 1, multiplique o resultado por ele.",
+      "exemplo": "Quanto é 1/3 de 12? O denominador é 3, então dividimos 12 por 3: 12 ÷ 3 = 4. Como o numerador é 1, a resposta é 4. Ou seja, 1/3 de 12 é 4.",
+      "pergunta": "Em uma caixa há 20 lápis. Se 1/4 deles são vermelhos, quantos lápis vermelhos há na caixa?",
+      "opcoes": ["4", "5", "6", "8"],
+      "resposta": "5",
+      "explicacao_resposta": "O denominador da fração 1/4 é 4, então dividimos o total de lápis por 4: 20 ÷ 4 = 5. Como o numerador é 1, a resposta é 5 lápis vermelhos. ⭐"
+    },
+    {
+      "titulo": "Lados e Perímetro das Figuras",
+      "explicacao": "Toda figura geométrica tem lados, e o perímetro é a medida de TODA a volta da figura, somando o tamanho de cada um dos lados. 📐 Quando todos os lados de uma figura têm o mesmo tamanho (como em um quadrado), podemos multiplicar a medida de um lado pela quantidade de lados.",
+      "dica": "💡 Para encontrar o perímetro de uma figura com lados iguais, conte quantos lados ela tem e multiplique pela medida de cada lado.",
+      "exemplo": "Um quadrado tem 4 lados iguais. Se cada lado mede 5 cm, o perímetro é 5 x 4 = 20 cm. Essa é a medida da volta toda do quadrado.",
+      "pergunta": "Um terreno tem o formato de um quadrado com 9 metros de lado. Qual é o perímetro (a volta toda) desse terreno?",
+      "opcoes": ["18 m", "27 m", "36 m", "81 m"],
+      "resposta": "36 m",
+      "explicacao_resposta": "Um quadrado tem 4 lados iguais. Como cada lado mede 9 metros, o perímetro é 9 x 4 = 36 metros. 🧠"
+    },
+    {
+      "titulo": "Descobrindo Padrões em Figuras",
+      "explicacao": "Padrões visuais são sequências de desenhos, cores ou formas que se repetem sempre na mesma ordem. 🔺🔻 Para descobrir qual figura vem a seguir, primeiro encontre o 'grupo' que se repete (chamamos isso de bloco do padrão) e depois veja em que posição do bloco estamos.",
+      "dica": "💡 Separe a sequência em pequenos grupos que se repetem. Depois, veja qual posição falta dentro do grupo que está incompleto.",
+      "exemplo": "Veja: 🔵🔴 🔵🔴 🔵🔴 🔵___. O bloco que se repete é '🔵🔴'. Depois de 🔵, sempre vem 🔴. Então a figura que falta é 🔴.",
+      "pergunta": "Observe a sequência: 🔺🔺🔻 🔺🔺🔻 🔺🔺🔻 🔺🔺___ . Qual figura completa corretamente o padrão?",
+      "opcoes": ["🔺", "🔻", "🔵", "🔴"],
+      "resposta": "🔻",
+      "explicacao_resposta": "O bloco que se repete é '🔺🔺🔻' (dois triângulos para cima e um para baixo). Depois de '🔺🔺' sempre vem '🔻'. Por isso a figura que completa o padrão é 🔻. 🎯"
+    },
+    {
+      "titulo": "Voltando no Caminho (Operação Inversa)",
+      "explicacao": "Em alguns problemas, alguém pensa em um número, faz algumas contas com ele e conta só o resultado final. Para descobrir o número secreto, precisamos 'desfazer' as contas, uma por uma, na ordem contrária! 🔄 Se a pessoa somou, nós subtraímos. Se ela multiplicou, nós dividimos.",
+      "dica": "💡 Refaça o caminho de trás para frente: troque cada operação pela sua operação contrária (soma ↔ subtração, multiplicação ↔ divisão), começando pela última conta que foi feita.",
+      "exemplo": "Pensei em um número, somei 5, e o resultado foi 12. Para descobrir o número, fazemos o caminho contrário: 12 - 5 = 7. O número pensado era 7.",
+      "pergunta": "Carla pensou em um número. Ela multiplicou esse número por 3 e depois somou 4, chegando ao resultado 19. Qual número Carla pensou no início?",
+      "opcoes": ["3", "4", "5", "6"],
+      "resposta": "5",
+      "explicacao_resposta": "Vamos desfazer as contas ao contrário: a última conta foi 'somar 4', então fazemos 19 - 4 = 15. A conta anterior foi 'multiplicar por 3', então fazemos 15 ÷ 3 = 5. O número que Carla pensou era 5. ⭐"
+    },
+    {
+      "titulo": "Sequências com Diferenças Crescentes",
+      "explicacao": "Nem toda sequência soma sempre o mesmo número! Em algumas sequências mais espertas, a diferença entre os números vai aumentando a cada passo. 🚀 Para descobrir o próximo número, devemos olhar para as diferenças entre os números, e não apenas para os números em si.",
+      "dica": "💡 Escreva as diferenças entre cada número e o seguinte. Se essas diferenças formarem uma sequência fácil (como 1, 2, 3, 4...), você descobre qual será a próxima diferença!",
+      "exemplo": "Veja 1, 2, 4, 7, 11... As diferenças são: 2-1=1, 4-2=2, 7-4=3, 11-7=4. As diferenças são 1, 2, 3, 4, então a próxima diferença é 5. Logo, o próximo número é 11 + 5 = 16.",
+      "pergunta": "Observe a sequência: 2, 3, 5, 8, 12, ___. Qual é o próximo número?",
+      "opcoes": ["15", "16", "17", "18"],
+      "resposta": "17",
+      "explicacao_resposta": "As diferenças entre os números são: 3-2=1, 5-3=2, 8-5=3, 12-8=4. As diferenças formam a sequência 1, 2, 3, 4, então a próxima diferença é 5. Por isso, o próximo número é 12 + 5 = 17. 🧠"
+    },
+    {
+      "titulo": "Desafio Olímpico: Apertos de Mão",
+      "explicacao": "Este é um desafio clássico das olimpíadas de matemática! 🏆 Quando várias pessoas se encontram e cada uma dá um aperto de mão para TODAS as outras (apenas uma vez, sem repetir), precisamos contar com cuidado para não contar o mesmo aperto de mão duas vezes.",
+      "dica": "💡 Cada pessoa aperta a mão de todas as outras, mas o aperto entre A e B é o mesmo que entre B e A — então não devemos contar duas vezes! Uma forma de organizar é: a primeira pessoa aperta a mão de todas as outras, a segunda aperta a mão de todas que ainda não apertou, e assim por diante.",
+      "exemplo": "Com 3 amigos (A, B e C): A aperta a mão de B e de C (2 apertos). B aperta a mão de C (mais 1 aperto, já que B-A já foi contado). Total: 2 + 1 = 3 apertos de mão.",
+      "pergunta": "Em uma festa, há 6 amigos e cada um dá um aperto de mão para todos os outros, uma única vez. Quantos apertos de mão acontecem no total?",
+      "opcoes": ["12", "15", "18", "30"],
+      "resposta": "15",
+      "explicacao_resposta": "Vamos contar com organização: o 1º amigo aperta a mão dos outros 5 (5 apertos). O 2º amigo aperta a mão dos 4 que restam (4 apertos). O 3º aperta a mão de 3 (3 apertos). O 4º aperta a mão de 2 (2 apertos). O 5º aperta a mão de 1 (1 aperto). Somando tudo: 5 + 4 + 3 + 2 + 1 = 15 apertos de mão no total! 🏅"
+    }
+  ]
+}

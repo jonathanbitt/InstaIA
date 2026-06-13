@@ -1,0 +1,13 @@
+{
+  "titulo": "📚 Biblioteca de Estudos",
+  "subtitulo": "Aprenda com explicações e pratique com exercícios",
+  "materias": [
+    {
+      "id": "obmep_4ano",
+      "nome": "🏆 OBMEP - 4º Ano",
+      "descricao": "Sequências, lógica, contagem e desafios olímpicos",
+      "icone": "🏅",
+      "arquivo": "./data/obmep_4ano.json"
+    }
+  ]
+}
