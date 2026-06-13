@@ -185,25 +185,54 @@
   }
 
   .secao{
-    margin-bottom: 16px;
-    padding: 14px 16px;
+    margin-bottom: 12px;
     border-radius: 16px;
-    line-height:1.6;
     font-size: 1.02rem;
+    overflow: hidden;
   }
   .secao-explicacao{ background:#F1ECFF; border-left: 6px solid var(--roxo); }
   .secao-exemplo{ background:#E6F7FF; border-left: 6px solid var(--azul); }
   .secao-dica{ background:#FFF3E0; border-left: 6px solid var(--laranja); }
 
+  .secao-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 16px;
+    cursor: pointer;
+    user-select: none;
+    gap: 8px;
+  }
+  .secao-header:hover{ filter: brightness(0.96); }
+
   .secao strong.rotulo{
-    display:block;
     font-family:'Fredoka One', cursive;
-    margin-bottom:6px;
     font-size: 1rem;
+    flex: 1;
   }
   .secao-explicacao .rotulo{ color: var(--roxo); }
   .secao-exemplo .rotulo{ color: #1F8FE0; }
   .secao-dica .rotulo{ color: #E08A00; }
+
+  .secao-chevron{
+    font-size: 0.85rem;
+    transition: transform 0.25s ease;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+  .secao.aberto .secao-chevron{ transform: rotate(180deg); }
+
+  .secao-corpo{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.32s ease, padding 0.22s ease;
+    padding: 0 16px;
+    line-height: 1.6;
+  }
+  .secao.aberto .secao-corpo{
+    max-height: 600px;
+    padding: 0 16px 14px;
+  }
 
   .pergunta-box{
     margin-top: 20px;
@@ -1399,6 +1428,13 @@ async function abrirMateria(materia){
 }
 
 /* =====================================================
+   ACCORDION: ABRIR/FECHAR SEÇÕES
+   ===================================================== */
+function toggleSecao(el){
+  el.classList.toggle('aberto');
+}
+
+/* =====================================================
    RENDERIZAR LIÇÃO ATUAL
    ===================================================== */
 function renderLicao(){
@@ -1424,19 +1460,28 @@ function renderLicao(){
   card.innerHTML = `
     <h2>${aula.titulo}</h2>
 
-    <div class="secao secao-explicacao">
-      <strong class="rotulo">🧠 Explicação</strong>
-      ${aula.explicacao}
+    <div class="secao secao-explicacao" onclick="toggleSecao(this)">
+      <div class="secao-header">
+        <strong class="rotulo">🧠 Explicação</strong>
+        <span class="secao-chevron">▼</span>
+      </div>
+      <div class="secao-corpo">${aula.explicacao}</div>
     </div>
 
-    <div class="secao secao-exemplo">
-      <strong class="rotulo">📚 Exemplo</strong>
-      ${aula.exemplo}
+    <div class="secao secao-exemplo" onclick="toggleSecao(this)">
+      <div class="secao-header">
+        <strong class="rotulo">📚 Exemplo</strong>
+        <span class="secao-chevron">▼</span>
+      </div>
+      <div class="secao-corpo">${aula.exemplo}</div>
     </div>
 
-    <div class="secao secao-dica">
-      <strong class="rotulo">💡 Dica</strong>
-      ${aula.dica}
+    <div class="secao secao-dica" onclick="toggleSecao(this)">
+      <div class="secao-header">
+        <strong class="rotulo">💡 Dica</strong>
+        <span class="secao-chevron">▼</span>
+      </div>
+      <div class="secao-corpo">${aula.dica}</div>
     </div>
 
     <div class="pergunta-box">
