@@ -1,0 +1,106 @@
+{
+  "icone": "🔬",
+  "titulo_materia": "🔬 Ciências - 4º Ano (Turma 3)",
+  "aulas": [
+    {
+      "titulo": "Animais Vertebrados: Classificação",
+      "explicacao": "Animais vertebrados têm coluna vertebral e podem ser divididos em 5 grupos principais: 🐟 PEIXES (vivem na água, têm escamas), 🐸 ANFÍBIOS (vida dupla: água e terra), 🦎 RÉPTEIS (pele seca com escamas), 🐦 AVES (têm penas e bico), 🐕 MAMÍFEROS (têm pelos e mamas).",
+      "dica": "💡 Lembre: MAMÍFEROS têm PELOS e MAMAS (alimentam os filhotes com leite). AVES têm PENAS. PEIXES têm ESCAMAS e BRÂNQUIAS.",
+      "exemplo": "Cachorro: mamífero (pelos, leite). Pinguim: ave (penas, mas não voa). Sapo: anfíbio (vive na água e na terra). Cobra: réptil (escamas, rasteja).",
+      "pergunta": "Uma baleia é um mamífero, mas vive na água. Por que ela não é classificada como peixe?",
+      "opcoes": ["Porque tem escamas", "Porque respira por pulmões e tem pelos", "Porque vive em água salgada", "Porque não tem barbatanas"],
+      "resposta": "Porque respira por pulmões e tem pelos",
+      "explicacao_resposta": "Baleias são mamíferos: respiram por pulmões (precisam subir para respirar), têm pelos (embora pouco) e alimentam filhotes com leite. 🐋"
+    },
+    {
+      "titulo": "Partes das Plantas",
+      "explicacao": "As plantas têm partes importantes: 🌱 RAIZ (fixa a planta e absorve água), CAULE (sustenta e transporta seiva), FOLHA (faz fotossíntese), FLOR (reprodução), FRUTO (protege a semente) e SEMENTE (origina uma nova planta).",
+      "dica": "💡 Raiz 'chupa' água do solo. Caule 'leva' água para as folhas. Folhas 'fazem comida' usando sol. Flores 'viram' frutos.",
+      "exemplo": "No feijão: raiz no solo, caule verde, folhas verdes, flor branca ou roxa, fruto (vagem) com sementes (feijões).",
+      "pergunta": "Qual parte da planta é responsável por ABSORVER água e nutrientes do solo?",
+      "opcoes": ["Caule", "Folha", "Raiz", "Flor"],
+      "resposta": "Raiz",
+      "explicacao_resposta": "A raiz é a parte da planta que cresce para baixo e absorve água e sais minerais do solo. 🌿"
+    },
+    {
+      "titulo": "Os 5 Sentidos",
+      "explicacao": "Nossos sentidos nos conectam com o mundo: 👀 VISÃO (olhos - enxergamos cores e formas), 👂 AUDIÇÃO (ouvidos - escutamos sons), 👃 OLFATO (nariz - sentimos cheiros), 👅 PALADAR (língua - sentimos sabores: doce, salgado, azedo, amargo), ✋ TATO (pele - sentimos temperatura, textura, dor).",
+      "dica": "💡 Lembre: OLFATO é cheiro, PALADAR é gosto. O tato está por toda a pele do corpo!",
+      "exemplo": "Comer pizza: visão (ver a pizza), olfato (cheiro), paladar (sabor), tato (temperatura quente). Audição (ouvir a mordida crocante).",
+      "pergunta": "Qual sentido é usado principalmente para sentir se um objeto está QUENTE ou FRIO?",
+      "opcoes": ["Visão", "Tato", "Audição", "Olfato"],
+      "resposta": "Tato",
+      "explicacao_resposta": "O tato (pele) detecta temperatura, textura, pressão e dor. Encostar em algo quente ou frio ativa o tato. ✋"
+    },
+    {
+      "titulo": "Dia e Noite",
+      "explicacao": "O dia e a noite acontecem por causa da ROTAÇÃO da Terra (movimento que a Terra faz em torno de si mesma). 🌍🌞 Quando a parte onde vivemos está virada para o Sol, é DIA. Quando está virada para o lado contrário, é NOITE. Uma volta completa leva 24 horas.",
+      "dica": "💡 A Terra gira de Oeste para Leste. Por isso o Sol 'nasce' no Leste e 'se põe' no Oeste.",
+      "exemplo": "No Brasil, quando é dia, no Japão é noite (estão no lado oposto da Terra). É por isso que quando aqui é 12h, lá pode ser 0h (meia-noite).",
+      "pergunta": "O que causa a alternância entre dia e noite na Terra?",
+      "opcoes": ["O movimento de translação da Terra", "O movimento de rotação da Terra", "A órbita da Lua", "A inclinação do eixo terrestre"],
+      "resposta": "O movimento de rotação da Terra",
+      "explicacao_resposta": "A rotação da Terra (girar em torno de si mesma) causa dia e noite. A translação (volta ao redor do Sol) causa as estações do ano. 🌎"
+    },
+    {
+      "titulo": "Estações do Ano",
+      "explicacao": "As quatro estações (PRIMAVERA, VERÃO, OUTONO, INVERNO) são causadas pela inclinação do eixo da Terra e pelo movimento de translação ao redor do Sol. 🌸🌞🍂❄️ Quando o hemisfério sul está inclinado para o Sol, é VERÃO aqui e INVERNO no hemisfério norte.",
+      "dica": "💡 No Brasil (hemisfério sul): dezembro a março = VERÃO (quente). Junho a setembro = INVERNO (frio).",
+      "exemplo": "No Natal, no Brasil é verão (calor, praia). Nos Estados Unidos, no Natal é inverno (frio, neve). Hemisférios opostos!",
+      "pergunta": "Enquanto no Brasil é INVERNO (junho/julho), como está a estação na Europa (hemisfério norte)?",
+      "opcoes": ["Inverno também", "Primavera", "Verão", "Outono"],
+      "resposta": "Verão",
+      "explicacao_resposta": "Os hemisférios norte e sul têm estações opostas. Quando é inverno no sul, é verão no norte. 🇧🇷❄️ ↔️ 🇪🇺☀️"
+    },
+    {
+      "titulo": "Reciclagem e Coleta Seletiva",
+      "explicacao": "Reciclar é transformar materiais usados em novos produtos. ♻️ As cores da coleta seletiva ajudam a separar: AZUL (papel), VERMELHO (plástico), VERDE (vidro), AMARELO (metal), MARROM (lixo orgânico), CINZA (lixo não reciclável).",
+      "dica": "💡 Lembre: PAPEL AZUL (começa com A), VIDRO VERDE (começa com V), PLÁSTICO VERMELHO (começa com P, mas pode confundir... decore: plástico = vermelho).",
+      "exemplo": "Garrafa PET (plástico) → lixeira VERMELHA. Jornal → lixeira AZUL. Garrafa de vidro → lixeira VERDE. Lata de refrigerante → lixeira AMARELA (metal).",
+      "pergunta": "Qual a cor da lixeira para descartar VIDRO corretamente na coleta seletiva?",
+      "opcoes": ["Azul", "Vermelha", "Verde", "Amarela"],
+      "resposta": "Verde",
+      "explicacao_resposta": "A lixeira VERDE é destinada ao vidro. Azul = papel, Vermelho = plástico, Amarelo = metal. 🗑️"
+    },
+    {
+      "titulo": "Seres Vivos e Seres Não Vivos",
+      "explicacao": "Seres vivos nascem, crescem, se reproduzem e morrem. 🌱 Exemplos: plantas, animais, fungos, bactérias. Seres não vivos não têm essas características. 🪨 Exemplos: pedra, água, ar, sol, cadeira.",
+      "dica": "💡 Pergunte: isso nasce? Cresce? Tem filhos? Se a resposta for NÃO para todas, é um ser não vivo.",
+      "exemplo": "Uma árvore é ser vivo (nasce, cresce, dá sementes). Uma nuvem não é ser vivo (não nasce nem cresce sozinha, não se reproduz).",
+      "pergunta": "Qual dos itens abaixo é um SER VIVO?",
+      "opcoes": ["Cadeira", "Cogumelo", "Bola", "Nuvem"],
+      "resposta": "Cogumelo",
+      "explicacao_resposta": "Cogumelos são fungos, que são seres vivos (nascem, crescem, se reproduzem, morrem). 🍄"
+    },
+    {
+      "titulo": "Cuidados com o Corpo",
+      "explicacao": "Para manter o corpo saudável, devemos: 🛁 TOMAR BANHO todos os dias, ESCOVAR OS DENTES após as refeições, CORTAR AS UNHAS, LAVAR AS MÃOS antes de comer, COMER FRUTAS E VEGETAIS, BEBER ÁGUA, PRATICAR EXERCÍCIOS e DORMIR BEM.",
+      "dica": "💡 Higiene pessoal previne doenças. Alimentação saudável dá energia. Exercício fortalece o corpo. Sono reparador descansa o cérebro.",
+      "exemplo": "Uma rotina saudável: acordar, escovar os dentes, tomar café da manhã, ir para a escola, lanchar fruta, almoçar, escovar os dentes, brincar, jantar, escovar os dentes, dormir 8-10 horas.",
+      "pergunta": "Quantas horas de sono são RECOMENDADAS para crianças de 4º ano (9-10 anos)?",
+      "opcoes": ["4-6 horas", "6-8 horas", "9-11 horas", "12-14 horas"],
+      "resposta": "9-11 horas",
+      "explicacao_resposta": "Crianças em idade escolar (6-12 anos) precisam dormir de 9 a 11 horas por noite para crescerem saudáveis. 😴"
+    },
+    {
+      "titulo": "O Ar e o Vento",
+      "explicacao": "O ar está em toda parte, mesmo que não possamos vê-lo. 🌬️ O vento é o ar em movimento. O ar tem peso (pressão atmosférica) e ocupa espaço. As plantas e animais precisam do ar para respirar.",
+      "dica": "💡 Para provar que o ar existe: encha um saco plástico e amarre. Ele fica cheio mesmo sendo leve! Ou sopre dentro de um copo virado na água.",
+      "exemplo": "Quando acenamos um leque, sentimos o vento (ar em movimento). Quando enchemos uma bexiga, o ar ocupa espaço dentro dela.",
+      "pergunta": "O que é o VENTO?",
+      "opcoes": ["Ar parado", "Ar em movimento", "Ar quente", "Ar pesado"],
+      "resposta": "Ar em movimento",
+      "explicacao_resposta": "Vento é o ar se movimentando de um lugar para o outro. Pode ser brisa leve ou ventania forte. 💨"
+    },
+    {
+      "titulo": "Magnetismo: Ímãs e Atração",
+      "explicacao": "Ímãs são objetos que atraem certos metais, principalmente o FERRO. 🧲 Eles têm dois polos: NORTE (N) e SUL (S). Polos diferentes (N-S) se ATRAEM. Polos iguais (N-N ou S-S) se REPELEM (se afastam).",
+      "dica": "💡 Nem todo metal é atraído pelo ímã. Teste: ímã atrai ferro (prego), níquel e cobalto. Não atrai alumínio, cobre, ouro, plástico, madeira.",
+      "exemplo": "Um ímã aproximado de pregos de ferro atrai os pregos. Mas não atrai uma moeda de alumínio. Uma bússola usa o magnetismo da Terra para apontar o norte.",
+      "pergunta": "O que acontece quando aproximamos o polo NORTE de um ímã do polo NORTE de outro ímã?",
+      "opcoes": ["Eles se atraem", "Eles se repelem", "Nada acontece", "Eles grudam forte"],
+      "resposta": "Eles se repelem",
+      "explicacao_resposta": "Polos IGUAIS (N-N ou S-S) se REPELEM. Polos DIFERENTES (N-S) se ATRAEM. 🧲"
+    }
+  ]
+}

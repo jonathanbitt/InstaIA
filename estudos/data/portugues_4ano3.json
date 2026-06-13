@@ -1,0 +1,106 @@
+{
+  "icone": "📖",
+  "titulo_materia": "📖 Língua Portuguesa - 4º Ano (Turma 3)",
+  "aulas": [
+    {
+      "titulo": "Palavras com CH, LH, NH",
+      "explicacao": "Os dígrafos CH, LH e NH representam sons únicos na língua portuguesa. 🗣️ CH tem som de 'x' (chuva, chapéu). LH tem som de 'li' puxado (filho, orelha). NH tem som de 'ni' (banho, arranhar).",
+      "dica": "💡 CH nunca vira X na escrita (escrevemos 'chave', não 'xave'). LH e NH sempre juntos na mesma sílaba.",
+      "exemplo": "Palavras com CH: chave, chocolate, churrasco. Palavras com LH: galho, palha, detalhe. Palavras com NH: banho, unha, companhia.",
+      "pergunta": "Qual palavra está escrita CORRETAMENTE?",
+      "opcoes": ["Xícara", "Chicara", "Xicara", "Chícara"],
+      "resposta": "Chícara",
+      "explicacao_resposta": "A forma correta é 'chícara', com CH e acento na primeira sílaba (tônica). ✍️"
+    },
+    {
+      "titulo": "Artigo: Definido e Indefinido",
+      "explicacao": "Artigos são palavras que acompanham substantivos. 📝 Artigos DEFINIDOS: O, A, OS, AS (indicam algo específico). Artigos INDEFINIDOS: UM, UMA, UNS, UMAS (indicam algo de forma geral).",
+      "dica": "💡 Se você pode apontar e dizer 'aquele', use artigo definido. Se é 'qualquer um', use artigo indefinido.",
+      "exemplo": "'O menino' (um menino específico, que já conhecemos). 'Um menino' (qualquer menino, não identificado).",
+      "pergunta": "Na frase 'Comprei ___ livro ontem', qual artigo preenche corretamente se é UM livro qualquer (não específico)?",
+      "opcoes": ["O", "A", "Um", "Uma"],
+      "resposta": "Um",
+      "explicacao_resposta": "Se o livro não é específico (qualquer um), usamos o artigo indefinido 'um' (masculino, pois livro é masculino). 📖"
+    },
+    {
+      "titulo": "Pronomes Pessoais",
+      "explicacao": "Pronomes pessoais substituem nomes de pessoas ou coisas. 👤 EU, TU, ELE/ELA, NÓS, VÓS, ELES/ELAS. Eles indicam quem fala (1ª pessoa), com quem se fala (2ª) ou de quem se fala (3ª).",
+      "dica": "💡 EU e NÓS = quem fala. TU e VÓS = com quem se fala. ELE/ELA e ELES/ELAS = de quem se fala.",
+      "exemplo": "'Eu estudo' (quem fala). 'Tu estudas' (com quem se fala). 'Ela estuda' (de quem se fala).",
+      "pergunta": "Na frase 'Maria e João foram ao cinema. ___ chegaram atrasados', qual pronome substitui 'Maria e João'?",
+      "opcoes": ["Ela", "Ele", "Eles", "Nós"],
+      "resposta": "Eles",
+      "explicacao_resposta": "Maria e João são duas pessoas, no masculino (João puxa) ou feminino+masculino? Na verdade, grupo misto usa 'eles' (masculino plural). Portanto, 'Eles chegaram atrasados'. ✅"
+    },
+    {
+      "titulo": "Rima e Poesia",
+      "explicacao": "Rima é a repetição de sons no final dos versos de um poema. 🎵 Palavras rimam quando terminam com sons parecidos (coração/mão, amor/dor, feliz/raiz).",
+      "dica": "💡 Leia em voz alta. Se duas palavras no final dos versos soam parecidas, elas rimam!",
+      "exemplo": "Poema: 'O sol brilha no céu azul / A criança correu pro sul.' As palavras 'azul' e 'sul' rimam (terminam com 'ul').",
+      "pergunta": "Qual par de palavras RIMA perfeitamente?",
+      "opcoes": ["Casa - Asa", "Amor - Dor", "Gato - Rato", "Feliz - Sorriso"],
+      "resposta": "Amor - Dor",
+      "explicacao_resposta": "'Amor' e 'dor' rimam porque terminam com 'or'. As outras opções têm sons finais diferentes. 💖"
+    },
+    {
+      "titulo": "Aumentativo e Diminutivo",
+      "explicacao": "O aumentativo indica que algo é maior (casão, bocarra). 📏 O diminutivo indica que algo é menor (casinha, boquinha). São formados com sufixos como -ÃO, -ZÃO (aumentativo) e -INHO, -ZINHO (diminutivo).",
+      "dica": "💡 Aumentativo: grande → grandão. Diminutivo: pequeno → pequenininho. Sempre respeite o gênero (masculino/feminino).",
+      "exemplo": "Aumentativo: mulher → mulherona, nariz → narigão. Diminutivo: cachorro → cachorrinho, árvore → arvorezinha.",
+      "pergunta": "Qual a palavra no AUMENTATIVO de 'cabeça'?",
+      "opcoes": ["Cabecinha", "Cabeção", "Cabeçorra", "Cabeçuda"],
+      "resposta": "Cabeção",
+      "explicacao_resposta": "O aumentativo de 'cabeça' é 'cabeção' (terminação -ão). 'Cabecinha' é diminutivo. 🧠"
+    },
+    {
+      "titulo": "Sinônimos na Prática",
+      "explicacao": "Sinônimos são palavras diferentes com o mesmo significado. 🔄 Eles ajudam a evitar repetições e tornar o texto mais bonito. Por exemplo, bonito pode ser substituído por lindo, belo, formoso.",
+      "dica": "💡 Use sinônimos para variar seu vocabulário. Um bom dicionário de sinônimos pode ajudar muito!",
+      "exemplo": "Frase original: 'O carro é rápido.' Usando sinônimos: 'O veículo é veloz.' 'Carro' = 'veículo', 'rápido' = 'veloz'.",
+      "pergunta": "Qual palavra NÃO é sinônimo de 'alegre'?",
+      "opcoes": ["Feliz", "Contente", "Triste", "Animado"],
+      "resposta": "Triste",
+      "explicacao_resposta": "'Triste' é antônimo (oposto) de 'alegre'. As outras são sinônimos (mesmo significado). 😊"
+    },
+    {
+      "titulo": "Parágrafo e Organização do Texto",
+      "explicacao": "Parágrafo é um conjunto de frases sobre uma mesma ideia. 📑 Começamos um novo parágrafo quando mudamos de assunto ou quando a ideia é muito longa. Na escrita, o parágrafo começa com um espaço (tab) ou alguns espaços.",
+      "dica": "💡 Cada parágrafo deve ter uma IDEIA PRINCIPAL. Se você percebeu que mudou de assunto, comece um novo parágrafo!",
+      "exemplo": "Texto sem parágrafos fica confuso. 'Fui ao parque. Vi muitos amigos. Brincamos muito. Depois fui à sorveteria. Comi sorvete de chocolate. Voltei para casa.' Melhor separar em 2 parágrafos: parque / sorveteria.",
+      "pergunta": "Quando devemos começar um novo PARÁGRAFO em um texto?",
+      "opcoes": ["A cada 3 palavras", "Quando muda o assunto ou ideia principal", "Apenas no início do texto", "A cada nova frase"],
+      "resposta": "Quando muda o assunto ou ideia principal",
+      "explicacao_resposta": "Um novo parágrafo indica uma nova ideia central ou uma mudança de assunto no texto. 📝"
+    },
+    {
+      "titulo": "Palavras Homônimas",
+      "explicacao": "Homônimos são palavras iguais (na escrita ou na fala) mas com significados diferentes. 🔀 Ex: 'manga' (fruta) e 'manga' (parte da camisa). 'Cedo' (verbo ceder) e 'cedo' (advérbio de tempo).",
+      "dica": "💡 O contexto da frase ajuda a saber qual significado é usado. Preste atenção nas outras palavras ao redor!",
+      "exemplo": "'Vou colocar cedo na mesa.' Aqui 'cedo' é o verbo (entregar). 'Acordei cedo hoje.' Aqui 'cedo' é advérbio (hora).",
+      "pergunta": "Na frase 'O banco fica na esquina', a palavra 'banco' significa:",
+      "opcoes": ["Assento para sentar", "Instituição financeira", "Peixe do mar", "Ferramenta de trabalho"],
+      "resposta": "Instituição financeira",
+      "explicacao_resposta": "Pelo contexto ('fica na esquina'), 'banco' é uma instituição financeira (agência bancária). Se fosse assento, seria 'sentar no banco'. 🏦"
+    },
+    {
+      "titulo": "Interjeições",
+      "explicacao": "Interjeições são palavras que expressam emoções repentinas como surpresa, dor, alegria, susto. 😲 Exemplos: Ah!, Oh!, Puxa!, Nossa!, Ai!, Oba!, Eita!, Ufa!",
+      "dica": "💡 Interjeições geralmente vêm seguidas de ponto de exclamação (!) para mostrar a emoção forte.",
+      "exemplo": "'Ai! Que susto!' (dor/susto). 'Oba! Ganhei um presente!' (alegria). 'Ufa! Finalmente terminei!' (alívio).",
+      "pergunta": "Qual interjeição expressa ALÍVIO (que algo difícil acabou)?",
+      "opcoes": ["Oh!", "Ai!", "Ufa!", "Oba!"],
+      "resposta": "Ufa!",
+      "explicacao_resposta": "'Ufa!' é usado quando estamos aliviados que algo difícil ou cansativo terminou. 'Oba!' é alegria, 'Ai!' é dor, 'Oh!' é surpresa. 😌"
+    },
+    {
+      "titulo": "Interpretação: Localizando Informações",
+      "explicacao": "Muitas perguntas de interpretação pedem para LOCALIZAR informações que estão explicitamente no texto. 🔍 Basta reler com atenção a parte que fala sobre o assunto da pergunta.",
+      "dica": "💡 Leia a pergunta, depois releia o texto procurando por palavras-chave da pergunta. A resposta provavelmente está perto dessas palavras.",
+      "exemplo": "Texto: 'João acordou atrasado. Ele correu para a escola, mas chegou depois da primeira aula.' Pergunta: Por que João correu? Resposta: Porque acordou atrasado (texto diz claramente).",
+      "pergunta": "Texto: 'A tartaruga venceu a corrida porque foi persistente. Enquanto a lebre descansou, ela continuou andando devagar, mas sem parar.' De acordo com o texto, por que a tartaruga venceu?",
+      "opcoes": ["Porque correu muito rápido", "Porque foi persistente e não parou", "Porque a lebre desistiu", "Porque o caminho era curto"],
+      "resposta": "Porque foi persistente e não parou",
+      "explicacao_resposta": "O texto diz explicitamente: 'A tartaruga venceu a corrida porque foi persistente' e 'continuou andando... sem parar'. 🐢"
+    }
+  ]
+}
